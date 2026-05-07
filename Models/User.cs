@@ -82,14 +82,20 @@ namespace ClickAndCollect.Models
         }
 
         public User(int userId, string firstName, string lastName,
-                    string email, string password, string role)
+                    string email, string password)
         {
             UserId    = userId;
             FirstName = firstName;
             LastName  = lastName;
             Email     = email;
-            Password  = password;
-            Role      = role;
+            Password = password;
+        }
+        
+        public User(int userId, string firstName, string lastName,
+            string email, string password, string role)
+            : this(userId, firstName, lastName, email, password)
+        {
+            Role = role;
         }
     }
 }
