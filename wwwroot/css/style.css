@@ -1,0 +1,115 @@
+/* ============================================
+   VARIABLES
+   ============================================ */
+:root {
+    --primary: #FFA01C;
+    --primary-light: #FFBF69;
+    --white: #FFF;
+    --bg-light: #CBF3F0;
+    --accent: #30C4B6;
+    --error-bg: #fee2e2;
+    --error-text: #dc2626;
+    --text-dark: #1a1a2e;
+    --text-gray: #888;
+    --text-label: #444;
+    --border: #ddd;
+    --shadow: rgba(0,0,0,0.1);
+}
+
+/* ============================================
+   GLOBAL
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg-light);
+}
+
+/* ============================================
+   LOGIN
+   ============================================ */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-card {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--shadow);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-card h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: var(--primary);
+}
+
+.login-card .subtitle {
+    color: var(--accent);
+    margin-bottom: 28px;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+
+input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s;
+}
+
+input:focus {
+    border-color: var(--accent);
+}
+
+.error {
+    background: var(--error-bg);
+    color: var(--error-text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: var(--primary-light);
+}
+

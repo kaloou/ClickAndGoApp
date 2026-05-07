@@ -1,6 +1,6 @@
 namespace ClickAndGoApp.Models;
 
-public class Customer : User
+public class Customer 
 {
     private int loyaltyPoints;
     private int phoneNumber;

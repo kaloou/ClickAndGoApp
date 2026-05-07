@@ -1,6 +1,6 @@
 namespace ClickAndGoApp.Models;
 
-public abstract class Employee : User
+public abstract class Employee 
 {
     
 }
