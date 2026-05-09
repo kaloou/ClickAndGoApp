@@ -1,6 +1,6 @@
 using ClickAndGoApp.Models.Enums;
 
-namespace ClickAndCollect.Models
+namespace ClickAndGoApp.Models
 {
     public class Order
     {

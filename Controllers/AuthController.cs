@@ -1,4 +1,4 @@
-using ClickAndCollect.DAL;
+using ClickAndGoApp.DAL;
 using Microsoft.AspNetCore.Mvc;
 using ClickAndCollect.Models;
 namespace ClickAndGoApp.Controllers;

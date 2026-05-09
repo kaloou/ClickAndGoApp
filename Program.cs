@@ -1,4 +1,3 @@
-using ClickAndCollect.DAL;
 using ClickAndGoApp.DAL;
 
 var builder = WebApplication.CreateBuilder(args);

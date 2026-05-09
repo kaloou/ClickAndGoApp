@@ -1,4 +1,6 @@
-namespace ClickAndCollect.Models
+using ClickAndCollect.Models;
+
+namespace ClickAndGoApp.Models
 {
     public class OrderPicker : Employee
     {

@@ -1,4 +1,4 @@
-namespace ClickAndCollect.Models
+namespace ClickAndGoApp.Models
 {
     public class Product
     {
