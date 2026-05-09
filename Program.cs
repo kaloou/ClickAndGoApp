@@ -1,3 +1,4 @@
+using ClickAndCollect.DAL;
 using ClickAndGoApp.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,9 @@ builder.Services.AddSession(options =>//Activate the session
 //DAL
 builder.Services.AddScoped<DBConnection>();//A new instance is created by HTTP resuest
 builder.Services.AddScoped<UserDAL>();
+builder.Services.AddScoped<OrderPickerDAL>();
+builder.Services.AddScoped<StoreDAL>();
+builder.Services.AddScoped<OrderDAL>();
 
 var app = builder.Build();
 
