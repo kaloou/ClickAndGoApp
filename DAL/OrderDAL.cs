@@ -51,5 +51,56 @@ namespace ClickAndCollect.DAL
             }
             return orders;
         }
+        
+        public Order GetById(int orderId)
+        {
+            using SqlConnection conn = _db.GetConnexion();
+            conn.Open();
+
+            string query = @"
+                SELECT orderId, orderDate, status, numberOfBoxes,
+                returnedBoxes, pickupDate, paymentStatus,
+                customerId, timeSlotId
+                FROM [Order]
+                WHERE orderId = @orderId";
+
+            using SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@orderId", orderId);
+
+            using SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                return new Order(
+                    (int)reader["orderId"],
+                    (DateTime)reader["orderDate"],
+                    Enum.Parse<OrderStatus>((string)reader["status"]),
+                    (int)reader["numberOfBoxes"],
+                    (int)reader["returnedBoxes"],
+                    (DateTime)reader["pickupDate"],
+                    Enum.Parse<PaymentStatus>((string)reader["paymentStatus"]),
+                    (int)reader["customerId"],
+                    (int)reader["timeSlotId"]
+                );
+            }
+            return null;
+        }
+        
+        public void SetNumberOfBoxes(int orderId, int numberOfBoxes)
+        {
+            using SqlConnection conn = _db.GetConnexion();
+            conn.Open();
+
+            string query = @"
+            UPDATE [Order]
+            SET numberOfBoxes = @numberOfBoxes
+            WHERE orderId = @orderId";
+
+            using SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@orderId", orderId);
+            cmd.Parameters.AddWithValue("@numberOfBoxes", numberOfBoxes);
+
+            cmd.ExecuteNonQuery();
+        }
     }
 }

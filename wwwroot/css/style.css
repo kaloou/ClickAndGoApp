@@ -262,3 +262,80 @@ button:hover {
     font-size: 16px;
     box-shadow: 0 4px 20px var(--shadow);
 }
+
+/* ============================================
+   ORDER DETAILS
+   ============================================ */
+.btn-back {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.btn-back:hover {
+    color: var(--primary-light);
+}
+
+.order-info-card {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--shadow);
+    margin-bottom: 24px;
+}
+
+.order-info-card h2 {
+    font-size: 20px;
+    color: var(--primary);
+    margin-bottom: 16px;
+}
+
+.order-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.order-info-grid div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-gray);
+    text-transform: uppercase;
+}
+
+.content h3 {
+    font-size: 18px;
+    color: var(--primary);
+    margin: 24px 0 12px 0;
+}
+
+.encode-boxes-card {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--shadow);
+    margin-top: 24px;
+    max-width: 400px;
+}
+
+.encode-boxes-card h3 {
+    margin-top: 0;
+}
+
+.success {
+    background: #d1fae5;
+    color: #059669;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}

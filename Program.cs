@@ -20,6 +20,7 @@ builder.Services.AddScoped<UserDAL>();
 builder.Services.AddScoped<OrderPickerDAL>();
 builder.Services.AddScoped<StoreDAL>();
 builder.Services.AddScoped<OrderDAL>();
+builder.Services.AddScoped<OrderLineDAL>();
 
 var app = builder.Build();
 

@@ -5,6 +5,7 @@ namespace ClickAndGoApp.Models
         private int orderId;
         private int productId;
         private int quantity;
+        private Product product;
 
         public int OrderId
         {
@@ -29,12 +30,19 @@ namespace ClickAndGoApp.Models
                 ? value
                 : throw new ArgumentException("Quantity must be positive");
         }
+        
+        public Product Product
+        {
+            get { return product; }
+            set => product = value ?? throw new ArgumentNullException("Product cannot be null");
+        }
 
-        public OrderLine(int orderId, int productId, int quantity)
+        public OrderLine(int orderId, int productId, int quantity, Product product)
         {
             OrderId = orderId;
             ProductId = productId;
             Quantity = quantity;
+            Product = product;
         }
     }
 }
