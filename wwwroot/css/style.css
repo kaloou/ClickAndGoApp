@@ -1,0 +1,341 @@
+/* ============================================
+   VARIABLES
+   ============================================ */
+:root {
+    --primary: #FFA01C;
+    --primary-light: #FFBF69;
+    --white: #FFF;
+    --bg-light: #CBF3F0;
+    --accent: #30C4B6;
+    --error-bg: #fee2e2;
+    --error-text: #dc2626;
+    --text-dark: #1a1a2e;
+    --text-gray: #888;
+    --text-label: #444;
+    --border: #ddd;
+    --shadow: rgba(0,0,0,0.1);
+}
+
+/* ============================================
+   GLOBAL
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg-light);
+}
+
+/* ============================================
+   LOGIN
+   ============================================ */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-card {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--shadow);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-card h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: var(--primary);
+}
+
+.login-card .subtitle {
+    color: var(--accent);
+    margin-bottom: 28px;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+
+input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s;
+}
+
+input:focus {
+    border-color: var(--accent);
+}
+
+.error {
+    background: var(--error-bg);
+    color: var(--error-text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: var(--primary-light);
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar h1 {
+    font-size: 20px;
+    color: var(--white);
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 14px;
+}
+
+.navbar-right a {
+    color: var(--white);
+    text-decoration: none;
+    background-color: var(--primary-light);
+    padding: 6px 14px;
+    border-radius: 6px;
+}
+
+.navbar-right a:hover {
+    background-color: var(--white);
+    color: var(--primary);
+}
+
+/* ============================================
+   DASHBOARD
+   ============================================ */
+.dashboard {
+    min-height: 100vh;
+    background-color: var(--bg-light);
+}
+
+.content {
+    padding: 32px;
+}
+
+.content h2 {
+    font-size: 22px;
+    color: var(--primary);
+    margin-bottom: 24px;
+}
+
+/* ============================================
+   TABLE
+   ============================================ */
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px var(--shadow);
+}
+
+.orders-table thead {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+.orders-table th {
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.orders-table td {
+    padding: 14px 18px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--bg-light);
+    color: var(--text-dark);
+}
+
+.orders-table tr:last-child td {
+    border-bottom: none;
+}
+
+.orders-table tr:hover td {
+    background-color: #f9fafb;
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-pending {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.badge-ready {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.badge-honnored {
+    background-color: #e0e7ff;
+    color: #4338ca;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-light);
+}
+
+/* ============================================
+   EMPTY MESSAGE
+   ============================================ */
+.empty-message {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    color: var(--text-gray);
+    font-size: 16px;
+    box-shadow: 0 4px 20px var(--shadow);
+}
+
+/* ============================================
+   ORDER DETAILS
+   ============================================ */
+.btn-back {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.btn-back:hover {
+    color: var(--primary-light);
+}
+
+.order-info-card {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--shadow);
+    margin-bottom: 24px;
+}
+
+.order-info-card h2 {
+    font-size: 20px;
+    color: var(--primary);
+    margin-bottom: 16px;
+}
+
+.order-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.order-info-grid div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-gray);
+    text-transform: uppercase;
+}
+
+.content h3 {
+    font-size: 18px;
+    color: var(--primary);
+    margin: 24px 0 12px 0;
+}
+
+.encode-boxes-card {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--shadow);
+    margin-top: 24px;
+    max-width: 400px;
+}
+
+.encode-boxes-card h3 {
+    margin-top: 0;
+}
+
+.success {
+    background: #d1fae5;
+    color: #059669;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}

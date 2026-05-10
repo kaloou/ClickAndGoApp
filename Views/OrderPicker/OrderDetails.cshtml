@@ -1,0 +1,105 @@
+@model List<ClickAndGoApp.Models.OrderLine>
+@{
+    ViewData["Title"] = "Order Details";
+    var order = ViewBag.Order as Order;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Order Details</title>
+    <link rel="stylesheet" href="~/css/style.css"/>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <h1>Click & Collect</h1>
+        <div class="navbar-right">
+            <span>Welcome, @Context.Session.GetString("firstName")</span>
+            <a href="/Auth/Logout">Logout</a>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- Back button -->
+        <a href="/OrderPicker/Index" class="btn-back">← Back to Orders</a>
+
+        <!-- Order info -->
+        <div class="order-info-card">
+            <h2>Order #@order.OrderId</h2>
+            <div class="order-info-grid">
+                <div>
+                    <span class="label">Pickup Date</span>
+                    <span>@order.PickupDate.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+                <div>
+                    <span class="label">Status</span>
+                    <span class="badge badge-@order.Status.ToString().ToLower()">
+                        @order.Status
+                    </span>
+                </div>
+                <div>
+                    <span class="label">Number of Boxes</span>
+                    <span>@order.NumberOfBoxes</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products list -->
+        <h3>Products</h3>
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var line in Model)
+                {
+                    <tr>
+                        <td>@line.Product.Name</td>
+                        <td>@line.Product.Price.ToString("0.00") €</td>
+                        <td>@line.Quantity</td>
+                        <td>@((line.Product.Price * line.Quantity).ToString("0.00")) €</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Encode boxes form -->
+        <div class="encode-boxes-card">
+            <h3>Encode Number of Boxes Used</h3>
+            <form method="post" action="/OrderPicker/EncodeBoxes">
+                <input type="hidden" name="orderId" value="@order.OrderId"/>
+                <div class="form-group">
+                    <label for="numberOfBoxes">Number of boxes</label>
+                    <input type="number" id="numberOfBoxes" name="numberOfBoxes"
+                           min="1" required/>
+                </div>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="error">@ViewBag.Error</div>
+                }
+                @if (ViewBag.Success != null)
+                {
+                    <div class="success">@ViewBag.Success</div>
+                }
+                <button type="submit">Confirm</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
