@@ -2,7 +2,7 @@ using ClickAndGoApp.DAL;
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
 
-namespace ClickAndCollect.DAL
+namespace ClickAndGoApp.DAL
 {
     public class OrderLineDAL
     {

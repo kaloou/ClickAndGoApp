@@ -1,9 +1,8 @@
-using ClickAndCollect.DAL;
 using Microsoft.AspNetCore.Mvc;
 using ClickAndGoApp.DAL;
 using ClickAndGoApp.Models;
 //Je mets comm en fr mais je traduirai tout avant de rendre(plus simple)
-namespace ClickAndCollect.Controllers
+namespace ClickAndGoApp.Controllers
 {
     public class OrderPickerController : Controller
     {
@@ -62,8 +61,8 @@ namespace ClickAndCollect.Controllers
         }
         
         // ============================================
-// Encode Number of Boxes Used
-// ============================================
+        // Encode Number of Boxes Used
+        // ============================================
         [HttpPost]
         public IActionResult EncodeBoxes(int orderId, int numberOfBoxes)
         {

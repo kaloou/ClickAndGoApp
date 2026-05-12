@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
 using ClickAndGoApp.Models.Enums;
 
-namespace ClickAndCollect.DAL
+namespace ClickAndGoApp.DAL
 {
     public class OrderDAL
     {

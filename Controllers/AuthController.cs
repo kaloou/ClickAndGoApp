@@ -1,6 +1,6 @@
 using ClickAndGoApp.DAL;
+using ClickAndGoApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using ClickAndCollect.Models;
 namespace ClickAndGoApp.Controllers;
 
 public class AuthController : Controller
@@ -27,7 +27,7 @@ public class AuthController : Controller
             ViewBag.Error = "Invalid email or password";
             return View();
         }
-        
+
         HttpContext.Session.SetInt32("userId", user.UserId);
         HttpContext.Session.SetString("role", user.Role);
         HttpContext.Session.SetString("firstName", user.FirstName);

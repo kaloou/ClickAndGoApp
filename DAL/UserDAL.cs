@@ -1,7 +1,5 @@
 using Microsoft.Data.SqlClient;
-using ClickAndCollect.Models;
-using ClickAndGoApp.DAL;
-using Microsoft.Data.SqlClient;
+using ClickAndGoApp.Models;
 namespace ClickAndGoApp.DAL
 {
     public class UserDAL

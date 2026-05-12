@@ -1,8 +1,79 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Accueil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- HERO -->
+<section class="hero-section">
+    <div class="hero-text">
+        <h1>Cliquez, commandez<br/>et retirez vos courses sans frais !</h1>
+        <p>
+            Oui, vous avez bien entendu, dès maintenant, le collect est toujours GRATUIT !<br/>
+            Faites vite vos courses en ligne et retirez-les sans frais dans un point collect près de chez vous.<br/>
+            Grâce à Click &amp; Go, vous gérez votre temps et votre argent super facilement !
+        </p>
+        <a asp-controller="Product" asp-action="Browse" class="btn-cta">Faire vos courses</a>
+    </div>
+    <div class="hero-visual">
+       <img src="images/panier.png" alt="panier"/>
+    </div>
+</section>
+
+<!-- POINTS FORTS -->
+<section class="features-section">
+    <div class="feature-card">
+        <h3>Commandez en ligne</h3>
+        <p>Sélectionnez vos produits depuis chez vous, à tout moment.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Retrait rapide</h3>
+        <p>Choisissez votre créneau et récupérez vos courses sans attendre.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Collect gratuit</h3>
+        <p>Aucun frais de livraison, le service Click &amp; Collect est offert.</p>
+    </div>
+</section>
+
+<!-- STORE + RECETTES -->
+<section class="split-section">
+    <div class="store-block">
+        <h2>Préparez-vous<br/>à gagner du temps</h2>
+        <form method="get" asp-controller="Store" asp-action="Find">
+            <div class="search-wrap">
+                <input type="text" name="location" placeholder="Code postal, ville ..." />
+                <button type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.868-3.833zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="recipes-block">
+        <h3>Découvrez nos pack de recettes<br/>déjà préparé pour vous !</h3>
+        <a asp-controller="Recipe" asp-action="Index" class="recipes-link">Voir plus</a>
+        <div class="recipes-row">
+            <div class="recipe-thumb"></div>
+            <div class="recipe-thumb"></div>
+            <div class="recipe-thumb"></div>
+            <div class="recipe-thumb"></div>
+        </div>
+    </div>
+</section>
+
+<!-- APP -->
+<section class="app-section">
+    <div class="app-text">
+        <h2>Rendez vous dans notre app !</h2>
+        <p>
+            Oui, vous avez bien entendu, dès maintenant, le collect est toujours GRATUIT !<br/>
+            Faites vite vos courses en ligne et retirez-les sans frais dans un point collect près de chez vous.<br/>
+            Grâce à Delhaize collect, vous gérez votre temps et votre argent super facilement !
+        </p>
+        <a href="#" class="btn-cta">Installer</a>
+    </div>
+    <div class="app-visual">
+        <div class="phone-mock"></div>
+    </div>
+</section>

@@ -7,6 +7,7 @@ namespace ClickAndGoApp.Models
         private float price;
         private int categoryId;
         private string imagePath;
+        private string description;
 
         public int ProductId
         {
@@ -45,14 +46,21 @@ namespace ClickAndGoApp.Models
             get => imagePath;
             set => imagePath = value;
         }
+        
+        public string Description
+        {
+            get => description;
+            set => description = value;
+        }
 
         public Product(int productId, string name, float price,
-            int categoryId, string imagePath = null)
+            int categoryId, string description,string imagePath = null)
         {
             ProductId = productId;
             Name = name;
             Price = price;
             CategoryId = categoryId;
+            Description = description;
             ImagePath = imagePath;
         }
     }

@@ -1,4 +1,3 @@
-using ClickAndCollect.DAL;
 using ClickAndGoApp.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 //Session
-builder.Services.AddSession(options =>//Activate the session 
+builder.Services.AddSession(options =>//Activate the session
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;//Session cookie isn't accessible from js
@@ -21,6 +20,8 @@ builder.Services.AddScoped<OrderPickerDAL>();
 builder.Services.AddScoped<StoreDAL>();
 builder.Services.AddScoped<OrderDAL>();
 builder.Services.AddScoped<OrderLineDAL>();
+builder.Services.AddScoped<ProductDAL>();
+builder.Services.AddScoped<CategoryDAL>();
 
 var app = builder.Build();
 
@@ -40,9 +41,9 @@ app.UseRouting();
 app.UseAuthorization();
 app.UseSession();
 
-//Route by default is Login page
+//Route by default is home page
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Login}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

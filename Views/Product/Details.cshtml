@@ -1,0 +1,31 @@
+@model ClickAndGoApp.Models.ProductDetailViewModel
+@{
+    ViewData["Title"] = Model.Product.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="product-detail-page">
+
+    <a asp-controller="Product" asp-action="Browse" class="detail-back">← Retour aux produits</a>
+
+    <div class="product-detail-card">
+        <div class="product-detail-img">
+            @if (!string.IsNullOrEmpty(Model.Product.ImagePath))
+            {
+                <img src="~/images/@Model.Product.ImagePath" alt="@Model.Product.Name"/>
+            }
+            else
+            {
+                <span> pas de photo</span>
+            }
+        </div>
+
+        <div class="product-detail-info">
+            <div class="product-detail-category">@Model.CategoryName</div>
+            <h1 class="product-detail-name">@Model.Product.Name</h1>
+            <div class="product-detail-price">@Model.Product.Price.ToString("0.00") €</div>
+            <div class="product-detail-description">@Model.Product.Description.</div>
+        </div>
+    </div>
+
+</div>
