@@ -1,6 +1,4 @@
-namespace ClickAndGoApp.Models;
-
-public class TimeSlot
+namespace ClickAndGoApp.Models
 {
     private int timeSlotId;
     private DateTime startTime;
