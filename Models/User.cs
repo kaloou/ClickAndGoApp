@@ -46,6 +46,9 @@ public class User
                 throw new ArgumentException("Email is not valid");
             email = value;
         }
+
+        public static User GetByCredentials(string email, string password, UserDAL dal)
+            => dal.GetByCredentials(email, password);
     }
 
     public string Password

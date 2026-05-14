@@ -1,0 +1,75 @@
+@model List<ClickAndGoApp.Models.Order>
+@{
+    ViewData["Title"] = "Today's Orders";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Today's Orders</title>
+    <link rel="stylesheet" href="~/css/style.css"/>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <partial name="_Navbar" />
+
+    <div class="content">
+        <h2>Today's Pickup Orders</h2>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="success">@TempData["Success"]</div>
+        }
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="empty-message">@ViewBag.Message</div>
+        }
+        else
+        {
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer ID</th>
+                        <th>Pickup Time</th>
+                        <th>Status</th>
+                        <th>Boxes</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td>@order.CustomerId</td>
+                            <td>@order.PickupDate.ToString("HH:mm")</td>
+                            <td>
+                                <span class="badge badge-@order.Status.ToString().ToLower()">
+                                    @order.Status
+                                </span>
+                            </td>
+                            <td>@order.NumberOfBoxes</td>
+                            <td>
+                                <a asp-controller="Cashier" asp-action="SelectCommand"
+                                   asp-route-orderId="@order.OrderId"
+                                   class="btn-primary">
+                                    Select
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+</body>
+</html>
