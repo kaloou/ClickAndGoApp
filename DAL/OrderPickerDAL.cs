@@ -1,6 +1,5 @@
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
-using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.DAL;
 

@@ -47,8 +47,19 @@ public class User
             email = value;
         }
 
-        public static User GetByCredentials(string email, string password, UserDAL dal)
-            => dal.GetByCredentials(email, password);
+        public static async Task<User> GetByCredentialsAsync(string email, string password, UserDAL dal)
+            => await dal.GetByCredentialsAsync(email, password);
+
+        public override string ToString()
+            => $"[User] Id={UserId} | {FirstName} {LastName} | {Email} | Role={Role}";
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not User other) return false;
+            return UserId == other.UserId;
+        }
+
+        public override int GetHashCode() => UserId.GetHashCode();
     }
 
     public string Password
