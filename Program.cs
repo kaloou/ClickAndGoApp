@@ -1,27 +1,35 @@
 using ClickAndGoApp.DAL;
+using ClickAndGoApp.DAL.interfaces;
 
-var builder = WebApplication.CreateBuilder(args);
+vaqr builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddSessionStateTempDataProvider();
 
 //Session
-builder.Services.AddSession(options =>//Activate the session
+builder.Services.AddSession(options => //Activate the session
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;//Session cookie isn't accessible from js
-    options.Cookie.IsEssential = true;//Cookie works even if user refuses them
+    options.Cookie.HttpOnly = true; //Session cookie isn't accessible from js
+    options.Cookie.IsEssential = true; //Cookie works even if user refuses them
 });
 
-//DAL
-builder.Services.AddScoped<DBConnection>();//A new instance is created by HTTP resuest
-builder.Services.AddScoped<UserDAL>();
-builder.Services.AddScoped<OrderPickerDAL>();
-builder.Services.AddScoped<StoreDAL>();
-builder.Services.AddScoped<OrderDAL>();
-builder.Services.AddScoped<OrderLineDAL>();
-builder.Services.AddScoped<ProductDAL>();
-builder.Services.AddScoped<CategoryDAL>();
+//Infrastructure
+builder.Services.AddTransient<DBConnection>();
+
+builder.Services.AddTransient<IProductDAL,           ProductDAL>();
+builder.Services.AddTransient<ICategoryDAL,          CategoryDAL>();
+builder.Services.AddTransient<IStoreDAL,             StoreDAL>();
+builder.Services.AddTransient<IOrderDAL,             OrderDAL>();
+builder.Services.AddTransient<IOrderLineDAL,         OrderLineDAL>();
+builder.Services.AddTransient<ITimeSlotDAL,          TimeSlotDAL>();
+builder.Services.AddTransient<IRecipeDAL,            RecipeDAL>();
+builder.Services.AddTransient<IRecipeIngredientDAL,  RecipeIngredientDAL>();
+builder.Services.AddTransient<ICustomerDAL,          CustomerDAL>();
+builder.Services.AddTransient<IUserDAL,              UserDAL>();
+builder.Services.AddTransient<IOrderPickerDAL,       OrderPickerDAL>();
+builder.Services.AddTransient<ICashierDAL,           CashierDAL>();
 
 var app = builder.Build();
 
@@ -29,7 +37,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -41,7 +48,6 @@ app.UseRouting();
 app.UseAuthorization();
 app.UseSession();
 
-//Route by default is home page
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
