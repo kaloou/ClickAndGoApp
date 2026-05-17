@@ -77,9 +77,9 @@ public class OrderDAL : IOrderDAL
         using SqlConnection conn = db.GetConnexion();
         conn.Open();
 
-        const string query = @"INSERT INTO [Order] (customerId)
+        const string query = @"INSERT INTO [Order] (customerId, status)
                                OUTPUT INSERTED.orderId
-                               VALUES (@customerId)";
+                               VALUES (@customerId, 'InTheCart')";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@customerId", customerId);
@@ -157,9 +157,9 @@ public class OrderDAL : IOrderDAL
         using SqlConnection conn = db.GetConnexion();
         await conn.OpenAsync();
 
-        const string query = @"INSERT INTO [Order] (customerId)
+        const string query = @"INSERT INTO [Order] (customerId, status)
                                OUTPUT INSERTED.orderId
-                               VALUES (@customerId)";
+                               VALUES (@customerId, 'InTheCart')";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@customerId", customerId);

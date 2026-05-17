@@ -27,6 +27,7 @@ builder.Services.AddTransient<ITimeSlotDAL,          TimeSlotDAL>();
 builder.Services.AddTransient<IRecipeDAL,            RecipeDAL>();
 builder.Services.AddTransient<IRecipeIngredientDAL,  RecipeIngredientDAL>();
 builder.Services.AddTransient<ICustomerDAL,          CustomerDAL>();
+builder.Services.AddTransient<UserDAL>();
 builder.Services.AddTransient<IUserDAL,              UserDAL>();
 builder.Services.AddTransient<IOrderPickerDAL,       OrderPickerDAL>();
 builder.Services.AddTransient<ICashierDAL,           CashierDAL>();

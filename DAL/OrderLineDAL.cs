@@ -88,9 +88,39 @@ public class OrderLineDAL : IOrderLineDAL
         }
     }
 
-    Task IOrderLineDAL.AddProduct(int orderId, int productId, int quantity) => Task.CompletedTask;
+    async Task IOrderLineDAL.AddProduct(int orderId, int productId, int quantity)
+    {
+        using SqlConnection conn = db.GetConnexion();
+        await conn.OpenAsync();
+
+        const string query = @"
+            INSERT INTO OrderLine (orderId, productId, quantity)
+            VALUES (@orderId, @productId, @quantity)";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@orderId",   orderId);
+        cmd.Parameters.AddWithValue("@productId", productId);
+        cmd.Parameters.AddWithValue("@quantity",  quantity);
+        await cmd.ExecuteNonQueryAsync();
+    }
+
     Task IOrderLineDAL.Remove(int orderId, int productId) => Task.CompletedTask;
-    Task IOrderLineDAL.SetQuantity(int orderId, int productId, int quantity) => Task.CompletedTask;
+
+    async Task IOrderLineDAL.SetQuantity(int orderId, int productId, int quantity)
+    {
+        using SqlConnection conn = db.GetConnexion();
+        await conn.OpenAsync();
+
+        const string query = @"
+            UPDATE OrderLine SET quantity = @quantity
+            WHERE orderId = @orderId AND productId = @productId";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@orderId",   orderId);
+        cmd.Parameters.AddWithValue("@productId", productId);
+        cmd.Parameters.AddWithValue("@quantity",  quantity);
+        await cmd.ExecuteNonQueryAsync();
+    }
 
     private static OrderLine ReadOrderLine(SqlDataReader reader)
     {

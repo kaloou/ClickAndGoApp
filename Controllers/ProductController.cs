@@ -22,13 +22,14 @@ public class ProductController : Controller
     }
 
     // ====== Browse Products ======
-    // FilterPerCategory extends ici : même action, categoryId déclenche le filtre
+    // ===== FilterPerCategory ===== extend
     public async Task<IActionResult> BrowseProductsAsync(int? categoryId)
     {
         List<Product> products;
         List<Category> categories = new();
         try
         {
+            // On récupère les produits de base OU les produits filtrés par la catégorie choisie
             if (categoryId.HasValue)
                 products = await Category.GetByCategory(categoryId.Value, productDal);
             else
@@ -51,27 +52,20 @@ public class ProductController : Controller
 
         return View(vm);
     }
-
-    // ====== Select Product ======
-    public async Task<IActionResult> SelectProduct(int productId)
-    {
-        Product product = await Product.GetById(productId, productDal);
-        if (product == null) 
-            return RedirectToAction("BrowseProducts");
-        return View(product);
-    }
-
+    
     // ====== Add Product To Cart ======
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddProductToCart(int productId, int quantity = 1)
     {
+        // On vérifie si l'utilisateur est bien connecté
         int? userId = HttpContext.Session.GetInt32("userId");
-        if (userId == null) // On redirect au login si pas connecté maintenant plus d'offline Cart
+        if (userId is null) 
             return RedirectToAction("Login", "Auth");
 
+        // On récupère l'id de l'Order(Cart), si pas présent, on le crée au vol
         int? orderId = HttpContext.Session.GetInt32("orderId");
-        if (orderId == null)
+        if (orderId is null)
         {
             int newOrderId = await orderDal.CreateOrder(userId.Value);
             HttpContext.Session.SetInt32("orderId", newOrderId);
@@ -79,13 +73,14 @@ public class ProductController : Controller
         }
 
         Order order = await Order.GetById(orderId.Value, orderDal);
-        if (order == null)
+        if (order is null)
             return RedirectToAction("BrowseProducts");
 
         List<OrderLine> orderLines = await order.GetOrderLines(orderLineDal); // Panier
 
+        // Null si le produit n'est pas encore dans le panier, un OrderLine (produit) s'il est déja dedans
         OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
-        // Null si le produit n'est pas encore dans le panier, un OrderLine (produit) si il est déja dedans
+        
         if (existing == null)
             await order.AddProduct(productId, orderLineDal, quantity);
         else
@@ -93,5 +88,14 @@ public class ProductController : Controller
 
         TempData["Success"] = "Produit ajouté au panier";
         return RedirectToAction("SelectProduct", new { productId = productId });
+    }
+    
+    // ====== Select Product ======
+    public async Task<IActionResult> SelectProduct(int productId)
+    {
+        Product product = await Product.GetById(productId, productDal);
+        if (product == null) 
+            return RedirectToAction("BrowseProducts");
+        return View(product);
     }
 }

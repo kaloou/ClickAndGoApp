@@ -6,7 +6,7 @@ public class Customer : User
 {
     private int loyaltyPoints;
     private int phoneNumber;
-    private string address;
+    private string? address;
 
     public int LoyaltyPoints
     {
@@ -22,16 +22,14 @@ public class Customer : User
         set => phoneNumber = value;
     }
 
-    public string Address
+    public string? Address
     {
         get => address;
-        set => address = !string.IsNullOrWhiteSpace(value)
-            ? value
-            : throw new ArgumentException("Address cannot be empty");
+        set => address = value;
     }
 
     public Customer(int userId, string firstName, string lastName, string email, string password,
-                    int loyaltyPoints, int phoneNumber, string address)
+                    int loyaltyPoints, int phoneNumber, string? address)
         : base(userId, firstName, lastName, email, password)
     {
         LoyaltyPoints = loyaltyPoints;
@@ -46,6 +44,6 @@ public class Customer : User
     public static Task<bool> GetByEmail(string email, ICustomerDAL dal) =>
         dal.GetByEmail(email);
 
-    public static Task<Customer> CreateAccount(string name, string email, string password, ICustomerDAL dal) =>
-        dal.CreateAccount(name, email, password);
+    public static Task<Customer> CreateAccount(string firstName, string lastName, string email, string password, string? phoneNumber, string? address, ICustomerDAL dal) =>
+        dal.CreateAccount(firstName, lastName, email, password, phoneNumber, address);
 }
