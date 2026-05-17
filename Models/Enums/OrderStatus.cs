@@ -4,5 +4,6 @@ public enum OrderStatus
 {
     Pending,
     Ready,
-    Honnored
+    Honnored,
+    InTheCart
 }

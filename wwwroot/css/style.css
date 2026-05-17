@@ -890,3 +890,73 @@ a.product-card {
     font-weight: 800;
     color: var(--primary);
 }
+
+/* ============================================
+   NOTIF NOTIFICATIONS
+   ============================================ */
+.notif-wrapper {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notif {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    min-width: 260px;
+    max-width: 380px;
+    animation: notif-in 0.3s ease;
+}
+
+.notif-success {
+    background: #edfaf1;
+    color: #1a7f3c;
+    border-left: 4px solid #28a745;
+}
+
+.notif-error {
+    background: #fdf0f0;
+    color: #9b1c1c;
+    border-left: 4px solid #e53e3e;
+}
+
+.notif-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.notif-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: inherit;
+    opacity: 0.5;
+    padding: 0;
+    line-height: 1;
+}
+
+.notif-close:hover {
+    opacity: 1;
+}
+
+@keyframes notif-in {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes notif-out {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(40px); }
+}

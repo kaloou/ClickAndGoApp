@@ -1,0 +1,38 @@
+@model ClickAndGoApp.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="product-detail-page">
+
+    <a asp-action="BrowseProducts" class="detail-back">← Retour aux produits</a>
+
+    <div class="product-detail-card">
+        <div class="product-detail-img">
+            @if (Model.ImagePath != null)
+            {
+                <img src="@Model.ImagePath" alt="@Model.Name" />
+            }
+            else
+            {
+                <span>🛒</span>
+            }
+        </div>
+
+        <div class="product-detail-info">
+            <p class="product-detail-category">@Model.Category.Name</p>
+            <p class="product-detail-name">@Model.Name</p>
+            <p class="product-detail-price">@Model.Price.ToString("F2") €</p>
+            <p>@Model.Description</p>
+
+            @* AddProductToCart *@
+            <form asp-action="AddProductToCart" method="post" style="display:flex; align-items:center; gap:12px; margin-top:8px">
+                <input type="hidden" name="productId" value="@Model.ProductId" />
+                <input type="number" name="quantity" value="1" min="1"
+                       style="width:80px; padding:8px; border:1px solid #ddd; border-radius:8px; font-size:1rem" />
+                <button type="submit" class="btn-cta">Ajouter au panier</button>
+            </form>
+        </div>
+    </div>
+
+</div>

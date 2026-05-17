@@ -1,28 +1,25 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ClickAndGoApp.Models;
+using ClickAndGoApp.ViewModels;
 
 namespace ClickAndGoApp.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<HomeController> logger;
 
     public HomeController(ILogger<HomeController> logger)
     {
-        _logger = logger;
+        this.logger = logger;
     }
-
+    
     public IActionResult Index()
     {
+        TempData["Success"] = "Bienvenue sur notre site";
         return View();
     }
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
+    
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

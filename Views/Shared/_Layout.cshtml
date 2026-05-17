@@ -21,8 +21,8 @@
             <span class="nav-name">Click & Go</span>
         </a>
 
-        @* barre de recherche vers Product/Browse *@
-        <form method="get" asp-controller="Product" asp-action="Browse" class="nav-search">
+        @* barre de recherche vers Product/BrowseProducts *@
+        <form method="get" asp-controller="Product" asp-action="BrowseProducts" class="nav-search">
             <input type="text" name="q" placeholder="Cherchez des produits ou des recettes" class="nav-search-input" />
             <button type="submit" class="nav-search-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -66,9 +66,44 @@
     </main>
 </div>
 
+@* Notif notifications *@
+@{
+    var toastSuccess = TempData["Success"] as string;
+    var toastError   = TempData["Error"]   as string;
+}
+@if (toastSuccess != null || toastError != null)
+{
+    <div class="notif-wrapper">
+        @if (toastSuccess != null)
+        {
+            <div class="notif notif-success">
+                <span class="notif-icon">✓</span>
+                <span>@toastSuccess</span>
+                <button class="notif-close" onclick="this.parentElement.remove()">✕</button>
+            </div>
+        }
+        @if (toastError != null)
+        {
+            <div class="notif notif-error">
+                <span class="notif-icon">✕</span>
+                <span>@toastError</span>
+                <button class="notif-close" onclick="this.parentElement.remove()">✕</button>
+            </div>
+        }
+    </div>
+}
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    document.querySelectorAll('.notif').forEach(function(n) {
+        setTimeout(function() {
+            n.style.animation = 'notif-out 0.3s ease forwards';
+            setTimeout(function() { n.remove(); }, 300);
+        }, 4000);
+    });
+</script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

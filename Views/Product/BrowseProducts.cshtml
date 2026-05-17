@@ -1,0 +1,56 @@
+@model ClickAndGoApp.ViewModels.BrowseViewModel
+@{
+    ViewData["Title"] = "Produits";
+}
+
+<div class="browse-page">
+
+    <div class="browse-header">
+        <h1>Nos Produits</h1>
+        <p class="browse-subtitle">Retrouvez tous nos produits frais et locaux</p>
+    </div>
+
+    @* Filtre par catégorie — FilterPerCategory *@
+    <div class="category-filters">
+        <a asp-action="BrowseProducts"
+           class="filter-pill @(Model.SelectedCategoryId == null ? "active" : "")">
+            Tous
+        </a>
+        @foreach (var cat in Model.Categories)
+        {
+            <a asp-action="BrowseProducts" asp-route-categoryId="@cat.CategoryId"
+               class="filter-pill @(Model.SelectedCategoryId == cat.CategoryId ? "active" : "")">
+                @cat.Name
+            </a>
+        }
+    </div>
+
+    @* Grille de produits *@
+    <div class="products-grid">
+        @if (!Model.Products.Any())
+        {
+            <div class="no-results">Aucun produit dans cette catégorie.</div>
+        }
+        else
+        {
+            @foreach (var product in Model.Products)
+            {
+                <a asp-action="SelectProduct" asp-route-productId="@product.ProductId"
+                   class="product-card">
+                    <div class="product-img">
+                        @if (product.ImagePath != null)
+                        {
+                            <img src="@product.ImagePath" alt="@product.Name" />
+                        }
+                    </div>
+                    <div class="product-info">
+                        <p class="product-category">@product.Category.Name</p>
+                        <p class="product-name">@product.Name</p>
+                        <p class="product-price">@product.Price.ToString("F2") €</p>
+                    </div>
+                </a>
+            }
+        }
+    </div>
+
+</div>
