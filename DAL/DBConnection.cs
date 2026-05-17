@@ -1,5 +1,6 @@
-namespace ClickAndGoApp.DAL;
 using Microsoft.Data.SqlClient;
+
+namespace ClickAndGoApp.DAL;
 public class DBConnection
 {
     private readonly string connectionString;

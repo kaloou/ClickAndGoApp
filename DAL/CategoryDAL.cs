@@ -1,25 +1,48 @@
-namespace ClickAndGoApp.DAL;
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
+using ClickAndGoApp.DAL.interfaces;
 
-public class CategoryDAL
+namespace ClickAndGoApp.DAL;
+
+public class CategoryDAL : ICategoryDAL
 {
-    private readonly DBConnection _db;
+    private readonly DBConnection db;
 
-    public CategoryDAL(DBConnection db) => _db = db;
-
-    public List<Category> GetAll()
+    public CategoryDAL(DBConnection db)
     {
-        using SqlConnection conn = _db.GetConnexion();
-        conn.Open();
+        this.db = db;
+    }
 
-        string query = "SELECT categoryId, name FROM Category ORDER BY name";
-        using SqlCommand cmd = new SqlCommand(query, conn);
-        using SqlDataReader reader = cmd.ExecuteReader();
+    public async Task<List<Category>> GetAll()
+    {
+        List<Category> categories = new List<Category>();
 
-        List<Category> categories = new();
-        while (reader.Read())
-            categories.Add(new Category((int)reader["categoryId"], (string)reader["name"]));
+        try
+        {
+            using (SqlConnection conn = db.GetConnexion())
+            {
+                await conn.OpenAsync();
+
+                string query = "SELECT categoryId, name FROM Category ORDER BY name";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                            categories.Add(new Category((int)reader["categoryId"], (string)reader["name"]));
+                    }
+                }
+            }
+        }
+        catch (SqlException e)
+        {
+            throw new Exception($"SQL Error : {e.Message}");
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error : {e.Message}");
+        }
 
         return categories;
     }

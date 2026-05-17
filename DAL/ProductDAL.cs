@@ -1,79 +1,111 @@
-namespace ClickAndGoApp.DAL;
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
+using ClickAndGoApp.DAL.interfaces;
 
-public class ProductDAL
+namespace ClickAndGoApp.DAL;
+
+public class ProductDAL : IProductDAL
 {
-    private readonly DBConnection _db;
+    private readonly DBConnection db;
 
-    public ProductDAL(DBConnection db) => _db = db;
-
-    public List<Product> GetFiltered(string search, int? categoryId)
+    public ProductDAL(DBConnection db)
     {
-        using SqlConnection conn = _db.GetConnexion();
-        conn.Open();
+        this.db = db;
+    }
 
-        string query = "SELECT productId, name, price, categoryId, description, imagePath FROM Product WHERE 1=1";
+    public async Task<List<Product>> GetAll()
+    {
+        List<Product> products = new List<Product>();
 
-        if (!string.IsNullOrWhiteSpace(search))
-            query += " AND name LIKE @search";
-        if (categoryId.HasValue)
-            query += " AND categoryId = @categoryId";
+        using (SqlConnection conn = db.GetConnexion())
+        {
+            await conn.OpenAsync();
 
-        query += " ORDER BY name";
+            string query = @"
+                SELECT p.productId, p.name, p.price, p.description, p.imagePath,
+                       c.categoryId, c.name AS categoryName
+                FROM Product p
+                JOIN Category c ON p.categoryId = c.categoryId
+                ORDER BY p.name";
 
-        using SqlCommand cmd = new SqlCommand(query, conn);
-
-        if (!string.IsNullOrWhiteSpace(search))
-            cmd.Parameters.AddWithValue("@search", $"%{search}%");
-        if (categoryId.HasValue)
-            cmd.Parameters.AddWithValue("@categoryId", categoryId.Value);
-
-        using SqlDataReader reader = cmd.ExecuteReader();
-
-        List<Product> products = new();
-        while (reader.Read())
-            products.Add(new Product(
-                (int)reader["productId"],
-                (string)reader["name"],
-                (float)(decimal)reader["price"],
-                (int)reader["categoryId"],
-                reader["description"] == DBNull.Value ? null : (string)reader["description"],
-                reader["imagePath"] == DBNull.Value ? null : (string)reader["imagePath"]
-            ));
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                    products.Add(ReadProduct(reader));
+            }
+        }
 
         return products;
     }
 
-    public ProductDetailViewModel GetById(int productId)
+    public async Task<List<Product>> GetByCategory(int categoryId)
     {
-        using SqlConnection conn = _db.GetConnexion();
-        conn.Open();
+        List<Product> products = new List<Product>();
 
-        string query = @"
-            SELECT p.productId, p.name, p.price, p.categoryId, p.description, p.imagePath, c.name AS categoryName
-            FROM Product p
-            JOIN Category c ON p.categoryId = c.categoryId
-            WHERE p.productId = @productId";
-
-        using SqlCommand cmd = new SqlCommand(query, conn);
-        cmd.Parameters.AddWithValue("@productId", productId);
-
-        using SqlDataReader reader = cmd.ExecuteReader();
-
-        if (!reader.Read()) return null;
-
-        return new ProductDetailViewModel
+        using (SqlConnection conn = db.GetConnexion())
         {
-            Product = new Product(
-                (int)reader["productId"],
-                (string)reader["name"],
-                (float)(decimal)reader["price"],
-                (int)reader["categoryId"],
-                reader["description"] == DBNull.Value ? null : (string)reader["description"],
-                reader["imagePath"] == DBNull.Value ? null : (string)reader["imagePath"]
-            ),
-            CategoryName = (string)reader["categoryName"]
-        };
+            await conn.OpenAsync();
+
+            string query = @"
+                SELECT p.productId, p.name, p.price, p.description, p.imagePath,
+                       c.categoryId, c.name AS categoryName
+                FROM Product p
+                JOIN Category c ON p.categoryId = c.categoryId
+                WHERE p.categoryId = @categoryId
+                ORDER BY p.name";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    while (await reader.ReadAsync())
+                        products.Add(ReadProduct(reader));
+            }
+        }
+
+        return products;
+    }
+
+    public async Task<Product> GetById(int productId)
+    {
+        using (SqlConnection conn = db.GetConnexion())
+        {
+            await conn.OpenAsync();
+
+            string query = @"
+                SELECT p.productId, p.name, p.price, p.description, p.imagePath,
+                       c.categoryId, c.name AS categoryName
+                FROM Product p
+                JOIN Category c ON p.categoryId = c.categoryId
+                WHERE p.productId = @productId";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@productId", productId);
+                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                {
+                    if (!await reader.ReadAsync()) return null;
+                    return ReadProduct(reader);
+                }
+            }
+        }
+    }
+
+    private static Product ReadProduct(SqlDataReader reader)
+    {
+        var category = new Category(
+            (int)reader["categoryId"],
+            (string)reader["categoryName"]
+        );
+
+        return new Product(
+            (int)reader["productId"],
+            (string)reader["name"],
+            (float)(decimal)reader["price"],
+            category,
+            reader["description"] == DBNull.Value ? null : (string)reader["description"],
+            reader["imagePath"]   == DBNull.Value ? null : (string)reader["imagePath"]
+        );
     }
 }
