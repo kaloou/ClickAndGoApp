@@ -1,3 +1,5 @@
+using ClickAndGoApp.DAL.interfaces;
+
 namespace ClickAndGoApp.Models
 {
     public class User
@@ -97,5 +99,9 @@ namespace ClickAndGoApp.Models
         {
             Role = role;
         }
+        
+        //methodes
+        public static Task<User> GetByCredentials(string email, string password, IUserDAL dal) => //
+            dal.GetByCredentials(email, password);
     }
 }

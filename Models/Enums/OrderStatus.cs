@@ -3,6 +3,6 @@ namespace ClickAndGoApp.Models.Enums;
 public enum OrderStatus
 {
     Pending,
-    Ready, 
+    Ready,
     Honnored
 }
