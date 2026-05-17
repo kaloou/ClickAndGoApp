@@ -150,12 +150,5 @@ public class Order
 
     public Task AddProduct(int productId, IOrderLineDAL dal, int quantity = 1) => //
         dal.AddProduct(orderId, productId, quantity);
-
-    public Task SetQuantity(int productId, int quantity, IOrderLineDAL dal) => //
-        dal.SetQuantity(orderId, productId, quantity);
-
-    /* Depuis orderlines ou ici ???
-    public Task Remove(int productId, IOrderLineDAL dal) => //
-        dal.Remove(orderId, productId);
-    */
+    
 }

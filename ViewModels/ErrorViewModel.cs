@@ -1,4 +1,4 @@
-namespace ClickAndGoApp.Models;
+namespace ClickAndGoApp.ViewModels;
 
 public class ErrorViewModel
 {

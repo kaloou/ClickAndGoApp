@@ -105,10 +105,10 @@ CREATE TABLE [Order] (
     status        VARCHAR(20)    NOT NULL DEFAULT 'Pending',
     numberOfBoxes INT            NOT NULL DEFAULT 0,
     returnedBoxes INT            NOT NULL DEFAULT 0,
-    pickupDate    DATETIME       NOT NULL,
+    pickupDate    DATETIME       NULL,
     paymentStatus VARCHAR(20)    NOT NULL DEFAULT 'AwaitingPayment',
     customerId    INT            NOT NULL,
-    timeSlotId    INT            NOT NULL,
+    timeSlotId    INT            NULL,
     FOREIGN KEY (customerId)  REFERENCES Customer(userId),
     FOREIGN KEY (timeSlotId)  REFERENCES TimeSlot(timeSlotId)
 );
