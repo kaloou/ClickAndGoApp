@@ -47,7 +47,7 @@ public class User
             email = value;
         }
 
-        public static async Task<User> GetByCredentialsAsync(string email, string password, UserDAL dal)
+        public static async Task<User> GetByCredentialsAsync(string email, string password, IUserDAL dal)
             => await dal.GetByCredentialsAsync(email, password);
 
         public override string ToString()
