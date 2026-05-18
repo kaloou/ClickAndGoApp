@@ -203,7 +203,7 @@ INSERT INTO [Order] (orderDate, status, numberOfBoxes, returnedBoxes, pickupDate
     (GETDATE(), 'Ready',   0, 0, DATEADD(hour, 11, @tomorrow), 'AwaitingPayment', 5, 3),
     (GETDATE(), 'Pending', 0, 0, DATEADD(hour, 14, @tomorrow), 'AwaitingPayment', 3, 4),
     (GETDATE(), 'Ready',   0, 0, DATEADD(hour, 15, @tomorrow), 'AwaitingPayment', 4, 5),
-    (GETDATE(), 'Pending', 0, 0, DATEADD(hour,  9, @tomorrow), 'AwaitingPayment', 5, 1);
+    (GETDATE(), 'Pending', 0, 0, DATEADD(hour,  18, @tomorrow), 'AwaitingPayment', 5, 1);
 
 INSERT INTO OrderLine (orderId, productId, quantity) VALUES
     (1, 1, 3), (1, 3, 2),

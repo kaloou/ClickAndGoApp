@@ -1,25 +1,28 @@
-using ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.Models;
 
-namespace ClickAndGoApp.Models
+public abstract class Employee : User
 {
-    public class Employee : User
+    private int storeId;
+    private Store store;
+
+    public int StoreId
     {
-        private Store store;
+        get => storeId;
+        set => storeId = value > 0
+            ? value
+            : throw new ArgumentException("StoreId must be positive");
+    }
 
-        public Store Store
-        {
-            get => store;
-            set => store = value;
-        }
+    public Store Store
+    {
+        get => store;
+        set => store = value ?? throw new ArgumentNullException("Store cannot be null");
+    }
 
-        public Employee(int userId, string firstName, string lastName,
-            string email, string password, Store store)
-            : base(userId, firstName, lastName, email, password)
-        {
-            Store = store;
-        }
-
-        //methodes
-        //public Store GetStore() => store; //
+    public Employee(int userId, string firstName, string lastName,
+        string email, string password, int storeId)
+        : base(userId, firstName, lastName, email, password)
+    {
+        StoreId = storeId;
     }
 }

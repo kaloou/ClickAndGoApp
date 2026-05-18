@@ -214,8 +214,51 @@ public class OrderDAL : IOrderDAL
 
     Task<List<Order>> IOrderDAL.GetOrdersByCustomer(int customerId) => Task.FromResult<List<Order>>(null);
     Task<List<Order>> IOrderDAL.GetOrdersToPrepare(int storeId) => Task.FromResult<List<Order>>(null);
-    Task<List<Order>> IOrderDAL.GetTodayOrders(int storeId) => Task.FromResult<List<Order>>(null);
+
+    async Task<List<Order>> IOrderDAL.GetTodayOrders(int storeId)
+    {
+        using SqlConnection conn = db.GetConnexion();
+        await conn.OpenAsync();
+
+        string query = BaseQuery + @"
+            WHERE ts.storeId = @storeId
+              AND CAST(o.pickupDate AS DATE) = CAST(GETDATE() AS DATE)
+              AND o.status != 'Honored'";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@storeId", storeId);
+
+        using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+        var orders = new List<Order>();
+        while (await reader.ReadAsync()) orders.Add(ReadOrder(reader));
+        return orders;
+    }
+
     Task IOrderDAL.SetTimeSlot(int orderId, int timeSlotId) => Task.CompletedTask;
-    Task IOrderDAL.SetStatus(int orderId, OrderStatus status) => Task.CompletedTask;
-    Task IOrderDAL.SetReturnedBoxes(int orderId, int returnedBoxes) => Task.CompletedTask;
+
+    async Task IOrderDAL.SetStatus(int orderId, OrderStatus status)
+    {
+        using SqlConnection conn = db.GetConnexion();
+        await conn.OpenAsync();
+
+        string query = "UPDATE [Order] SET status = @status WHERE orderId = @orderId";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@orderId", orderId);
+        cmd.Parameters.AddWithValue("@status", status.ToString());
+        await cmd.ExecuteNonQueryAsync();
+    }
+
+    async Task IOrderDAL.SetReturnedBoxes(int orderId, int returnedBoxes)
+    {
+        using SqlConnection conn = db.GetConnexion();
+        await conn.OpenAsync();
+
+        string query = "UPDATE [Order] SET returnedBoxes = @returnedBoxes WHERE orderId = @orderId";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@orderId", orderId);
+        cmd.Parameters.AddWithValue("@returnedBoxes", returnedBoxes);
+        await cmd.ExecuteNonQueryAsync();
+    }
 }

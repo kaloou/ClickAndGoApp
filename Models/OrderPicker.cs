@@ -1,18 +1,21 @@
 using ClickAndGoApp.DAL.interfaces;
 
-namespace ClickAndGoApp.Models
+namespace ClickAndGoApp.Models;
+
+public class OrderPicker : Employee
 {
-    public class OrderPicker : Employee
+    public OrderPicker(int userId, string firstName, string lastName,
+        string email, string password, int storeId)
+        : base(userId, firstName, lastName, email, password, storeId)
     {
-        public OrderPicker(int userId, string firstName, string lastName,
-            string email, string password, Store store)
-            : base(userId, firstName, lastName, email, password, store)
-        {
-        }
-
-        //methodes
-
-        public static Task<OrderPicker> GetById(int pickerId, IOrderPickerDAL dal) => //
-            dal.GetById(pickerId);
     }
+
+    public static async Task<OrderPicker> GetByIdAsync(int pickerId, IOrderPickerDAL dal) =>
+        await dal.GetById(pickerId);
+
+    public async Task<Store> GetStoreAsync(IStoreDAL dal) =>
+        await Store.GetStoreAsync(StoreId, dal);
+
+    public override string ToString() =>
+        $"[OrderPicker] Id={UserId} | {FirstName} {LastName} | Store={StoreId}";
 }

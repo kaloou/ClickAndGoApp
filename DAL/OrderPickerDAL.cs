@@ -29,14 +29,16 @@ namespace ClickAndGoApp.DAL
                 (string)reader["storeAddress"]
             );
 
-            return new OrderPicker(
+            var picker = new OrderPicker(
                 (int)reader["userId"],
                 (string)reader["firstName"],
                 (string)reader["lastName"],
                 (string)reader["email"],
                 (string)reader["password"],
-                store
+                store.StoreId
             );
+            picker.Store = store;
+            return picker;
         }
         
         // mieux d'utiliser IOrderPickerDal

@@ -1,18 +1,21 @@
 using ClickAndGoApp.DAL.interfaces;
 
-namespace ClickAndGoApp.Models
+namespace ClickAndGoApp.Models;
+
+public class Cashier : Employee
 {
-    public class Cashier : Employee
+    public Cashier(int userId, string firstName, string lastName,
+        string email, string password, int storeId)
+        : base(userId, firstName, lastName, email, password, storeId)
     {
-        public Cashier(int userId, string firstName, string lastName,
-            string email, string password, Store store)
-            : base(userId, firstName, lastName, email, password, store)
-        {
-        }
-
-        //methodes
-
-        public static Task<Cashier> GetById(int cashierId, ICashierDAL dal) => //
-            dal.GetById(cashierId);
     }
+
+    public static async Task<Cashier> GetByIdAsync(int cashierId, ICashierDAL dal) =>
+        await dal.GetById(cashierId);
+
+    public async Task<Store> GetStoreAsync(IStoreDAL dal) =>
+        await Store.GetStoreAsync(StoreId, dal);
+
+    public override string ToString() =>
+        $"[Cashier] Id={UserId} | {FirstName} {LastName} | Store={StoreId}";
 }

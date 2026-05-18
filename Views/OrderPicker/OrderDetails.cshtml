@@ -1,7 +1,7 @@
-@model List<ClickAndGoApp.Models.OrderLine>
+@model ClickAndGoApp.ViewModels.OrderDetailsViewModel
 @{
     ViewData["Title"] = "Order Details";
-    var order = ViewBag.Order as Order;
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -16,43 +16,32 @@
 
 <div class="dashboard">
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <h1>Click & Collect</h1>
-        <div class="navbar-right">
-            <span>Welcome, @Context.Session.GetString("firstName")</span>
-            <a href="/Auth/Logout">Logout</a>
-        </div>
-    </nav>
+    <partial name="_Navbar" />
 
-    <!-- CONTENT -->
     <div class="content">
 
-        <!-- Back button -->
-        <a href="/OrderPicker/Index" class="btn-back">← Back to Orders</a>
+        <a asp-controller="OrderPicker" asp-action="Index" class="btn-back">← Back to Orders</a>
 
-        <!-- Order info -->
         <div class="order-info-card">
-            <h2>Order #@order.OrderId</h2>
+            <h2>Order #@Model.Order.OrderId</h2>
             <div class="order-info-grid">
                 <div>
                     <span class="label">Pickup Date</span>
-                    <span>@order.PickupDate.ToString("dd/MM/yyyy HH:mm")</span>
+                    <span>@Model.Order.PickupDate.ToString("dd/MM/yyyy HH:mm")</span>
                 </div>
                 <div>
                     <span class="label">Status</span>
-                    <span class="badge badge-@order.Status.ToString().ToLower()">
-                        @order.Status
+                    <span class="badge badge-@Model.Order.Status.ToString().ToLower()">
+                        @Model.Order.Status
                     </span>
                 </div>
                 <div>
                     <span class="label">Number of Boxes</span>
-                    <span>@order.NumberOfBoxes</span>
+                    <span>@Model.Order.NumberOfBoxes</span>
                 </div>
             </div>
         </div>
 
-        <!-- Products list -->
         <h3>Products</h3>
         <table class="orders-table">
             <thead>
@@ -64,23 +53,24 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var line in Model)
+                @for (int i = 0; i < Model.OrderLines.Count; i++)
                 {
+                    var line = Model.OrderLines[i];
+                    var product = Model.Products[i];
                     <tr>
-                        <td>@line.Product.Name</td>
-                        <td>@line.Product.Price.ToString("0.00") €</td>
+                        <td>@product.Name</td>
+                        <td>@product.Price.ToString("0.00") €</td>
                         <td>@line.Quantity</td>
-                        <td>@((line.Product.Price * line.Quantity).ToString("0.00")) €</td>
+                        <td>@((product.Price * line.Quantity).ToString("0.00")) €</td>
                     </tr>
                 }
             </tbody>
         </table>
 
-        <!-- Encode boxes form -->
         <div class="encode-boxes-card">
             <h3>Encode Number of Boxes Used</h3>
-            <form method="post" action="/OrderPicker/EncodeBoxes">
-                <input type="hidden" name="orderId" value="@order.OrderId"/>
+            <form method="post" asp-controller="OrderPicker" asp-action="EncodeBoxes">
+                <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
                 <div class="form-group">
                     <label for="numberOfBoxes">Number of boxes</label>
                     <input type="number" id="numberOfBoxes" name="numberOfBoxes"

@@ -7,8 +7,9 @@ public class Store
     private int storeId;
     private string name;
     private string address;
-    private List<Order> orders;
-    private List<TimeSlot> timeSlots;
+    private List<Order> orders = new List<Order>();
+    private Dictionary<int, Employee> employees = new Dictionary<int, Employee>();
+    private SortedList<DateTime, TimeSlot> timeSlots = new SortedList<DateTime, TimeSlot>();
 
     public int StoreId
     {
@@ -40,10 +41,16 @@ public class Store
         set => orders = value;
     }
 
-    public List<TimeSlot> TimeSlots
+    public Dictionary<int, Employee> Employees
+    {
+        get => employees;
+        set => employees = value ?? throw new ArgumentNullException("Employees cannot be null");
+    }
+
+    public SortedList<DateTime, TimeSlot> TimeSlots
     {
         get => timeSlots;
-        set => timeSlots = value;
+        set => timeSlots = value ?? throw new ArgumentNullException("TimeSlots cannot be null");
     }
 
     public Store(int storeId, string name, string address)
@@ -53,16 +60,32 @@ public class Store
         Address = address;
     }
 
-    //methodes
-    public static async Task<List<Store>> GetAllStoresAsync(IStoreDAL dal) => //
+    public static async Task<Store> GetStoreAsync(int storeId, IStoreDAL dal) =>
+        await dal.GetStore(storeId);
+
+    public static async Task<List<Store>> GetAllStoresAsync(IStoreDAL dal) =>
         await dal.GetAllStores();
 
-    public async Task<List<Order>> GetOrdersByStoreAsync(DateOnly date, IOrderDAL dal) => //
+    public async Task<List<Order>> GetOrdersByStoreAsync(IOrderDAL dal) =>
         await dal.GetOrdersByStore(storeId);
 
-    public async Task<List<Order>> GetTodayOrdersAsync(IOrderDAL dal) => //
+    public async Task<List<Order>> GetTodaysOrdersAsync(IOrderDAL dal) =>
         await dal.GetTodayOrders(storeId);
 
-    public async Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(IStoreDAL dal) => //
+    public async Task<List<Order>> GetTodayOrdersAsync(IOrderDAL dal) =>
+        await dal.GetTodayOrders(storeId);
+
+    public async Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(IStoreDAL dal) =>
         await dal.GetAvailableTimeSlots(storeId);
+
+    public override string ToString() =>
+        $"[Store] Id={StoreId} | {Name} | {Address}";
+
+    public override bool Equals(object obj)
+    {
+        if (obj is not Store other) return false;
+        return StoreId == other.StoreId;
+    }
+
+    public override int GetHashCode() => StoreId.GetHashCode();
 }

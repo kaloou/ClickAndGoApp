@@ -36,6 +36,8 @@ public class Product
             : throw new ArgumentException("Price cannot be negative");
     }
 
+    public int CategoryId => category.CategoryId;
+
     public Category Category
     {
         get => category;
@@ -76,4 +78,15 @@ public class Product
 
     public static async Task<Product> GetByIdAsync(int productId, IProductDAL dal) =>
         await dal.GetById(productId);
+
+    public override string ToString() =>
+        $"[Product] Id={ProductId} | {Name} | {Price:0.00}€ | CategoryId={CategoryId}";
+
+    public override bool Equals(object obj)
+    {
+        if (obj is not Product other) return false;
+        return ProductId == other.ProductId;
+    }
+
+    public override int GetHashCode() => ProductId.GetHashCode();
 }

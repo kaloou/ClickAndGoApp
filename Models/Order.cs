@@ -12,14 +12,13 @@ public class Order
     private int returnedBoxes;
     private DateTime pickupDate;    // DateTime.MinValue pour les orders cart
     private PaymentStatus paymentStatus;
-    private Customer customer;
-    private TimeSlot? timeSlot;     // null pour les orders cart (pas encore de créneau)
-    private Store? store;           // null pour les orders cart (pas de store lié)
-    private List<OrderLine> orderLines;
-
-    public int CustomerId => customer.UserId;
+    private int customerId;
     private int timeSlotId;
     private bool isSelected;
+    private Customer? customer;     // null si constructeur int-IDs
+    private TimeSlot? timeSlot;     // null pour les orders cart
+    private Store? store;           // null pour les orders cart
+    private List<OrderLine> orderLines = new List<OrderLine>();
 
     public const float SERVICE_FEE = 5.95f;
     public const float BOX_DEPOSIT = 5.95f;
@@ -74,7 +73,23 @@ public class Order
         set => paymentStatus = value;
     }
 
-    public Customer Customer
+    public int CustomerId
+    {
+        get => customer != null ? customer.UserId : customerId;
+        set => customerId = value > 0
+            ? value
+            : throw new ArgumentException("CustomerId must be positive");
+    }
+
+    public int TimeSlotId
+    {
+        get => timeSlotId;
+        set => timeSlotId = value > 0
+            ? value
+            : throw new ArgumentException("TimeSlotId must be positive");
+    }
+
+    public Customer? Customer
     {
         get => customer;
         set => customer = value ?? throw new ArgumentNullException("Customer cannot be null");
@@ -98,6 +113,9 @@ public class Order
         set => orderLines = value;
     }
 
+    public bool IsSelected => isSelected;
+
+    // Constructeur kalou : navigation objects (utilisé par OrderDAL)
     public Order(int orderId, DateTime orderDate, OrderStatus status,
                  int numberOfBoxes, int returnedBoxes, DateTime pickupDate,
                  PaymentStatus paymentStatus, Customer customer, TimeSlot? timeSlot, Store? store)
@@ -112,25 +130,64 @@ public class Order
         Customer      = customer;
         TimeSlot      = timeSlot;
         Store         = store;
+        customerId    = customer.UserId;
+    }
+
+    // Constructeur bywaa : int IDs (utilisé par les DAL de l'équipier)
+    public Order(int orderId, DateTime orderDate, OrderStatus status,
+                 int numberOfBoxes, int returnedBoxes, DateTime pickupDate,
+                 PaymentStatus paymentStatus, int customerId, int timeSlotId)
+    {
+        OrderId       = orderId;
+        OrderDate     = orderDate;
+        Status        = status;
+        NumberOfBoxes = numberOfBoxes;
+        ReturnedBoxes = returnedBoxes;
+        PickupDate    = pickupDate;
+        PaymentStatus = paymentStatus;
+        CustomerId    = customerId;
+        TimeSlotId    = timeSlotId;
     }
 
     // ==================== STATIC ====================
 
-    public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal) => //
+    public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal) =>
         await dal.GetById(orderId);
+
+    public static async Task<List<Order>> GetOrdersByStoreAsync(int storeId, IOrderDAL dal) =>
+        await dal.GetOrdersByStore(storeId);
+
+    public static async Task<List<Order>> GetTodaysOrdersAsync(int storeId, IOrderDAL dal) =>
+        await dal.GetTodayOrders(storeId);
 
     // ==================== INSTANCE ====================
 
-    public float ComputeTotal(float productsTotal) //
+    public float ComputeTotal(float productsTotal) =>
+        productsTotal + SERVICE_FEE + (NumberOfBoxes * BOX_DEPOSIT) - (ReturnedBoxes * BOX_DEPOSIT);
+
+    public async Task<float> ComputeTotalAsync(IOrderLineDAL dal)
     {
-        productsTotal += SERVICE_FEE + (NumberOfBoxes * BOX_DEPOSIT) - (ReturnedBoxes * BOX_DEPOSIT);
-        return productsTotal;
+        List<OrderLine> lines = await dal.GetOrderLines(orderId);
+        float productsTotal = lines.Sum(ol => ol.Product.Price * ol.Quantity);
+        return ComputeTotal(productsTotal);
     }
 
-    public async Task SetTimeSlotAsync(int timeSlotId, IOrderDAL dal) => //
+    public Order GetSelected(bool selected)
+    {
+        isSelected = selected;
+        return this;
+    }
+
+    public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal) =>
+        await dal.GetOrderLines(orderId);
+
+    public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1) =>
+        await dal.AddProduct(orderId, productId, quantity);
+
+    public async Task SetTimeSlotAsync(int timeSlotId, IOrderDAL dal) =>
         await dal.SetTimeSlot(orderId, timeSlotId);
 
-    public void SetStore(int storeId) //
+    public void SetStore(int storeId)
     {
         if (store == null)
             store = new Store(storeId, "-", "-");
@@ -138,18 +195,23 @@ public class Order
             store.StoreId = storeId;
     }
 
-    public async Task SetStatusAsync(OrderStatus status, IOrderDAL dal) => //
+    public async Task SetStatusAsync(OrderStatus status, IOrderDAL dal) =>
         await dal.SetStatus(orderId, status);
 
-    public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) => //
+    public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) =>
         await dal.SetNumberOfBoxes(orderId, numberOfBoxes);
 
-    public async Task SetReturnedBoxesAsync(int returnedBoxes, IOrderDAL dal) => //
+    public async Task SetReturnedBoxesAsync(int returnedBoxes, IOrderDAL dal) =>
         await dal.SetReturnedBoxes(orderId, returnedBoxes);
 
-    public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal) => //
-        await dal.GetOrderLines(orderId);
+    public override string ToString() =>
+        $"[Order] Id={OrderId} | Status={Status} | PickupDate={PickupDate:dd/MM/yyyy HH:mm} | CustomerId={CustomerId}";
 
-    public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1) => //
-        await dal.AddProduct(orderId, productId, quantity);
+    public override bool Equals(object obj)
+    {
+        if (obj is not Order other) return false;
+        return OrderId == other.OrderId;
+    }
+
+    public override int GetHashCode() => OrderId.GetHashCode();
 }

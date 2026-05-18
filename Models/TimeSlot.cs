@@ -5,6 +5,7 @@ public class TimeSlot
     private int timeSlotId;
     private DateTime startTime;
     private DateTime endTime;
+    private Queue<Order> orders = new Queue<Order>();
 
     public int TimeSlotId
     {
@@ -25,9 +26,19 @@ public class TimeSlot
     public DateTime EndTime
     {
         get => endTime;
-        set => endTime = value != default
-            ? value
-            : throw new ArgumentException("EndTime is not valid");
+        set
+        {
+            if (value != default && value > startTime)
+                endTime = value;
+            else
+                throw new ArgumentException("EndTime must be after StartTime");
+        }
+    }
+
+    public Queue<Order> Orders
+    {
+        get => orders;
+        set => orders = value ?? throw new ArgumentNullException("Orders cannot be null");
     }
 
     public TimeSlot(int timeSlotId, DateTime startTime, DateTime endTime)
@@ -35,5 +46,12 @@ public class TimeSlot
         TimeSlotId = timeSlotId;
         StartTime  = startTime;
         EndTime    = endTime;
+    }
+
+    public void AddOrder(Order order)
+    {
+        if (orders.Count >= 10)
+            throw new InvalidOperationException("A time slot cannot have more than 10 orders");
+        orders.Enqueue(order);
     }
 }
