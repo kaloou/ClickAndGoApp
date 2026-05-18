@@ -67,8 +67,8 @@ public class OrderLine
         await dal.SetQuantityAsync(orderId, product.ProductId, quantity);
 
     //==============================
-    public override string ToString() =>
-        $"[OrderLine] OrderId={OrderId} | Product={Product?.Name} | Qty={Quantity}";
+    public override string ToString() 
+        => $"[OrderLine] OrderId={OrderId} | Product={Product?.Name} | Qty={Quantity}";
 
     public override bool Equals(object obj)
     {

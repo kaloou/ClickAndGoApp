@@ -16,7 +16,6 @@ public class AuthController : Controller
         this.customerDal = customerDal;
     }
     
-    
     // ====== Login page ======
     [HttpGet]
     public IActionResult Login()

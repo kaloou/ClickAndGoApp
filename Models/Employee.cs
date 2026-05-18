@@ -29,8 +29,8 @@ public abstract class Employee : User
     }
 
     //==============================
-    public virtual async Task<Store> GetStoreAsync(IStoreDAL dal) =>
-        await Store.GetStoreAsync(StoreId, dal);
+    public virtual async Task<Store> GetStoreAsync(IStoreDAL dal)
+        => await Store.GetStoreAsync(StoreId, dal);
     
     //==============================
     
