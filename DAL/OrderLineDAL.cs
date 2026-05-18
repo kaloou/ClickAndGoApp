@@ -104,7 +104,20 @@ public class OrderLineDAL : IOrderLineDAL
         await cmd.ExecuteNonQueryAsync();
     }
 
-    Task IOrderLineDAL.Remove(int orderId, int productId) => Task.CompletedTask;
+    async Task IOrderLineDAL.Remove(int orderId, int productId)
+    {
+        using SqlConnection conn = db.GetConnexion();
+        await conn.OpenAsync();
+
+        const string query = @"
+            DELETE FROM OrderLine
+            WHERE orderId = @orderId AND productId = @productId";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@orderId",   orderId);
+        cmd.Parameters.AddWithValue("@productId", productId);
+        await cmd.ExecuteNonQueryAsync();
+    }
 
     async Task IOrderLineDAL.SetQuantity(int orderId, int productId, int quantity)
     {

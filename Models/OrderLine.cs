@@ -41,10 +41,10 @@ namespace ClickAndGoApp.Models
 
         public Product GetProduct() => product;   //
 
-        public Task Remove(int productId, IOrderLineDAL dal) => //
-            dal.Remove(orderId, productId);
+        public Task Remove(IOrderLineDAL dal) => //
+            dal.Remove(orderId, product.ProductId);
 
-        public Task SetQuantity(int productId, int quantity, IOrderLineDAL dal) => //
-            dal.SetQuantity(orderId, productId, quantity);
+        public Task SetQuantity(int quantity, IOrderLineDAL dal) => //
+            dal.SetQuantity(orderId, product.ProductId, quantity);
     }
 }

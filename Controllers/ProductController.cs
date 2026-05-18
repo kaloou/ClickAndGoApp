@@ -84,7 +84,7 @@ public class ProductController : Controller
         if (existing == null)
             await order.AddProduct(productId, orderLineDal, quantity);
         else
-            await existing.SetQuantity(productId, existing.Quantity + quantity, orderLineDal);
+            await existing.SetQuantity(existing.Quantity + quantity, orderLineDal);
 
         TempData["Success"] = "Produit ajouté au panier";
         return RedirectToAction("SelectProduct", new { productId = productId });

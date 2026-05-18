@@ -10,11 +10,11 @@ public class Order
     private OrderStatus status;
     private int numberOfBoxes;
     private int returnedBoxes;
-    private DateTime pickupDate;    // DateTime.MinValue pour les orders draft
+    private DateTime pickupDate;    // DateTime.MinValue pour les orders cart
     private PaymentStatus paymentStatus;
     private Customer customer;
-    private TimeSlot? timeSlot;     // null pour les orders draft (pas encore de créneau)
-    private Store? store;           // null pour les orders draft (dérivé du timeSlot)
+    private TimeSlot? timeSlot;     // null pour les orders cart (pas encore de créneau)
+    private Store? store;           // null pour les orders cart (pas de store lié)
     private List<OrderLine> orderLines;
 
     public const float SERVICE_FEE = 5.95f;
@@ -58,7 +58,7 @@ public class Order
             : throw new ArgumentException("ReturnedBoxes cannot be negative");
     }
 
-    public DateTime PickupDate  // reste DateTime (pas DateTime?) pour ne pas casser les vues de l'équipier
+    public DateTime PickupDate
     {
         get => pickupDate;
         set => pickupDate = value;
