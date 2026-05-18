@@ -1,4 +1,4 @@
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.Models;
 
@@ -36,14 +36,10 @@ public class Customer : User
         PhoneNumber   = phoneNumber;
         Address       = address;
     }
-    
-    //=========================
-    // METHODES
-    //=========================
-    //metrre en async
+
     public static async Task<Customer> CreateAccountAsync(string firstName, string lastName, string email, string password, string? phoneNumber, string? address, ICustomerDAL dal) =>
-        await dal.CreateAccount(firstName, lastName, email, password, phoneNumber, address);
+        await dal.CreateAccountAsync(firstName, lastName, email, password, phoneNumber, address);
 
     public static async Task<bool> GetByEmailAsync(string email, ICustomerDAL dal) =>
-        await dal.GetByEmail(email);
+        await dal.GetByEmailAsync(email);
 }

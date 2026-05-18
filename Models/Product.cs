@@ -1,4 +1,4 @@
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.Models;
 
@@ -74,10 +74,10 @@ public class Product
     }
 
     public static async Task<List<Product>> GetAllAsync(IProductDAL dal) =>
-        await dal.GetAll();
+        await dal.GetAllAsync();
 
     public static async Task<Product> GetByIdAsync(int productId, IProductDAL dal) =>
-        await dal.GetById(productId);
+        await dal.GetByIdAsync(productId);
 
     public override string ToString() =>
         $"[Product] Id={ProductId} | {Name} | {Price:0.00}€ | CategoryId={CategoryId}";

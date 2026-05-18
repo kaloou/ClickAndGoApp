@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
-using ClickAndGoApp.DAL.interfaces;
+// namespace via ClickAndGoApp.DAL
 
 namespace ClickAndGoApp.DAL;
 
@@ -13,7 +13,7 @@ public class ProductDAL : IProductDAL
         this.db = db;
     }
 
-    public async Task<List<Product>> GetAll()
+    public async Task<List<Product>> GetAllAsync()
     {
         List<Product> products = new List<Product>();
 
@@ -39,7 +39,7 @@ public class ProductDAL : IProductDAL
         return products;
     }
 
-    public async Task<List<Product>> GetByCategory(int categoryId)
+    public async Task<List<Product>> GetByCategoryAsync(int categoryId)
     {
         List<Product> products = new List<Product>();
 
@@ -67,7 +67,7 @@ public class ProductDAL : IProductDAL
         return products;
     }
 
-    public async Task<Product> GetById(int productId)
+    public async Task<Product> GetByIdAsync(int productId)
     {
         using (SqlConnection conn = db.GetConnexion())
         {

@@ -1,11 +1,12 @@
 using ClickAndGoApp.Models;
 
-namespace ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.DAL;
 
 public interface IOrderLineDAL
 {
-    Task<List<OrderLine>> GetOrderLines(int orderId);
-    Task AddProduct(int orderId, int productId, int quantity);
-    Task Remove(int orderId, int productId);
-    Task SetQuantity(int orderId, int productId, int quantity);
+    Task<float> GetProductsTotalAsync(int orderId);
+    Task<List<OrderLine>> GetOrderLinesAsync(int orderId);
+    Task AddProductAsync(int orderId, int productId, int quantity);
+    Task RemoveAsync(int orderId, int productId);
+    Task SetQuantityAsync(int orderId, int productId, int quantity);
 }

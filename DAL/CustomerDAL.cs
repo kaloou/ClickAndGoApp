@@ -1,5 +1,5 @@
 using Microsoft.Data.SqlClient;
-using ClickAndGoApp.DAL.interfaces;
+// namespace via ClickAndGoApp.DAL
 using ClickAndGoApp.Models;
 
 namespace ClickAndGoApp.DAL;
@@ -13,7 +13,7 @@ public class CustomerDAL : ICustomerDAL
         this.db = db;
     }
 
-    public async Task<bool> GetByEmail(string email)
+    public async Task<bool> GetByEmailAsync(string email)
     {
         using SqlConnection conn = db.GetConnexion();
         await conn.OpenAsync();
@@ -25,7 +25,7 @@ public class CustomerDAL : ICustomerDAL
         return (int)await cmd.ExecuteScalarAsync() > 0;
     }
 
-    public async Task<Customer> CreateAccount(string firstName, string lastName, string email, string password, string? phoneNumber, string? address)
+    public async Task<Customer> CreateAccountAsync(string firstName, string lastName, string email, string password, string? phoneNumber, string? address)
     {
         using SqlConnection conn = db.GetConnexion();
         await conn.OpenAsync();

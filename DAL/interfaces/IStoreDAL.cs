@@ -1,10 +1,10 @@
 using ClickAndGoApp.Models;
 
-namespace ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.DAL;
 
 public interface IStoreDAL
 {
-    Task<Store> GetStore(int storeId);
-    Task<List<Store>> GetAllStores();
-    Task<List<TimeSlot>> GetAvailableTimeSlots(int storeId);
+    Task<Store> GetStoreAsync(int storeId);
+    Task<List<Store>> GetAllStoresAsync();
+    Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(int storeId);
 }

@@ -1,8 +1,8 @@
 using ClickAndGoApp.Models;
 
-namespace ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.DAL;
 
 public interface IRecipeIngredientDAL
 {
-    Task<List<RecipeIngredient>> GetByRecipe(int recipeId);
+    Task<List<RecipeIngredient>> GetByRecipeAsync(int recipeId);
 }

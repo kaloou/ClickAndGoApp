@@ -1,8 +1,8 @@
 using ClickAndGoApp.Models;
 
-namespace ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.DAL;
 
 public interface ICategoryDAL
 {
-    public Task<List<Category>> GetAll();
+    Task<List<Category>> GetAllAsync();
 }

@@ -1,4 +1,4 @@
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.Models;
 
@@ -47,13 +47,13 @@ public class Recipe
     }
 
     public static async Task<List<Recipe>> GetAllAsync(IRecipeDAL dal) =>
-        await dal.GetAll();
+        await dal.GetAllAsync();
 
     public static async Task<Recipe> GetByIdAsync(int recipeId, IRecipeDAL dal) =>
-        await dal.GetById(recipeId);
+        await dal.GetByIdAsync(recipeId);
 
     public async Task<List<RecipeIngredient>> GetIngredientsAsync(IRecipeIngredientDAL dal) =>
-        await dal.GetByRecipe(recipeId);
+        await dal.GetByRecipeAsync(recipeId);
 
     public override string ToString() =>
         $"[Recipe] Id={RecipeId} | {Name}";

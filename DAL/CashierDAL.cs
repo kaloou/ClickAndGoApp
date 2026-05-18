@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
-using ClickAndGoApp.DAL.interfaces;
+// namespace via ClickAndGoApp.DAL
 
 namespace ClickAndGoApp.DAL;
 
@@ -13,7 +13,7 @@ public class CashierDAL : ICashierDAL
         _db = db;
     }
 
-    public async Task<Cashier> GetById(int cashierId)
+    public async Task<Cashier> GetByIdAsync(int cashierId)
     {
         using SqlConnection conn = _db.GetConnexion();
         await conn.OpenAsync();

@@ -1,18 +1,18 @@
 using ClickAndGoApp.Models;
 using ClickAndGoApp.Models.Enums;
 
-namespace ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.DAL;
 
 public interface IOrderDAL
 {
-    public Task<int> CreateOrder(int customerId);
-    public Task<Order> GetById(int orderId);
-    public Task<List<Order>> GetOrdersByStore(int storeId);
-    public Task<List<Order>> GetOrdersByCustomer(int customerId);
-    public Task<List<Order>> GetOrdersToPrepare(int storeId);
-    public Task<List<Order>> GetTodayOrders(int storeId);
-    public Task SetTimeSlot(int orderId, int timeSlotId);
-    public Task SetStatus(int orderId, OrderStatus status);
-    public Task SetNumberOfBoxes(int orderId, int numberOfBoxes);
-    public Task SetReturnedBoxes(int orderId, int returnedBoxes);
+    Task<Order> GetByIdAsync(int orderId);
+    Task<List<Order>> GetOrdersByStoreAsync(int storeId);
+    Task<List<Order>> GetTodaysOrdersAsync(int storeId);
+    Task SetNumberOfBoxesAsync(int orderId, int numberOfBoxes);
+    Task SetReturnedBoxesAsync(int orderId, int returnedBoxes);
+    Task SetStatusAsync(int orderId, OrderStatus status);
+    Task<int> CreateOrderAsync(int customerId);
+    Task<List<Order>> GetOrdersByCustomerAsync(int customerId);
+    Task<List<Order>> GetOrdersToPrepareAsync(int storeId);
+    Task SetTimeSlotAsync(int orderId, int timeSlotId);
 }

@@ -1,8 +1,8 @@
 using ClickAndGoApp.Models;
 
-namespace ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.DAL;
 
 public interface IOrderPickerDAL
 {
-    Task<OrderPicker> GetById(int pickerId);
+    Task<OrderPicker> GetByIdAsync(int pickerId);
 }

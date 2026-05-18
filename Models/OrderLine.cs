@@ -1,4 +1,4 @@
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.Models;
 
@@ -39,7 +39,7 @@ public class OrderLine
         set => product = value ?? throw new ArgumentNullException("Product cannot be null");
     }
 
-    // Constructeur kalou : pas de productId explicite (déduit du product)
+    // Constructeur kalou : productId déduit du product
     public OrderLine(int orderId, int quantity, Product product)
     {
         OrderId   = orderId;
@@ -60,13 +60,13 @@ public class OrderLine
     public Product GetProduct() => product;
 
     public static async Task<List<OrderLine>> GetOrderLinesAsync(int orderId, IOrderLineDAL dal) =>
-        await dal.GetOrderLines(orderId);
+        await dal.GetOrderLinesAsync(orderId);
 
     public async Task RemoveAsync(IOrderLineDAL dal) =>
-        await dal.Remove(orderId, product.ProductId);
+        await dal.RemoveAsync(orderId, product.ProductId);
 
     public async Task SetQuantityAsync(int quantity, IOrderLineDAL dal) =>
-        await dal.SetQuantity(orderId, product.ProductId, quantity);
+        await dal.SetQuantityAsync(orderId, product.ProductId, quantity);
 
     public override string ToString() =>
         $"[OrderLine] OrderId={OrderId} | Product={Product?.Name} | Qty={Quantity}";

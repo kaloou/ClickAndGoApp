@@ -1,4 +1,4 @@
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.Models;
 
@@ -37,8 +37,8 @@ public class Category
     }
 
     public static async Task<List<Category>> GetAllAsync(ICategoryDAL dal) =>
-        await dal.GetAll();
+        await dal.GetAllAsync();
 
     public static async Task<List<Product>> GetByCategoryAsync(int categoryId, IProductDAL dal) =>
-        await dal.GetByCategory(categoryId);
+        await dal.GetByCategoryAsync(categoryId);
 }

@@ -1,8 +1,8 @@
 using ClickAndGoApp.Models;
 
-namespace ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.DAL;
 
 public interface IUserDAL
 {
-    Task<User> GetByCredentials(string email, string password);
+    Task<User> GetByCredentialsAsync(string email, string password);
 }

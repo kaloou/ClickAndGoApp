@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.DAL;
 using ClickAndGoApp.Models;
 using ClickAndGoApp.ViewModels;
 
@@ -67,7 +67,7 @@ public class ProductController : Controller
         int? orderId = HttpContext.Session.GetInt32("orderId");
         if (orderId is null)
         {
-            int newOrderId = await orderDal.CreateOrder(userId.Value);
+            int newOrderId = await orderDal.CreateOrderAsync(userId.Value);
             HttpContext.Session.SetInt32("orderId", newOrderId);
             orderId = newOrderId;
         }

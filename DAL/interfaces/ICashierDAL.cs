@@ -1,8 +1,8 @@
 using ClickAndGoApp.Models;
 
-namespace ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.DAL;
 
 public interface ICashierDAL
 {
-    Task<Cashier> GetById(int cashierId);
+    Task<Cashier> GetByIdAsync(int cashierId);
 }

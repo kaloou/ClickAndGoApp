@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.DAL;
 using ClickAndGoApp.Models;
 using ClickAndGoApp.Models.Enums;
 using ClickAndGoApp.ViewModels;

@@ -1,4 +1,4 @@
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.DAL;
 using ClickAndGoApp.Models.Enums;
 
 namespace ClickAndGoApp.Models;
@@ -84,9 +84,9 @@ public class Order
     public int TimeSlotId
     {
         get => timeSlotId;
-        set => timeSlotId = value > 0
+        set => timeSlotId = value >= 0
             ? value
-            : throw new ArgumentException("TimeSlotId must be positive");
+            : throw new ArgumentException("TimeSlotId cannot be negative");
     }
 
     public Customer? Customer
@@ -115,7 +115,7 @@ public class Order
 
     public bool IsSelected => isSelected;
 
-    // Constructeur kalou : navigation objects (utilisé par OrderDAL)
+    // Constructeur kalou : navigation objects
     public Order(int orderId, DateTime orderDate, OrderStatus status,
                  int numberOfBoxes, int returnedBoxes, DateTime pickupDate,
                  PaymentStatus paymentStatus, Customer customer, TimeSlot? timeSlot, Store? store)
@@ -133,7 +133,7 @@ public class Order
         customerId    = customer.UserId;
     }
 
-    // Constructeur bywaa : int IDs (utilisé par les DAL de l'équipier)
+    // Constructeur bywaa : int IDs (utilisé par OrderDAL)
     public Order(int orderId, DateTime orderDate, OrderStatus status,
                  int numberOfBoxes, int returnedBoxes, DateTime pickupDate,
                  PaymentStatus paymentStatus, int customerId, int timeSlotId)
@@ -152,13 +152,13 @@ public class Order
     // ==================== STATIC ====================
 
     public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal) =>
-        await dal.GetById(orderId);
+        await dal.GetByIdAsync(orderId);
 
     public static async Task<List<Order>> GetOrdersByStoreAsync(int storeId, IOrderDAL dal) =>
-        await dal.GetOrdersByStore(storeId);
+        await dal.GetOrdersByStoreAsync(storeId);
 
     public static async Task<List<Order>> GetTodaysOrdersAsync(int storeId, IOrderDAL dal) =>
-        await dal.GetTodayOrders(storeId);
+        await dal.GetTodaysOrdersAsync(storeId);
 
     // ==================== INSTANCE ====================
 
@@ -167,8 +167,7 @@ public class Order
 
     public async Task<float> ComputeTotalAsync(IOrderLineDAL dal)
     {
-        List<OrderLine> lines = await dal.GetOrderLines(orderId);
-        float productsTotal = lines.Sum(ol => ol.Product.Price * ol.Quantity);
+        float productsTotal = await dal.GetProductsTotalAsync(orderId);
         return ComputeTotal(productsTotal);
     }
 
@@ -179,13 +178,13 @@ public class Order
     }
 
     public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal) =>
-        await dal.GetOrderLines(orderId);
+        await dal.GetOrderLinesAsync(orderId);
 
     public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1) =>
-        await dal.AddProduct(orderId, productId, quantity);
+        await dal.AddProductAsync(orderId, productId, quantity);
 
     public async Task SetTimeSlotAsync(int timeSlotId, IOrderDAL dal) =>
-        await dal.SetTimeSlot(orderId, timeSlotId);
+        await dal.SetTimeSlotAsync(orderId, timeSlotId);
 
     public void SetStore(int storeId)
     {
@@ -196,13 +195,13 @@ public class Order
     }
 
     public async Task SetStatusAsync(OrderStatus status, IOrderDAL dal) =>
-        await dal.SetStatus(orderId, status);
+        await dal.SetStatusAsync(orderId, status);
 
     public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) =>
-        await dal.SetNumberOfBoxes(orderId, numberOfBoxes);
+        await dal.SetNumberOfBoxesAsync(orderId, numberOfBoxes);
 
     public async Task SetReturnedBoxesAsync(int returnedBoxes, IOrderDAL dal) =>
-        await dal.SetReturnedBoxes(orderId, returnedBoxes);
+        await dal.SetReturnedBoxesAsync(orderId, returnedBoxes);
 
     public override string ToString() =>
         $"[Order] Id={OrderId} | Status={Status} | PickupDate={PickupDate:dd/MM/yyyy HH:mm} | CustomerId={CustomerId}";

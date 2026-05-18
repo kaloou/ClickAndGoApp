@@ -1,96 +1,62 @@
-using ClickAndGoApp.DAL.interfaces;
-using ClickAndGoApp.Models;
 using Microsoft.Data.SqlClient;
+using ClickAndGoApp.Models;
 
 namespace ClickAndGoApp.DAL;
 
 public class OrderLineDAL : IOrderLineDAL
 {
-    private readonly DBConnection db;
+    private readonly DBConnection _db;
 
     public OrderLineDAL(DBConnection db)
     {
-        this.db = db;
+        _db = db;
     }
 
-    public List<OrderLine> GetOrderLines(int orderId)
+    public async Task<float> GetProductsTotalAsync(int orderId)
     {
-        using (SqlConnection conn = db.GetConnexion())
-        {
-            conn.Open();
+        using SqlConnection conn = _db.GetConnexion();
+        await conn.OpenAsync();
 
-            string query = @"
-                SELECT ol.orderId, ol.quantity,
-                       p.productId, p.name, p.price, p.description, p.imagePath,
-                       c.categoryId, c.name AS categoryName
-                FROM OrderLine ol
-                JOIN Product p  ON ol.productId  = p.productId
-                JOIN Category c ON p.categoryId  = c.categoryId
-                WHERE ol.orderId = @orderId";
+        string query = @"
+            SELECT ISNULL(SUM(ol.quantity * p.price), 0)
+            FROM OrderLine ol
+            JOIN Product p ON ol.productId = p.productId
+            WHERE ol.orderId = @orderId";
 
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@orderId", orderId);
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@orderId", orderId);
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    List<OrderLine> orderLines = new List<OrderLine>();
-                    while (reader.Read())
-                        orderLines.Add(ReadOrderLine(reader));
-                    return orderLines;
-                }
-            }
-        }
+        object result = await cmd.ExecuteScalarAsync();
+        return (float)(decimal)result;
     }
 
-    public void AddProduct(int orderId, int productId, int quantity)
+    public async Task<List<OrderLine>> GetOrderLinesAsync(int orderId)
     {
-        //
+        using SqlConnection conn = _db.GetConnexion();
+        await conn.OpenAsync();
+
+        string query = @"
+            SELECT ol.orderId, ol.productId, ol.quantity,
+                   p.name, p.price, p.description, p.imagePath,
+                   c.categoryId, c.name AS categoryName
+            FROM OrderLine ol
+            JOIN Product  p ON ol.productId  = p.productId
+            JOIN Category c ON p.categoryId  = c.categoryId
+            WHERE ol.orderId = @orderId";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@orderId", orderId);
+
+        using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+        var orderLines = new List<OrderLine>();
+        while (await reader.ReadAsync())
+            orderLines.Add(ReadOrderLine(reader));
+        return orderLines;
     }
 
-    public void Remove(int orderId, int productId)
+    public async Task AddProductAsync(int orderId, int productId, int quantity)
     {
-        //
-    }
-
-    public void SetQuantity(int orderId, int productId, int quantity)
-    {
-        //
-    }
-
-    async Task<List<OrderLine>> IOrderLineDAL.GetOrderLines(int orderId)
-    {
-        using (SqlConnection conn = db.GetConnexion())
-        {
-            await conn.OpenAsync();
-
-            string query = @"
-                SELECT ol.orderId, ol.quantity,
-                       p.productId, p.name, p.price, p.description, p.imagePath,
-                       c.categoryId, c.name AS categoryName
-                FROM OrderLine ol
-                JOIN Product p  ON ol.productId  = p.productId
-                JOIN Category c ON p.categoryId  = c.categoryId
-                WHERE ol.orderId = @orderId";
-
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@orderId", orderId);
-
-                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
-                {
-                    List<OrderLine> orderLines = new List<OrderLine>();
-                    while (await reader.ReadAsync())
-                        orderLines.Add(ReadOrderLine(reader));
-                    return orderLines;
-                }
-            }
-        }
-    }
-
-    async Task IOrderLineDAL.AddProduct(int orderId, int productId, int quantity)
-    {
-        using SqlConnection conn = db.GetConnexion();
+        using SqlConnection conn = _db.GetConnexion();
         await conn.OpenAsync();
 
         const string query = @"
@@ -104,9 +70,9 @@ public class OrderLineDAL : IOrderLineDAL
         await cmd.ExecuteNonQueryAsync();
     }
 
-    async Task IOrderLineDAL.Remove(int orderId, int productId)
+    public async Task RemoveAsync(int orderId, int productId)
     {
-        using SqlConnection conn = db.GetConnexion();
+        using SqlConnection conn = _db.GetConnexion();
         await conn.OpenAsync();
 
         const string query = @"
@@ -119,9 +85,9 @@ public class OrderLineDAL : IOrderLineDAL
         await cmd.ExecuteNonQueryAsync();
     }
 
-    async Task IOrderLineDAL.SetQuantity(int orderId, int productId, int quantity)
+    public async Task SetQuantityAsync(int orderId, int productId, int quantity)
     {
-        using SqlConnection conn = db.GetConnexion();
+        using SqlConnection conn = _db.GetConnexion();
         await conn.OpenAsync();
 
         const string query = @"
@@ -153,6 +119,7 @@ public class OrderLineDAL : IOrderLineDAL
 
         return new OrderLine(
             (int)reader["orderId"],
+            (int)reader["productId"],
             (int)reader["quantity"],
             product
         );

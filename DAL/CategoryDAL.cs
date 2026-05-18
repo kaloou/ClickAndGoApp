@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
-using ClickAndGoApp.DAL.interfaces;
+// namespace via ClickAndGoApp.DAL
 
 namespace ClickAndGoApp.DAL;
 
@@ -13,7 +13,7 @@ public class CategoryDAL : ICategoryDAL
         this.db = db;
     }
 
-    public async Task<List<Category>> GetAll()
+    public async Task<List<Category>> GetAllAsync()
     {
         List<Category> categories = new List<Category>();
 

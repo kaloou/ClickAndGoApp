@@ -1,4 +1,4 @@
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.Models;
 
@@ -11,7 +11,7 @@ public class Cashier : Employee
     }
 
     public static async Task<Cashier> GetByIdAsync(int cashierId, ICashierDAL dal) =>
-        await dal.GetById(cashierId);
+        await dal.GetByIdAsync(cashierId);
 
     public async Task<Store> GetStoreAsync(IStoreDAL dal) =>
         await Store.GetStoreAsync(StoreId, dal);

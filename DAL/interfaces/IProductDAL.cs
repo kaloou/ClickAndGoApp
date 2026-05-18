@@ -1,10 +1,10 @@
 using ClickAndGoApp.Models;
 
-namespace ClickAndGoApp.DAL.interfaces;
+namespace ClickAndGoApp.DAL;
 
 public interface IProductDAL
 {
-    Task<List<Product>> GetAll();
-    Task<List<Product>> GetByCategory(int categoryId);
-    Task<Product> GetById(int productId);
+    Task<List<Product>> GetAllAsync();
+    Task<List<Product>> GetByCategoryAsync(int categoryId);
+    Task<Product> GetByIdAsync(int productId);
 }

@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using ClickAndGoApp.DAL;
 using ClickAndGoApp.Models;
-using ClickAndGoApp.DAL.interfaces;
+using ClickAndGoApp.ViewModels;
 
 namespace ClickAndGoApp.Controllers;
 
 public class AuthController : Controller
 {
-    private readonly UserDAL     userDal;
+    private readonly IUserDAL     userDal;
     private readonly ICustomerDAL customerDal;
 
     public AuthController(UserDAL userDal, ICustomerDAL customerDal)
@@ -17,34 +17,26 @@ public class AuthController : Controller
     }
     
     // ====== Login page ======
-    [HttpGet] 
+    [HttpGet]
     public IActionResult Login()
     {
-        return View();
+        return View(new LoginViewModel());
     }
-    
-    // ====== Register page ======
-    [HttpGet]
-    public IActionResult Register()
-    {
-        return View();
-    }
-
     // ====== Login ====== (Redirige selon le role)
     [HttpPost]
-    public async Task<IActionResult> LoginAsync(string email, string password)
+    public async Task<IActionResult> LoginAsync(LoginViewModel model)
     {
-        var user = await Models.User.GetByCredentialsAsync(email, password, userDal);
+        if (!ModelState.IsValid)
+            return View(model);
+
+        Models.User user = await Models.User.GetByCredentialsAsync(model.Email, model.Password, userDal);
         if (user == null)
         {
-            ViewBag.Error = "Invalid email or password";
-            return View();
+            ModelState.AddModelError(string.Empty, "Invalid email or password");
+            return View(model);
         }
-        
-        // Données de session 
-        HttpContext.Session.SetInt32("userId", user.UserId);
-        HttpContext.Session.SetString("role", user.Role);
-        HttpContext.Session.SetString("firstName", user.FirstName);
+
+        CreateSession(user);
 
         if (user.Role == "OrderPicker")
             return RedirectToAction("Index", "OrderPicker");
@@ -54,6 +46,21 @@ public class AuthController : Controller
             return Redirect($"/");
     }
     
+    private void CreateSession(Models.User user)
+    {
+        HttpContext.Session.SetInt32("userId", user.UserId);
+        HttpContext.Session.SetString("role", user.Role);
+        HttpContext.Session.SetString("firstName", user.FirstName);
+    }
+    
+    // ====== Register page ======
+    [HttpGet]
+    public IActionResult Register()
+    {
+        return View();
+    }
+    
+    // Create Account
     [HttpPost]
     public async Task<IActionResult> Register(string firstName, string lastName, string email, string password, string? phoneNumber, string? address)
     {
@@ -76,6 +83,7 @@ public class AuthController : Controller
         return RedirectToAction("Login");
     }
 
+    // Log out
     public IActionResult Logout()
     {
         HttpContext.Session.Clear();

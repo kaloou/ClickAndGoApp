@@ -1,4 +1,3 @@
-using ClickAndGoApp.DAL.interfaces;
 using ClickAndGoApp.Models;
 
 namespace ClickAndGoApp.DAL;
@@ -12,5 +11,5 @@ public class RecipeIngredientDAL : IRecipeIngredientDAL
         this.db = db;
     }
 
-    public Task<List<RecipeIngredient>> GetByRecipe(int recipeId) => Task.FromResult<List<RecipeIngredient>>(null);
+    public Task<List<RecipeIngredient>> GetByRecipeAsync(int recipeId) => Task.FromResult<List<RecipeIngredient>>(null);
 }
