@@ -61,12 +61,12 @@ namespace ClickAndGoApp.Controllers
             if (order == null)
                 return RedirectToAction("Index");
 
-            order.GetSelected(true);
+            Order selectedOrder = order.GetSelected(true);
 
             return View(new CashierOrderViewModel
             {
-                Order = order,
-                TotalAmount = await order.ComputeTotalAsync(_orderLineDAL)
+                Order = selectedOrder,
+                TotalAmount = await selectedOrder.ComputeTotalAsync(_orderLineDAL)
             });
         }
 

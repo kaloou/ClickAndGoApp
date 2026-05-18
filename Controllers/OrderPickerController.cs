@@ -92,13 +92,18 @@ namespace ClickAndGoApp.Controllers
             Order order = await Order.GetByIdAsync(orderId, _orderDAL);
             List<OrderLine> orderLines = await order.GetOrderLinesAsync(_orderLineDAL);
 
+            List<Product> products = new List<Product>();
+            foreach (OrderLine orderLine in orderLines)
+                products.Add(orderLine.GetProduct());
+
             if (numberOfBoxes <= 0)
             {
                 ViewBag.Error = "Invalid value — number of boxes must be greater than 0";
                 return View("OrderDetails", new OrderDetailsViewModel
                 {
                     Order = order,
-                    OrderLines = orderLines
+                    OrderLines = orderLines,
+                    Products = products
                 });
             }
 
@@ -107,11 +112,16 @@ namespace ClickAndGoApp.Controllers
             order = await Order.GetByIdAsync(orderId, _orderDAL);
             orderLines = await order.GetOrderLinesAsync(_orderLineDAL);
 
+            products = new List<Product>();
+            foreach (OrderLine orderLine in orderLines)
+                products.Add(orderLine.GetProduct());
+
             ViewBag.Success = "Number of boxes saved successfully";
             return View("OrderDetails", new OrderDetailsViewModel
             {
                 Order = order,
-                OrderLines = orderLines
+                OrderLines = orderLines,
+                Products = products
             });
         }
     }
