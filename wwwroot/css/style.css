@@ -165,18 +165,50 @@ body {
     box-shadow: 0 4px 20px var(--shadow);
     width: 100%;
     max-width: 400px;
+    position: relative;
+}
+
+.login-back {
+    display: inline-block;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.login-back:hover {
+    text-decoration: underline;
+}
+
+.login-register {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted, #666);
+}
+
+.login-register a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-register a:hover {
+    text-decoration: underline;
 }
 
 .login-card h1 {
     font-size: 24px;
     margin-bottom: 8px;
     color: var(--primary);
+    text-align: center;
 }
 
 .login-card .subtitle {
     color: var(--accent);
     margin-bottom: 28px;
     font-size: 14px;
+    text-align: center;
 }
 
 .form-group {
