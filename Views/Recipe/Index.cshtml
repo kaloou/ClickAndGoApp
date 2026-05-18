@@ -1,0 +1,32 @@
+@model List<ClickAndGoApp.Models.Recipe>
+@{
+    ViewData["Title"] = "Recettes";
+}
+
+<div class="browse-page">
+
+    <div class="browse-header">
+        <h1>Nos Recettes</h1>
+        <p class="browse-subtitle">Découvrez nos recettes et ajoutez les ingrédients à votre panier</p>
+    </div>
+
+    <div class="products-grid">
+        @if (!Model.Any())
+        {
+            <div class="no-results">Aucune recette disponible.</div>
+        }
+        else
+        {
+            @foreach (var recipe in Model)
+            {
+                <a asp-action="SelectRecipe" asp-route-recipeId="@recipe.RecipeId" class="product-card">
+                    <div class="product-info">
+                        <p class="product-name">@recipe.Name</p>
+                        <p class="product-category">@recipe.Description</p>
+                    </div>
+                </a>
+            }
+        }
+    </div>
+
+</div>
