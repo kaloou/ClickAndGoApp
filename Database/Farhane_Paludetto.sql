@@ -158,10 +158,10 @@ GO
 -- STORES
 -- =============================================
 INSERT INTO Store (name, address) VALUES
-                                      ('Click & Go Bruxelles', 'Avenue Louise 42, 1050 Bruxelles'),
-                                      ('Click & Go Charleroi', 'Rue du Centre 15, 6000 Charleroi'),
-                                      ('Click & Go Liège',     'Boulevard de la Sauvenière 8, 4000 Liège'),
-                                      ('Click & Go Namur',     'Rue de Fer 22, 5000 Namur');
+                                      ('Click & Go Jumet', 'Chaussée de Bruxelles 167, 6040 Jumet'),
+                                      ('Click & Go Gosselies', 'Rue de la Motte 4, 6041 Gosselies'),
+                                      ('Click & Go Marcinelle',     'Rue de Philippeville 256, 6001 Marcinelle'),
+                                      ('Click & Go Gilly',     'Rue de Ransart 80, 6060 Gilly');
 GO
 
 -- =============================================
