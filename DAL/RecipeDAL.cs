@@ -17,7 +17,7 @@ public class RecipeDAL : IRecipeDAL
         using SqlConnection conn = db.GetConnexion();
         await conn.OpenAsync();
 
-        const string query = "SELECT recipeId, name, description FROM Recipes";
+        const string query = "SELECT recipeId, name, description, imagePath FROM Recipes";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
         using SqlDataReader reader = await cmd.ExecuteReaderAsync();
@@ -29,7 +29,7 @@ public class RecipeDAL : IRecipeDAL
                 (int)reader["recipeId"],
                 (string)reader["name"],
                 (string)reader["description"]
-            ));
+            ) { ImagePath = reader["imagePath"] == DBNull.Value ? null : (string)reader["imagePath"] });
         }
         return recipes;
     }
@@ -40,9 +40,9 @@ public class RecipeDAL : IRecipeDAL
         await conn.OpenAsync();
 
         const string query = @"
-            SELECT r.recipeId, r.name, r.description,
+            SELECT r.recipeId, r.name, r.description, r.imagePath AS recipeImagePath,
                    ri.productId, ri.quantity,
-                   p.name AS productName, p.price, p.description AS productDescription, p.imagePath,
+                   p.name AS productName, p.price, p.description AS productDescription, p.imagePath AS productImagePath,
                    c.categoryId, c.name AS categoryName
             FROM Recipes r
             LEFT JOIN RecipesIngredients ri ON r.recipeId = ri.recipeId
@@ -64,7 +64,7 @@ public class RecipeDAL : IRecipeDAL
                     (int)reader["recipeId"],
                     (string)reader["name"],
                     (string)reader["description"]
-                );
+                ) { ImagePath = reader["recipeImagePath"] == DBNull.Value ? null : (string)reader["recipeImagePath"] };
             }
 
             if (reader["productId"] != DBNull.Value)
@@ -79,7 +79,7 @@ public class RecipeDAL : IRecipeDAL
                     (float)(decimal)reader["price"],
                     category,
                     reader["productDescription"] == DBNull.Value ? null : (string)reader["productDescription"],
-                    reader["imagePath"] == DBNull.Value ? null : (string)reader["imagePath"]
+                    reader["productImagePath"] == DBNull.Value ? null : (string)reader["productImagePath"]
                 );
                 recipe.Ingredients.AddLast(new RecipeIngredient(
                     (int)reader["recipeId"],

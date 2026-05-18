@@ -20,6 +20,12 @@
             @foreach (var recipe in Model)
             {
                 <a asp-action="SelectRecipe" asp-route-recipeId="@recipe.RecipeId" class="product-card">
+                    <div class="recipe-card-img">
+                        @if (recipe.ImagePath != null)
+                        {
+                            <img src="/images/@recipe.ImagePath" alt="@recipe.Name" />
+                        }
+                    </div>
                     <div class="product-info">
                         <p class="product-name">@recipe.Name</p>
                         <p class="product-category">@recipe.Description</p>
