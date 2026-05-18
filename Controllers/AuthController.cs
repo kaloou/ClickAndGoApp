@@ -32,7 +32,7 @@ public class AuthController : Controller
         Models.User user = await Models.User.GetByCredentialsAsync(model.Email, model.Password, userDal);
         if (user == null)
         {
-            ModelState.AddModelError(string.Empty, "Invalid email or password");
+            ModelState.AddModelError(string.Empty, "Email ou mot de passe incorrect.");
             return View(model);
         }
 
