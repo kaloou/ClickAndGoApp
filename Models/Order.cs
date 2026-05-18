@@ -17,6 +17,10 @@ public class Order
     private Store? store;           // null pour les orders cart (pas de store lié)
     private List<OrderLine> orderLines;
 
+    public int CustomerId => customer.UserId;
+    private int timeSlotId;
+    private bool isSelected;
+
     public const float SERVICE_FEE = 5.95f;
     public const float BOX_DEPOSIT = 5.95f;
 
@@ -94,8 +98,6 @@ public class Order
         set => orderLines = value;
     }
 
-    public int CustomerId => customer.UserId;
-
     public Order(int orderId, DateTime orderDate, OrderStatus status,
                  int numberOfBoxes, int returnedBoxes, DateTime pickupDate,
                  PaymentStatus paymentStatus, Customer customer, TimeSlot? timeSlot, Store? store)
@@ -114,19 +116,19 @@ public class Order
 
     // ==================== STATIC ====================
 
-    public static Task<Order> GetById(int orderId, IOrderDAL dal) => //
-        dal.GetById(orderId);
+    public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal) => //
+        await dal.GetById(orderId);
 
     // ==================== INSTANCE ====================
-
-    public Task<List<OrderLine>> GetOrderLines(IOrderLineDAL dal) => //
-        dal.GetOrderLines(orderId);
 
     public float ComputeTotal(float productsTotal) //
     {
         productsTotal += SERVICE_FEE + (NumberOfBoxes * BOX_DEPOSIT) - (ReturnedBoxes * BOX_DEPOSIT);
         return productsTotal;
     }
+
+    public async Task SetTimeSlotAsync(int timeSlotId, IOrderDAL dal) => //
+        await dal.SetTimeSlot(orderId, timeSlotId);
 
     public void SetStore(int storeId) //
     {
@@ -136,19 +138,18 @@ public class Order
             store.StoreId = storeId;
     }
 
-    public Task SetTimeSlot(int timeSlotId, IOrderDAL dal) => //
-        dal.SetTimeSlot(orderId, timeSlotId);
+    public async Task SetStatusAsync(OrderStatus status, IOrderDAL dal) => //
+        await dal.SetStatus(orderId, status);
 
-    public Task SetStatus(OrderStatus status, IOrderDAL dal) => //
-        dal.SetStatus(orderId, status);
+    public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) => //
+        await dal.SetNumberOfBoxes(orderId, numberOfBoxes);
 
-    public Task SetNumberOfBoxes(int numberOfBoxes, IOrderDAL dal) => //
-        dal.SetNumberOfBoxes(orderId, numberOfBoxes);
+    public async Task SetReturnedBoxesAsync(int returnedBoxes, IOrderDAL dal) => //
+        await dal.SetReturnedBoxes(orderId, returnedBoxes);
 
-    public Task SetReturnedBoxes(int returnedBoxes, IOrderDAL dal) => //
-        dal.SetReturnedBoxes(orderId, returnedBoxes);
+    public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal) => //
+        await dal.GetOrderLines(orderId);
 
-    public Task AddProduct(int productId, IOrderLineDAL dal, int quantity = 1) => //
-        dal.AddProduct(orderId, productId, quantity);
-    
+    public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1) => //
+        await dal.AddProduct(orderId, productId, quantity);
 }

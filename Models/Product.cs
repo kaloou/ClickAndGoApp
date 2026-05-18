@@ -71,9 +71,9 @@ public class Product
         ImagePath   = imagePath;
     }
 
-    public static Task<List<Product>> GetAll(IProductDAL dal) =>
-        dal.GetAll();
+    public static async Task<List<Product>> GetAllAsync(IProductDAL dal) =>
+        await dal.GetAll();
 
-    public static Task<Product> GetById(int productId, IProductDAL dal) =>
-        dal.GetById(productId);
+    public static async Task<Product> GetByIdAsync(int productId, IProductDAL dal) =>
+        await dal.GetById(productId);
 }

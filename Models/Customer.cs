@@ -40,10 +40,10 @@ public class Customer : User
     //=========================
     // METHODES
     //=========================
+    //metrre en async
+    public static async Task<Customer> CreateAccountAsync(string firstName, string lastName, string email, string password, string? phoneNumber, string? address, ICustomerDAL dal) =>
+        await dal.CreateAccount(firstName, lastName, email, password, phoneNumber, address);
 
-    public static Task<bool> GetByEmail(string email, ICustomerDAL dal) =>
-        dal.GetByEmail(email);
-
-    public static Task<Customer> CreateAccount(string firstName, string lastName, string email, string password, string? phoneNumber, string? address, ICustomerDAL dal) =>
-        dal.CreateAccount(firstName, lastName, email, password, phoneNumber, address);
+    public static async Task<bool> GetByEmailAsync(string email, ICustomerDAL dal) =>
+        await dal.GetByEmail(email);
 }

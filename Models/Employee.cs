@@ -20,6 +20,6 @@ namespace ClickAndGoApp.Models
         }
 
         //methodes
-        public Store GetStore() => store; //
+        //public Store GetStore() => store; //
     }
 }

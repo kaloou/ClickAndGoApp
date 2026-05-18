@@ -17,7 +17,6 @@ builder.Services.AddSession(options => //Activate the session
 
 //Infrastructure
 builder.Services.AddTransient<DBConnection>();
-
 builder.Services.AddTransient<IProductDAL,           ProductDAL>();
 builder.Services.AddTransient<ICategoryDAL,          CategoryDAL>();
 builder.Services.AddTransient<IStoreDAL,             StoreDAL>();

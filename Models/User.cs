@@ -101,7 +101,7 @@ namespace ClickAndGoApp.Models
         }
         
         //methodes
-        public static Task<User> GetByCredentials(string email, string password, IUserDAL dal) => //
-            dal.GetByCredentials(email, password);
+        public static async Task<User> GetByCredentialsAsync(string email, string password, IUserDAL dal) => //
+            await dal.GetByCredentials(email, password);
     }
 }

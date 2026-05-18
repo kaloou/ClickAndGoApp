@@ -54,15 +54,15 @@ public class Store
     }
 
     //methodes
-    public static Task<List<Store>> GetAllStores(IStoreDAL dal) => //
-        dal.GetAllStores();
+    public static async Task<List<Store>> GetAllStoresAsync(IStoreDAL dal) => //
+        await dal.GetAllStores();
 
-    public Task<List<TimeSlot>> GetAvailableTimeSlots(IStoreDAL dal) => //
-        dal.GetAvailableTimeSlots(storeId);
+    public async Task<List<Order>> GetOrdersByStoreAsync(DateOnly date, IOrderDAL dal) => //
+        await dal.GetOrdersByStore(storeId);
 
-    public Task<List<Order>> GetOrdersByStore(DateOnly date, IOrderDAL dal) => //
-        dal.GetOrdersByStore(storeId);
+    public async Task<List<Order>> GetTodayOrdersAsync(IOrderDAL dal) => //
+        await dal.GetTodayOrders(storeId);
 
-    public Task<List<Order>> GetTodayOrders(IOrderDAL dal) => //
-        dal.GetTodayOrders(storeId);
+    public async Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(IStoreDAL dal) => //
+        await dal.GetAvailableTimeSlots(storeId);
 }

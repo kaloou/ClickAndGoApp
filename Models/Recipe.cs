@@ -45,12 +45,12 @@ public class Recipe
     }
     
     //Methodes====
-    public static Task<List<Recipe>> GetAll(IRecipeDAL dal) => // 
-        dal.GetAll();
+    public static async Task<List<Recipe>> GetAllAsync(IRecipeDAL dal) => //
+        await dal.GetAll();
 
-    public static Task<Recipe> GetById(int recipeId, IRecipeDAL dal) => // 
-        dal.GetById(recipeId);
+    public static async Task<Recipe> GetByIdAsync(int recipeId, IRecipeDAL dal) => //
+        await dal.GetById(recipeId);
 
-    public Task<List<RecipeIngredient>> GetIngredients(IRecipeIngredientDAL dal) => // 
-        dal.GetByRecipe(recipeId);
+    public async Task<List<RecipeIngredient>> GetIngredientsAsync(IRecipeIngredientDAL dal) => //
+        await dal.GetByRecipe(recipeId);
 }

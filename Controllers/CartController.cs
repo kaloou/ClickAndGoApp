@@ -25,12 +25,12 @@ public class CartController : Controller
             return View(new CartViewModel { Order = null, OrderLines = new() });
 
         // on récupère order(cart)
-        Order order = await Order.GetById(orderId.Value, orderDal);
+        Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
         if (order == null) // order id corrompu
             return View(new CartViewModel { Order = null, OrderLines = new() });
 
         // on récupère sa liste de produits
-        List<OrderLine> orderLines = await order.GetOrderLines(orderLineDal);
+        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
         return View(new CartViewModel { Order = order, OrderLines = orderLines });
     }
@@ -46,13 +46,13 @@ public class CartController : Controller
             return RedirectToAction("Index");
 
         //on l'a récupère + sa liste de produits
-        Order order = await Order.GetById(orderId.Value, orderDal);
-        List<OrderLine> orderLines = await order.GetOrderLines(orderLineDal);
+        Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
+        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
         // on check bien si le produit choisi est dans la liste de produits
         OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
         if (existing != null)
-            await existing.Remove(orderLineDal);
+            await existing.RemoveAsync(orderLineDal);
 
         TempData["Success"] = "Produit retiré du panier";
         return RedirectToAction("Index");
@@ -69,15 +69,15 @@ public class CartController : Controller
             return RedirectToAction("Index");
 
         //on l'a récupère + sa liste de produits
-        Order order = await Order.GetById(orderId.Value, orderDal);
-        List<OrderLine> orderLines = await order.GetOrderLines(orderLineDal);
+        Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
+        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
         if (quantity > 0) 
         {
             // on check bien si le produit choisi est dans la liste de produits
             OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
             if (existing != null)
-                await existing.SetQuantity(quantity, orderLineDal);
+                await existing.SetQuantityAsync(quantity, orderLineDal);
             
             TempData["Success"] = "Quantité mise à jour";
             return RedirectToAction("Index");

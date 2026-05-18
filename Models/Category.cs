@@ -36,9 +36,9 @@ public class Category
         Name       = name;
     }
 
-    public static Task<List<Category>> GetAll(ICategoryDAL dal) =>
-        dal.GetAll();
+    public static async Task<List<Category>> GetAllAsync(ICategoryDAL dal) =>
+        await dal.GetAll();
 
-    public static Task<List<Product>> GetByCategory(int categoryId, IProductDAL dal) =>
-        dal.GetByCategory(categoryId);
+    public static async Task<List<Product>> GetByCategoryAsync(int categoryId, IProductDAL dal) =>
+        await dal.GetByCategory(categoryId);
 }

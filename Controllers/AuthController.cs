@@ -34,7 +34,7 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<IActionResult> LoginAsync(string email, string password)
     {
-        var user = await Models.User.GetByCredentials(email, password, userDal);
+        var user = await Models.User.GetByCredentialsAsync(email, password, userDal);
         if (user == null)
         {
             ViewBag.Error = "Invalid email or password";
@@ -64,14 +64,14 @@ public class AuthController : Controller
             return View();
         }
 
-        bool emailExists = await Customer.GetByEmail(email, customerDal);
+        bool emailExists = await Customer.GetByEmailAsync(email, customerDal);
         if (emailExists)
         {
             ViewBag.error = "email already used";
             return View();
         }
         
-        await Customer.CreateAccount(firstName, lastName, email, password, phoneNumber, address, customerDal);
+        await Customer.CreateAccountAsync(firstName, lastName, email, password, phoneNumber, address, customerDal);
         TempData["Success"] = "Account created";
         return RedirectToAction("Login");
     }

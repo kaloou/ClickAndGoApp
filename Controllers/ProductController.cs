@@ -31,11 +31,11 @@ public class ProductController : Controller
         {
             // On récupère les produits de base OU les produits filtrés par la catégorie choisie
             if (categoryId.HasValue)
-                products = await Category.GetByCategory(categoryId.Value, productDal);
+                products = await Category.GetByCategoryAsync(categoryId.Value, productDal);
             else
-                products = await Product.GetAll(productDal);
+                products = await Product.GetAllAsync(productDal);
             
-            categories = await Category.GetAll(categoryDal);
+            categories = await Category.GetAllAsync(categoryDal);
         }
         catch (Exception)
         {                        
@@ -72,19 +72,19 @@ public class ProductController : Controller
             orderId = newOrderId;
         }
 
-        Order order = await Order.GetById(orderId.Value, orderDal);
+        Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
         if (order is null)
             return RedirectToAction("BrowseProducts");
 
-        List<OrderLine> orderLines = await order.GetOrderLines(orderLineDal); // Panier
+        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal); // Panier
 
         // Null si le produit n'est pas encore dans le panier, un OrderLine (produit) s'il est déja dedans
         OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
         
         if (existing == null)
-            await order.AddProduct(productId, orderLineDal, quantity);
+            await order.AddProductAsync(productId, orderLineDal, quantity);
         else
-            await existing.SetQuantity(existing.Quantity + quantity, orderLineDal);
+            await existing.SetQuantityAsync(existing.Quantity + quantity, orderLineDal);
 
         TempData["Success"] = "Produit ajouté au panier";
         return RedirectToAction("SelectProduct", new { productId = productId });
@@ -93,7 +93,7 @@ public class ProductController : Controller
     // ====== Select Product ======
     public async Task<IActionResult> SelectProduct(int productId)
     {
-        Product product = await Product.GetById(productId, productDal);
+        Product product = await Product.GetByIdAsync(productId, productDal);
         if (product == null) 
             return RedirectToAction("BrowseProducts");
         return View(product);
