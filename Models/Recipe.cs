@@ -46,6 +46,7 @@ public class Recipe
         Description = description;
     }
 
+    //==============================
     public static async Task<List<Recipe>> GetAllAsync(IRecipeDAL dal) =>
         await dal.GetAllAsync();
 
@@ -54,6 +55,8 @@ public class Recipe
 
     public async Task<List<RecipeIngredient>> GetIngredientsAsync(IRecipeIngredientDAL dal) =>
         await dal.GetByRecipeAsync(recipeId);
+    
+    //==============================
 
     public override string ToString() =>
         $"[Recipe] Id={RecipeId} | {Name}";

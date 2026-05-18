@@ -9,13 +9,16 @@ public class OrderPicker : Employee
         : base(userId, firstName, lastName, email, password, storeId)
     {
     }
-
+    
+    //==============================
     public static async Task<OrderPicker> GetByIdAsync(int pickerId, IOrderPickerDAL dal) =>
         await dal.GetByIdAsync(pickerId);
-
-    public async Task<Store> GetStoreAsync(IStoreDAL dal) =>
-        await Store.GetStoreAsync(StoreId, dal);
-
+    
+    public override async Task<Store> GetStoreAsync(IStoreDAL dal) =>
+        await base.GetStoreAsync(dal);
+    
+    //==============================
+    
     public override string ToString() =>
         $"[OrderPicker] Id={UserId} | {FirstName} {LastName} | Store={StoreId}";
 }

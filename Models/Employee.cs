@@ -1,3 +1,5 @@
+using ClickAndGoApp.DAL;
+
 namespace ClickAndGoApp.Models;
 
 public abstract class Employee : User
@@ -25,4 +27,11 @@ public abstract class Employee : User
     {
         StoreId = storeId;
     }
+
+    //==============================
+    public virtual async Task<Store> GetStoreAsync(IStoreDAL dal) =>
+        await Store.GetStoreAsync(StoreId, dal);
+    
+    //==============================
+    
 }

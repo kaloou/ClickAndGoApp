@@ -37,9 +37,12 @@ public class Customer : User
         Address       = address;
     }
 
+    //==============================
     public static async Task<Customer> CreateAccountAsync(string firstName, string lastName, string email, string password, string? phoneNumber, string? address, ICustomerDAL dal) =>
         await dal.CreateAccountAsync(firstName, lastName, email, password, phoneNumber, address);
 
     public static async Task<bool> GetByEmailAsync(string email, ICustomerDAL dal) =>
         await dal.GetByEmailAsync(email);
+    //==============================
+    
 }

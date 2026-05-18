@@ -36,9 +36,12 @@ public class Category
         Name       = name;
     }
 
+    //==============================
     public static async Task<List<Category>> GetAllAsync(ICategoryDAL dal) =>
         await dal.GetAllAsync();
 
     public static async Task<List<Product>> GetByCategoryAsync(int categoryId, IProductDAL dal) =>
         await dal.GetByCategoryAsync(categoryId);
+    
+    //==============================
 }

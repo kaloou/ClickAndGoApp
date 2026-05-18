@@ -73,12 +73,14 @@ public class Product
         ImagePath   = imagePath;
     }
 
+    //==============================
     public static async Task<List<Product>> GetAllAsync(IProductDAL dal) =>
         await dal.GetAllAsync();
 
     public static async Task<Product> GetByIdAsync(int productId, IProductDAL dal) =>
         await dal.GetByIdAsync(productId);
 
+    //==============================
     public override string ToString() =>
         $"[Product] Id={ProductId} | {Name} | {Price:0.00}€ | CategoryId={CategoryId}";
 

@@ -88,8 +88,11 @@ public class User
         Role = role;
     }
 
+    //==============================
     public static async Task<User> GetByCredentialsAsync(string email, string password, IUserDAL dal) =>
         await dal.GetByCredentialsAsync(email, password);
+    
+    //==============================
 
     public override string ToString() =>
         $"[User] Id={UserId} | {FirstName} {LastName} | {Email} | Role={Role}";

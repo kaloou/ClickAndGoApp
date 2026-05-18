@@ -59,25 +59,25 @@ public class Store
         Name    = name;
         Address = address;
     }
-
-    public static async Task<Store> GetStoreAsync(int storeId, IStoreDAL dal) =>
-        await dal.GetStoreAsync(storeId);
-
-    public static async Task<List<Store>> GetAllStoresAsync(IStoreDAL dal) =>
-        await dal.GetAllStoresAsync();
-
+    
+    //==============================
     public async Task<List<Order>> GetOrdersByStoreAsync(IOrderDAL dal) =>
         await dal.GetOrdersByStoreAsync(storeId);
-
+    
     public async Task<List<Order>> GetTodaysOrdersAsync(IOrderDAL dal) =>
         await dal.GetTodaysOrdersAsync(storeId);
-
-    public async Task<List<Order>> GetTodayOrdersAsync(IOrderDAL dal) =>
-        await dal.GetTodaysOrdersAsync(storeId);
-
+    
     public async Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(IStoreDAL dal) =>
         await dal.GetAvailableTimeSlotsAsync(storeId);
-
+    
+    public static async Task<List<Store>> GetAllStoresAsync(IStoreDAL dal) =>
+        await dal.GetAllStoresAsync();
+    
+    //==============================
+    
+    public static async Task<Store> GetStoreAsync(int storeId, IStoreDAL dal) =>
+        await dal.GetStoreAsync(storeId);
+    
     public override string ToString() =>
         $"[Store] Id={StoreId} | {Name} | {Address}";
 

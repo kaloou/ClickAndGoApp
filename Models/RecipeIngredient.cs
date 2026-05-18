@@ -31,7 +31,7 @@ public class RecipeIngredient
         set => product = value ?? throw new ArgumentNullException("Product cannot be null");
     }
 
-    // Constructeur kalou : pas de productId explicite (déduit du product)
+    // pas de productId explicite (déduit du product)
     public RecipeIngredient(int recipeId, Product product, int quantity)
     {
         RecipeId  = recipeId;
@@ -40,7 +40,7 @@ public class RecipeIngredient
         Quantity  = quantity;
     }
 
-    // Constructeur bywaa : productId explicite
+    // productId explicite
     public RecipeIngredient(int recipeId, int productId, int quantity, Product product)
     {
         RecipeId       = recipeId;

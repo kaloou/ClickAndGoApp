@@ -114,8 +114,7 @@ public class Order
     }
 
     public bool IsSelected => isSelected;
-
-    // Constructeur kalou : navigation objects
+    
     public Order(int orderId, DateTime orderDate, OrderStatus status,
                  int numberOfBoxes, int returnedBoxes, DateTime pickupDate,
                  PaymentStatus paymentStatus, Customer customer, TimeSlot? timeSlot, Store? store)
@@ -133,7 +132,6 @@ public class Order
         customerId    = customer.UserId;
     }
 
-    // Constructeur bywaa : int IDs (utilisé par OrderDAL)
     public Order(int orderId, DateTime orderDate, OrderStatus status,
                  int numberOfBoxes, int returnedBoxes, DateTime pickupDate,
                  PaymentStatus paymentStatus, int customerId, int timeSlotId)
@@ -149,19 +147,25 @@ public class Order
         TimeSlotId    = timeSlotId;
     }
 
-    // ==================== STATIC ====================
-
+    //==============================
+    public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal) =>
+        await dal.GetOrderLinesAsync(orderId);
+    
+    public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) =>
+        await dal.SetNumberOfBoxesAsync(orderId, numberOfBoxes);
+    
     public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal) =>
         await dal.GetByIdAsync(orderId);
-
-    public static async Task<List<Order>> GetOrdersByStoreAsync(int storeId, IOrderDAL dal) =>
-        await dal.GetOrdersByStoreAsync(storeId);
-
-    public static async Task<List<Order>> GetTodaysOrdersAsync(int storeId, IOrderDAL dal) =>
-        await dal.GetTodaysOrdersAsync(storeId);
-
-    // ==================== INSTANCE ====================
-
+    
+    public Order GetSelected(bool selected)
+    {
+        isSelected = selected;
+        return this;
+    }
+    
+    public async Task SetReturnedBoxesAsync(int returnedBoxes, IOrderDAL dal) =>
+        await dal.SetReturnedBoxesAsync(orderId, returnedBoxes);
+    
     public float ComputeTotal(float productsTotal) =>
         productsTotal + SERVICE_FEE + (NumberOfBoxes * BOX_DEPOSIT) - (ReturnedBoxes * BOX_DEPOSIT);
 
@@ -170,22 +174,13 @@ public class Order
         float productsTotal = await dal.GetProductsTotalAsync(orderId);
         return ComputeTotal(productsTotal);
     }
-
-    public Order GetSelected(bool selected)
-    {
-        isSelected = selected;
-        return this;
-    }
-
-    public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal) =>
-        await dal.GetOrderLinesAsync(orderId);
-
-    public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1) =>
-        await dal.AddProductAsync(orderId, productId, quantity);
-
+    
+    public async Task SetStatusAsync(OrderStatus status, IOrderDAL dal) =>
+        await dal.SetStatusAsync(orderId, status);
+    
     public async Task SetTimeSlotAsync(int timeSlotId, IOrderDAL dal) =>
         await dal.SetTimeSlotAsync(orderId, timeSlotId);
-
+    
     public void SetStore(int storeId)
     {
         if (store == null)
@@ -194,15 +189,14 @@ public class Order
             store.StoreId = storeId;
     }
 
-    public async Task SetStatusAsync(OrderStatus status, IOrderDAL dal) =>
-        await dal.SetStatusAsync(orderId, status);
-
-    public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) =>
-        await dal.SetNumberOfBoxesAsync(orderId, numberOfBoxes);
-
-    public async Task SetReturnedBoxesAsync(int returnedBoxes, IOrderDAL dal) =>
-        await dal.SetReturnedBoxesAsync(orderId, returnedBoxes);
-
+    public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1) =>
+        await dal.AddProductAsync(orderId, productId, quantity);
+    
+    // METHODE REMOVE A IMPLEMENTER
+    
+    
+    //==============================
+    
     public override string ToString() =>
         $"[Order] Id={OrderId} | Status={Status} | PickupDate={PickupDate:dd/MM/yyyy HH:mm} | CustomerId={CustomerId}";
 
