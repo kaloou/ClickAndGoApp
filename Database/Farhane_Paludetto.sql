@@ -133,7 +133,8 @@ GO
 CREATE TABLE Recipes (
     recipeId    INT IDENTITY(1,1) PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
-    description VARCHAR(500)
+    description VARCHAR(500), 
+    imagePath VARCHAR(255) NULL
 );
 GO
 
@@ -153,7 +154,7 @@ GO
 -- =============================================
 -- Données de test
 -- =============================================
-
+    
 -- =============================================
 -- STORES
 -- =============================================
