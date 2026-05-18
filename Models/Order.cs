@@ -197,8 +197,8 @@ public class Order
     
     //==============================
     
-    public override string ToString() =>
-        $"[Order] Id={OrderId} | Status={Status} | PickupDate={PickupDate:dd/MM/yyyy HH:mm} | CustomerId={CustomerId}";
+    public override string ToString() 
+        => $"[Order] Id={OrderId} | Status={Status} | PickupDate={PickupDate:dd/MM/yyyy HH:mm} | CustomerId={CustomerId}";
 
     public override bool Equals(object obj)
     {

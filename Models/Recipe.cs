@@ -47,19 +47,19 @@ public class Recipe
     }
 
     //==============================
-    public static async Task<List<Recipe>> GetAllAsync(IRecipeDAL dal) =>
-        await dal.GetAllAsync();
+    public static async Task<List<Recipe>> GetAllAsync(IRecipeDAL dal) 
+        => await dal.GetAllAsync();
 
-    public static async Task<Recipe> GetByIdAsync(int recipeId, IRecipeDAL dal) =>
-        await dal.GetByIdAsync(recipeId);
+    public static async Task<Recipe> GetByIdAsync(int recipeId, IRecipeDAL dal) 
+        => await dal.GetByIdAsync(recipeId);
 
-    public async Task<List<RecipeIngredient>> GetIngredientsAsync(IRecipeIngredientDAL dal) =>
-        await dal.GetByRecipeAsync(recipeId);
+    public async Task<List<RecipeIngredient>> GetIngredientsAsync(IRecipeIngredientDAL dal) 
+        => await dal.GetByRecipeAsync(recipeId);
     
     //==============================
 
-    public override string ToString() =>
-        $"[Recipe] Id={RecipeId} | {Name}";
+    public override string ToString() 
+        => $"[Recipe] Id={RecipeId} | {Name}";
 
     public override bool Equals(object obj)
     {

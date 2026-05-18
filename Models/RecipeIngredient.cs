@@ -49,8 +49,8 @@ public class RecipeIngredient
         Product        = product;
     }
 
-    public override string ToString() =>
-        $"[RecipeIngredient] RecipeId={RecipeId} | Product={Product?.Name} | Qty={Quantity}";
+    public override string ToString()
+        => $"[RecipeIngredient] RecipeId={RecipeId} | Product={Product?.Name} | Qty={Quantity}";
 
     public override bool Equals(object obj)
     {

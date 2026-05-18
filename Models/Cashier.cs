@@ -11,14 +11,14 @@ public class Cashier : Employee
     }
     
     //==============================
-    public static async Task<Cashier> GetByIdAsync(int cashierId, ICashierDAL dal) =>
-        await dal.GetByIdAsync(cashierId);
+    public static async Task<Cashier> GetByIdAsync(int cashierId, ICashierDAL dal) 
+        => await dal.GetByIdAsync(cashierId);
 
     public override async Task<Store> GetStoreAsync(IStoreDAL dal) =>
         await base.GetStoreAsync(dal);
     
     //==============================
 
-    public override string ToString() =>
-        $"[Cashier] Id={UserId} | {FirstName} {LastName} | Store={StoreId}";
+    public override string ToString()
+        => $"[Cashier] Id={UserId} | {FirstName} {LastName} | Store={StoreId}";
 }
