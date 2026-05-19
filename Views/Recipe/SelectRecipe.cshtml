@@ -1,0 +1,60 @@
+@model ClickAndGoApp.Models.Recipe
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="browse-page">
+
+    <a asp-action="Index" class="btn-back">← Retour aux recettes</a>
+
+    <div class="recipe-detail-layout">
+
+        @* Colonne gauche : image *@
+        <div class="recipe-detail-img">
+            @if (Model.ImagePath != null)
+            {
+                <img src="/images/@Model.ImagePath" alt="@Model.Name" />
+            }
+        </div>
+
+        @* Colonne droite : infos + ingrédients *@
+        <div class="recipe-detail-content">
+            <h2>@Model.Name</h2>
+            <p class="recipe-detail-desc">@Model.Description</p>
+
+            <h3>Ingrédients</h3>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Catégorie</th>
+                        <th>Quantité</th>
+                        <th>Prix unitaire</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ingredient in Model.Ingredients)
+                    {
+                        <tr>
+                            <td>@ingredient.Product.Name</td>
+                            <td>@ingredient.Product.Category.Name</td>
+                            <td>@ingredient.Quantity</td>
+                            <td>@ingredient.Product.Price.ToString("F2") €</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @* opt [customer want to add ingredients to cart] *@
+            @if (Context.Session.GetInt32("userId") != null)
+            {
+                <form method="post" asp-controller="Recipe" asp-action="AddIngredientsToCart">
+                    <input type="hidden" name="recipeId" value="@Model.RecipeId" />
+                    <button type="submit" class="btn-cta">Ajouter les ingrédients au panier</button>
+                </form>
+            }
+        </div>
+
+    </div>
+
+</div>

@@ -9,17 +9,14 @@ namespace ClickAndGoApp.Controllers
     public class CashierController : Controller
     {
         private readonly ICashierDAL _cashierDAL;
-        private readonly IStoreDAL _storeDAL;
         private readonly IOrderDAL _orderDAL;
         private readonly IOrderLineDAL _orderLineDAL;
 
         public CashierController(ICashierDAL cashierDAL,
-            IStoreDAL storeDAL,
             IOrderDAL orderDAL,
             IOrderLineDAL orderLineDAL)
         {
             _cashierDAL = cashierDAL;
-            _storeDAL = storeDAL;
             _orderDAL = orderDAL;
             _orderLineDAL = orderLineDAL;
         }
@@ -36,7 +33,7 @@ namespace ClickAndGoApp.Controllers
 
             int cashierId = (int)HttpContext.Session.GetInt32("userId");
             Cashier cashier = await Cashier.GetByIdAsync(cashierId, _cashierDAL);
-            Store store = await cashier.GetStoreAsync(_storeDAL);
+            Store store = await cashier.GetStoreAsync();
             List<Order> orders = await store.GetTodaysOrdersAsync(_orderDAL);
 
             if (orders.Count == 0)
@@ -61,12 +58,12 @@ namespace ClickAndGoApp.Controllers
             if (order == null)
                 return RedirectToAction("Index");
 
-            order.GetSelected(true);
+            Order selectedOrder = order.GetSelected(true);
 
             return View(new CashierOrderViewModel
             {
-                Order = order,
-                TotalAmount = await order.ComputeTotalAsync(_orderLineDAL)
+                Order = selectedOrder,
+                TotalAmount = await selectedOrder.ComputeTotalAsync(_orderLineDAL)
             });
         }
 
@@ -119,7 +116,7 @@ namespace ClickAndGoApp.Controllers
 
             int cashierId = (int)HttpContext.Session.GetInt32("userId");
             Cashier cashier = await Cashier.GetByIdAsync(cashierId, _cashierDAL);
-            Store store = await cashier.GetStoreAsync(_storeDAL);
+            Store store = await cashier.GetStoreAsync();
             List<Order> orders = await store.GetTodaysOrdersAsync(_orderDAL);
 
             Order order = await Order.GetByIdAsync(orderId, _orderDAL);

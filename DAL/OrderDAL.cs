@@ -19,11 +19,16 @@ public class OrderDAL : IOrderDAL
         await conn.OpenAsync();
 
         string query = @"
-            SELECT orderId, orderDate, status, numberOfBoxes,
-                   returnedBoxes, pickupDate, paymentStatus,
-                   customerId, timeSlotId
-            FROM [Order]
-            WHERE orderId = @orderId";
+            SELECT o.orderId, o.orderDate, o.status, o.numberOfBoxes,
+                   o.returnedBoxes, o.pickupDate, o.paymentStatus,
+                   u.userId, u.firstName, u.lastName, u.email, u.password,
+                   c.loyaltyPoints, c.phoneNumber, c.address,
+                   ts.timeSlotId AS tsId, ts.startTime, ts.endTime
+            FROM [Order] o
+            JOIN [User]   u  ON o.customerId   = u.userId
+            JOIN Customer c  ON u.userId        = c.userId
+            LEFT JOIN TimeSlot ts ON o.timeSlotId = ts.timeSlotId
+            WHERE o.orderId = @orderId";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@orderId", orderId);
@@ -44,9 +49,13 @@ public class OrderDAL : IOrderDAL
         string query = @"
             SELECT o.orderId, o.orderDate, o.status, o.numberOfBoxes,
                    o.returnedBoxes, o.pickupDate, o.paymentStatus,
-                   o.customerId, o.timeSlotId
+                   u.userId, u.firstName, u.lastName, u.email, u.password,
+                   c.loyaltyPoints, c.phoneNumber, c.address,
+                   ts.timeSlotId AS tsId, ts.startTime, ts.endTime
             FROM [Order] o
-            JOIN TimeSlot ts ON o.timeSlotId = ts.timeSlotId
+            JOIN [User]   u  ON o.customerId   = u.userId
+            JOIN Customer c  ON u.userId        = c.userId
+            JOIN TimeSlot ts ON o.timeSlotId   = ts.timeSlotId
             WHERE ts.storeId = @storeId
               AND CAST(o.pickupDate AS DATE) = CAST(DATEADD(day, 1, GETDATE()) AS DATE)
               AND o.status != 'Honored'";
@@ -57,7 +66,11 @@ public class OrderDAL : IOrderDAL
         using SqlDataReader reader = await cmd.ExecuteReaderAsync();
         var orders = new List<Order>();
         while (await reader.ReadAsync())
-            orders.Add(ReadOrder(reader));
+        {
+            Order order = ReadOrder(reader);
+            order.SetStore(storeId);
+            orders.Add(order);
+        }
         return orders;
     }
 
@@ -69,9 +82,13 @@ public class OrderDAL : IOrderDAL
         string query = @"
             SELECT o.orderId, o.orderDate, o.status, o.numberOfBoxes,
                    o.returnedBoxes, o.pickupDate, o.paymentStatus,
-                   o.customerId, o.timeSlotId
+                   u.userId, u.firstName, u.lastName, u.email, u.password,
+                   c.loyaltyPoints, c.phoneNumber, c.address,
+                   ts.timeSlotId AS tsId, ts.startTime, ts.endTime
             FROM [Order] o
-            JOIN TimeSlot ts ON o.timeSlotId = ts.timeSlotId
+            JOIN [User]   u  ON o.customerId   = u.userId
+            JOIN Customer c  ON u.userId        = c.userId
+            JOIN TimeSlot ts ON o.timeSlotId   = ts.timeSlotId
             WHERE ts.storeId = @storeId
               AND CAST(o.pickupDate AS DATE) = CAST(GETDATE() AS DATE)
               AND o.status != 'Honored'";
@@ -82,7 +99,11 @@ public class OrderDAL : IOrderDAL
         using SqlDataReader reader = await cmd.ExecuteReaderAsync();
         var orders = new List<Order>();
         while (await reader.ReadAsync())
-            orders.Add(ReadOrder(reader));
+        {
+            Order order = ReadOrder(reader);
+            order.SetStore(storeId);
+            orders.Add(order);
+        }
         return orders;
     }
 
@@ -166,7 +187,26 @@ public class OrderDAL : IOrderDAL
             ? DateTime.MinValue
             : (DateTime)reader["pickupDate"];
 
-        int timeSlotId = reader["timeSlotId"] == DBNull.Value ? 0 : (int)reader["timeSlotId"];
+        var customer = new Customer(
+            (int)reader["userId"],
+            (string)reader["firstName"],
+            (string)reader["lastName"],
+            (string)reader["email"],
+            (string)reader["password"],
+            (int)reader["loyaltyPoints"],
+            (int)reader["phoneNumber"],
+            reader["address"] == DBNull.Value ? null : (string)reader["address"]
+        );
+
+        TimeSlot? timeSlot = null;
+        if (reader["tsId"] != DBNull.Value)
+        {
+            timeSlot = new TimeSlot(
+                (int)reader["tsId"],
+                (DateTime)reader["startTime"],
+                (DateTime)reader["endTime"]
+            );
+        }
 
         return new Order(
             (int)reader["orderId"],
@@ -176,8 +216,9 @@ public class OrderDAL : IOrderDAL
             (int)reader["returnedBoxes"],
             pickupDate,
             Enum.Parse<PaymentStatus>((string)reader["paymentStatus"]),
-            (int)reader["customerId"],
-            timeSlotId
+            customer,
+            timeSlot,
+            null
         );
     }
 }
