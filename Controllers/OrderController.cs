@@ -61,11 +61,7 @@ public class OrderController : Controller
         if (order.TimeSlotId != 0) // signifie que le timeSlot n'a pas encore été choisi
             ViewBag.Total = await order.ComputeTotalAsync(orderLineDal);
         
-        var vm = new CartViewModel // on réutilise le viewmodel de cart pour visualiser les produits
-        {
-            Order = order,
-            OrderLines = orderLines
-        };
+        var vm = new CartViewModel(order, orderLines);
         
         return View(vm);
     }

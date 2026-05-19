@@ -2,9 +2,4 @@ using ClickAndGoApp.Models;
 
 namespace ClickAndGoApp.ViewModels;
 
-public class OrderDetailsViewModel
-{
-    public Order Order { get; set; }
-    public List<OrderLine> OrderLines { get; set; }
-    public List<Product> Products { get; set; }
-}
+public record OrderDetailsViewModel(Order Order, List<OrderLine> OrderLines, List<Product> Products);

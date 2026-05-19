@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ClickAndGoApp.DAL;
 using ClickAndGoApp.Models;
 using ClickAndGoApp.ViewModels;
+using ClickAndGoApp.Exceptions;
 
 namespace ClickAndGoApp.Controllers
 {
@@ -30,15 +31,22 @@ namespace ClickAndGoApp.Controllers
 
             ViewBag.FirstName = HttpContext.Session.GetString("firstName");
 
-            int pickerId = (int)HttpContext.Session.GetInt32("userId");
-            OrderPicker orderPicker = await OrderPicker.GetByIdAsync(pickerId, _orderPickerDAL);
-            Store store = await orderPicker.GetStoreAsync();
-            List<Order> orders = await store.GetOrdersByStoreAsync(_orderDAL);
+            try
+            {
+                int pickerId = (int)HttpContext.Session.GetInt32("userId");
+                OrderPicker orderPicker = await OrderPicker.GetByIdAsync(pickerId, _orderPickerDAL);
+                Store store = await orderPicker.GetStoreAsync();
+                List<Order> orders = await store.GetOrdersByStoreAsync(_orderDAL);
 
-            if (orders.Count == 0)
-                ViewBag.Message = "No orders to prepare";
+                if (orders.Count == 0)
+                    ViewBag.Message = "No orders to prepare";
 
-            return View(orders);
+                return View(orders);
+            }
+            catch (EntityNotFoundException)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         // ============================================
@@ -51,27 +59,18 @@ namespace ClickAndGoApp.Controllers
 
             ViewBag.FirstName = HttpContext.Session.GetString("firstName");
 
-            Order order = await Order.GetByIdAsync(id, _orderDAL);
-
-            if (order == null)
-                return RedirectToAction("Index");
-
-            List<OrderLine> orderLines = await order.GetOrderLinesAsync(_orderLineDAL);
-
-            List<Product> products = new List<Product>();
-            foreach (OrderLine orderLine in orderLines)
+            try
             {
-                products.Add(orderLine.GetProduct());
+                Order order = await Order.GetByIdAsync(id, _orderDAL);
+                List<OrderLine> orderLines = await order.GetOrderLinesAsync(_orderLineDAL);
+                List<Product> products = orderLines.Select(ol => ol.GetProduct()).ToList();
+
+                return View(new OrderDetailsViewModel(order, orderLines, products));
             }
-
-            var viewModel = new OrderDetailsViewModel
+            catch (EntityNotFoundException)
             {
-                Order = order,
-                OrderLines = orderLines,
-                Products = products
-            };
-
-            return View(viewModel);
+                return RedirectToAction("Index");
+            }
         }
 
         // ============================================
@@ -86,40 +85,31 @@ namespace ClickAndGoApp.Controllers
 
             ViewBag.FirstName = HttpContext.Session.GetString("firstName");
 
-            Order order = await Order.GetByIdAsync(orderId, _orderDAL);
-            List<OrderLine> orderLines = await order.GetOrderLinesAsync(_orderLineDAL);
-
-            List<Product> products = new List<Product>();
-            foreach (OrderLine orderLine in orderLines)
-                products.Add(orderLine.GetProduct());
-
-            if (numberOfBoxes <= 0)
+            try
             {
-                ViewBag.Error = "Invalid value — number of boxes must be greater than 0";
-                return View("OrderDetails", new OrderDetailsViewModel
+                Order order = await Order.GetByIdAsync(orderId, _orderDAL);
+                List<OrderLine> orderLines = await order.GetOrderLinesAsync(_orderLineDAL);
+                List<Product> products = orderLines.Select(ol => ol.GetProduct()).ToList();
+
+                if (numberOfBoxes <= 0)
                 {
-                    Order = order,
-                    OrderLines = orderLines,
-                    Products = products
-                });
+                    ViewBag.Error = "Invalid value — number of boxes must be greater than 0";
+                    return View("OrderDetails", new OrderDetailsViewModel(order, orderLines, products));
+                }
+
+                await order.SetNumberOfBoxesAsync(numberOfBoxes, _orderDAL);
+
+                order = await Order.GetByIdAsync(orderId, _orderDAL);
+                orderLines = await order.GetOrderLinesAsync(_orderLineDAL);
+                products = orderLines.Select(ol => ol.GetProduct()).ToList();
+
+                ViewBag.Success = "Number of boxes saved successfully";
+                return View("OrderDetails", new OrderDetailsViewModel(order, orderLines, products));
             }
-
-            await order.SetNumberOfBoxesAsync(numberOfBoxes, _orderDAL);
-
-            order = await Order.GetByIdAsync(orderId, _orderDAL);
-            orderLines = await order.GetOrderLinesAsync(_orderLineDAL);
-
-            products = new List<Product>();
-            foreach (OrderLine orderLine in orderLines)
-                products.Add(orderLine.GetProduct());
-
-            ViewBag.Success = "Number of boxes saved successfully";
-            return View("OrderDetails", new OrderDetailsViewModel
+            catch (EntityNotFoundException)
             {
-                Order = order,
-                OrderLines = orderLines,
-                Products = products
-            });
+                return RedirectToAction("Index");
+            }
         }
     }
 }

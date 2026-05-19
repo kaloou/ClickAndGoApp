@@ -22,17 +22,17 @@ public class CartController : Controller
         // on check si une order(Cart) est bien en cours, sinon on envoie le view model avec données vides
         int? orderId = HttpContext.Session.GetInt32("orderId");
         if (orderId == null)
-            return View(new CartViewModel { Order = null, OrderLines = new() });
+            return View(new CartViewModel(null, new()));
 
         // on récupère order(cart)
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
         if (order == null) // order id corrompu
-            return View(new CartViewModel { Order = null, OrderLines = new() });
+            return View(new CartViewModel(null, new()));
 
         // on récupère sa liste de produits
         List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
-        return View(new CartViewModel { Order = order, OrderLines = orderLines });
+        return View(new CartViewModel(order, orderLines));
     }
 
     // ====== Remove Product ======

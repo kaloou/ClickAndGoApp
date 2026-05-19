@@ -2,20 +2,8 @@ using ClickAndGoApp.Models;
 
 namespace ClickAndGoApp.ViewModels;
 
-public class CartViewModel
+public record CartViewModel(Order Order, List<OrderLine> OrderLines)
 {
-    public Order Order { get; set; }
-    public List<OrderLine> OrderLines { get; set; }
-
-    public float ProductsTotal
-    {
-        get
-        {
-            float total = 0;
-            foreach (OrderLine ol in OrderLines)
-                total += ol.Product.Price * ol.Quantity;
-            return total;
-        }
-    }
+    public float ProductsTotal => OrderLines.Sum(ol => ol.Product.Price * ol.Quantity);
     public float Total => Order.ComputeTotal(ProductsTotal);
 }

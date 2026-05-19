@@ -19,7 +19,12 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        TempData["Success"] = "Bienvenue sur notre site";
+        if (HttpContext.Session.GetInt32("welcomed") == null)
+        {
+            TempData["Success"] = "Bienvenue sur notre site";
+            HttpContext.Session.SetInt32("welcomed", 1);
+        }
+
         List<Recipe> recipes = await Recipe.GetAllAsync(recipeDal);
         return View(recipes.Take(4).ToList());
     }
@@ -27,6 +32,6 @@ public class HomeController : Controller
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(new ErrorViewModel(Activity.Current?.Id ?? HttpContext.TraceIdentifier));
     }
 }

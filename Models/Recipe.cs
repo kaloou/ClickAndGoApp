@@ -2,12 +2,13 @@ using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.Models;
 
-public class Recipe
+public class Recipe : IDisposable
 {
     private int recipeId;
     private string name;
     private string description;
     private LinkedList<RecipeIngredient> ingredients = new LinkedList<RecipeIngredient>();
+    private bool disposed = false;
 
     public string? ImagePath { get; set; }
 
@@ -60,7 +61,28 @@ public class Recipe
     
     //==============================
 
-    public override string ToString() 
+    //==============================
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposed)
+        {
+            if (disposing)
+                ingredients.Clear();
+            disposed = true;
+        }
+    }
+
+    ~Recipe() => Dispose(false);
+
+    //==============================
+
+    public override string ToString()
         => $"[Recipe] Id={RecipeId} | {Name}";
 
     public override bool Equals(object obj)
