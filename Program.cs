@@ -15,7 +15,11 @@ builder.Services.AddSession(options => //Activate the session
 });
 
 //Infrastructure
-builder.Services.AddTransient<DBConnection>();
+//sp = serviceProvider
+builder.Services.AddSingleton(sp =>
+    DBConnection.GetInstance(sp.GetRequiredService<IConfiguration>()));//GetRequiredService sert a lancer une exception si le service
+//N'est pas trouvé
+
 builder.Services.AddTransient<IProductDAL,           ProductDAL>();
 builder.Services.AddTransient<ICategoryDAL,          CategoryDAL>();
 builder.Services.AddTransient<IStoreDAL,             StoreDAL>();
