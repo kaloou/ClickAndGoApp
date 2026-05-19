@@ -167,7 +167,41 @@ public class OrderDAL : IOrderDAL
         return (int)(await cmd.ExecuteScalarAsync())!;
     }
 
-    public Task<List<Order>> GetOrdersByCustomerAsync(int customerId) => Task.FromResult(new List<Order>());
+    public async Task<List<Order>> GetOrdersByCustomerAsync(int customerId)
+    {
+        using SqlConnection conn = _db.GetConnexion();
+        await conn.OpenAsync();
+
+        string query = @"
+            SELECT o.orderId, o.orderDate, o.status, o.numberOfBoxes,
+                   o.returnedBoxes, o.pickupDate, o.paymentStatus,
+                   u.userId, u.firstName, u.lastName, u.email, u.password,
+                   c.loyaltyPoints, c.phoneNumber, c.address,
+                   ts.timeSlotId AS tsId, ts.startTime, ts.endTime
+            FROM [Order] o
+            JOIN [User]   u  ON o.customerId  = u.userId
+            JOIN Customer c  ON u.userId       = c.userId
+            LEFT JOIN TimeSlot ts ON o.timeSlotId = ts.timeSlotId
+            WHERE o.customerId = @customerId
+              AND o.status != 'InTheCart'
+            ORDER BY o.orderDate DESC";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@customerId", customerId);
+
+        try
+        {
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            var orders = new List<Order>();
+            while (await reader.ReadAsync())
+                orders.Add(ReadOrder(reader));
+            return orders;
+        }
+        catch (SqlException ex)
+        {
+            throw new DatabaseException("Failed to retrieve orders for customer.", ex);
+        }
+    }
     public Task<List<Order>> GetOrdersToPrepareAsync(int storeId) => Task.FromResult(new List<Order>());
 
     public async Task SetTimeSlotAsync(int orderId, int timeSlotId)

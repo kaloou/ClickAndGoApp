@@ -126,7 +126,7 @@ public class Order : IDisposable
     public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) 
         => await dal.SetNumberOfBoxesAsync(orderId, numberOfBoxes);
     
-    public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal) 
+    public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal)
         => await dal.GetByIdAsync(orderId);
     
     public Order GetSelected(bool selected)
@@ -164,6 +164,8 @@ public class Order : IDisposable
     public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1) =>
         await dal.AddProductAsync(orderId, productId, quantity);
     
+    public static async Task<List<Order>> GetOrdersByCustomerAsync(int customerId, IOrderDAL dal)
+        => await dal.GetOrdersByCustomerAsync(customerId);
     // METHODE REMOVE A IMPLEMENTER
     
     
