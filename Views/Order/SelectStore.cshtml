@@ -1,0 +1,32 @@
+@model List<ClickAndGoApp.Models.Store>
+@{
+    ViewData["Title"] = "Choisir un magasin";
+}
+
+<div class="browse-page">
+
+    <div class="browse-header">
+        <h1>Choisir un magasin</h1>
+        <p class="browse-subtitle">Sélectionnez le magasin où vous souhaitez retirer votre commande</p>
+    </div>
+
+    <div class="products-grid">
+        @foreach (var store in Model)
+        {
+            <form asp-action="SelectStore" method="post">
+                <input type="hidden" name="storeId" value="@store.StoreId"/>
+                <button type="submit" class="product-card" style="background:none; border:none; cursor:pointer; text-align:left; width:100%">
+                    <div class="product-info">
+                        <p class="product-name">@store.Name</p>
+                        <p class="product-category">@store.Address</p>
+                    </div>
+                </button>
+            </form>
+        }
+    </div>
+
+    <div style="margin-top:24px">
+        <a asp-action="Index" style="color:var(--text-gray); font-size:0.9rem">← Retour au récapitulatif</a>
+    </div>
+
+</div>

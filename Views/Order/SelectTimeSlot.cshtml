@@ -1,0 +1,47 @@
+@model List<ClickAndGoApp.Models.TimeSlot>
+@{
+    ViewData["Title"] = "Choisir un créneau";
+    string storeName = ViewBag.StoreName as string;
+}
+
+<div class="browse-page">
+
+    <div class="browse-header">
+        <h1>Choisir un créneau</h1>
+        <p class="browse-subtitle">Créneaux disponibles pour @storeName</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="no-results">
+            Aucun créneau disponible pour ce magasin.
+            <a asp-action="SelectStore">Choisir un autre magasin</a>
+        </div>
+    }
+    else
+    {
+        <div class="product-detail-card" style="flex-direction:column; gap:0; padding:0; overflow:hidden">
+            @foreach (var slot in Model)
+            {
+                <form asp-action="SelectTimeSlot" method="post">
+                    <input type="hidden" name="timeSlotId" value="@slot.TimeSlotId"/>
+                    <button type="submit" style="width:100%; background:none; border:none; border-bottom:1px solid #f0f0f0; padding:18px 32px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; text-align:left">
+                        <div>
+                            <p style="font-weight:600; margin:0">@slot.StartTime.ToString("dddd dd MMMM yyyy")</p>
+                            <p style="color:var(--text-gray); font-size:0.9rem; margin:4px 0 0">
+                                @slot.StartTime.ToString("HH:mm") – @slot.EndTime.ToString("HH:mm")
+                            </p>
+                        </div>
+                        <span class="btn-cta" style="padding:8px 16px; font-size:0.85rem; pointer-events:none">Choisir</span>
+                    </button>
+                </form>
+            }
+        </div>
+    }
+
+    <div style="margin-top:24px; display:flex; gap:24px">
+        <a asp-action="SelectStore" style="color:var(--text-gray); font-size:0.9rem">← Changer de magasin</a>
+        <a asp-action="Index" style="color:var(--text-gray); font-size:0.9rem">← Retour au récapitulatif</a>
+    </div>
+
+</div>

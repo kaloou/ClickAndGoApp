@@ -1,0 +1,105 @@
+@model ClickAndGoApp.ViewModels.CartViewModel
+@{
+    ViewData["Title"] = "Passer commande";
+    var store     = ViewBag.SelectedStore as ClickAndGoApp.Models.Store;
+    bool hasStore = store != null;
+    bool hasSlot  = Model.Order.TimeSlotId > 0;
+    float? total  = ViewBag.Total as float?;
+}
+
+<div class="browse-page">
+
+    <div class="browse-header">
+        <h1>Récapitulatif de commande</h1>
+    </div>
+
+    @* Liste des produits (lecture seule) *@
+    <div class="product-detail-card" style="flex-direction:column; gap:0; padding:0; overflow:hidden; margin-bottom:24px">
+        @foreach (var line in Model.OrderLines)
+        {
+            <div style="display:flex; align-items:center; gap:24px; padding:16px 32px; border-bottom:1px solid #f0f0f0">
+                <div class="product-detail-img" style="width:60px; height:60px; flex-shrink:0; font-size:1.3rem">
+                    @if (line.Product.ImagePath != null)
+                    {
+                        <img src="@line.Product.ImagePath" alt="@line.Product.Name"/>
+                    }
+                </div>
+                <div style="flex:1">
+                    <p class="product-detail-category">@line.Product.Category.Name</p>
+                    <p class="product-detail-name" style="font-size:1rem">@line.Product.Name</p>
+                </div>
+                <div style="text-align:right">
+                    <p style="font-size:0.85rem; color:var(--text-gray)">x@(line.Quantity)</p>
+                    <p class="product-detail-price" style="font-size:1rem">@((line.Product.Price * line.Quantity).ToString("F2")) €</p>
+                </div>
+            </div>
+        }
+        <div style="padding:16px 32px; display:flex; justify-content:flex-end">
+            <p style="color:var(--text-gray); font-size:0.9rem">Sous-total : <strong>@Model.ProductsTotal.ToString("F2") €</strong></p>
+        </div>
+    </div>
+
+    @* Étapes de checkout *@
+    <div class="product-detail-card" style="flex-direction:column; gap:0; padding:0; overflow:hidden">
+
+        @* Étape 1 : Magasin *@
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:20px 32px; border-bottom:1px solid #f0f0f0">
+            <div>
+                <p style="font-weight:600; margin:0">Magasin</p>
+                @if (hasStore)
+                {
+                    <p style="color:var(--text-gray); font-size:0.9rem; margin:4px 0 0">@store.Name — @store.Address</p>
+                }
+                else
+                {
+                    <p style="color:var(--text-gray); font-size:0.9rem; margin:4px 0 0">Non sélectionné</p>
+                }
+            </div>
+            <a asp-action="SelectStore" class="btn-cta" style="padding:8px 16px; font-size:0.85rem">
+                @(hasStore ? "Modifier" : "Choisir")
+            </a>
+        </div>
+
+        @* Étape 2 : Créneau horaire *@
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:20px 32px; border-bottom:1px solid #f0f0f0">
+            <div>
+                <p style="font-weight:600; margin:0">Créneau de retrait</p>
+                @if (hasSlot)
+                {
+                    <p style="color:var(--text-gray); font-size:0.9rem; margin:4px 0 0">@Model.Order.PickupDate.ToString("dddd dd MMMM yyyy — HH:mm")</p>
+                }
+                else
+                {
+                    <p style="color:var(--text-gray); font-size:0.9rem; margin:4px 0 0">Non sélectionné</p>
+                }
+            </div>
+            @if (hasStore)
+            {
+                <a asp-action="SelectTimeSlot" class="btn-cta" style="padding:8px 16px; font-size:0.85rem">
+                    @(hasSlot ? "Modifier" : "Choisir")
+                </a>
+            }
+            else
+            {
+                <span style="color:var(--text-gray); font-size:0.85rem">Choisir un magasin d'abord</span>
+            }
+        </div>
+
+        @* Total + confirmation si tout est sélectionné *@
+        @if (hasStore && hasSlot && total != null)
+        {
+            <div style="padding:24px 32px; display:flex; flex-direction:column; align-items:flex-end; gap:12px">
+                <div style="text-align:right">
+                    <p style="color:var(--text-gray); font-size:0.85rem">Produits : @Model.ProductsTotal.ToString("F2") €</p>
+                    <p style="color:var(--text-gray); font-size:0.85rem">Frais de service : @ClickAndGoApp.Models.Order.SERVICE_FEE.ToString("F2") €</p>
+                    <p style="font-size:1.2rem; font-weight:700; color:var(--primary)">Total estimé : @((float)total).ToString("F2") €</p>
+                </div>
+                <form asp-action="ConfirmOrder" method="post">
+                    <button type="submit" class="btn-cta">Confirmer la commande</button>
+                </form>
+            </div>
+        }
+
+    </div>
+
+</div>
