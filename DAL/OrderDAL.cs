@@ -194,7 +194,7 @@ public class OrderDAL : IOrderDAL
             (string)reader["email"],
             (string)reader["password"],
             (int)reader["loyaltyPoints"],
-            (int)reader["phoneNumber"],
+            Convert.ToInt32(reader["phoneNumber"]),
             reader["address"] == DBNull.Value ? null : (string)reader["address"]
         );
 
