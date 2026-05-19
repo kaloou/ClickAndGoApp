@@ -56,7 +56,7 @@ public class Recipe : IDisposable
     public static async Task<Recipe> GetByIdAsync(int recipeId, IRecipeDAL dal) 
         => await dal.GetByIdAsync(recipeId);
 
-    public async Task<List<RecipeIngredient>> GetIngredientsAsync(IRecipeIngredientDAL dal) 
+    public async Task<List<RecipeIngredient>> GetIngredientsAsync(IRecipeIngredientDAL dal)
         => await dal.GetByRecipeAsync(recipeId);
     
     //==============================
