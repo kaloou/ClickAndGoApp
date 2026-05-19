@@ -10,6 +10,7 @@ public class DBConnection
     private DBConnection(IConfiguration configuration)
         => connectionString = configuration.GetConnectionString("DefaultConnection");
     //Singleton
+    //Dependency injection(DI)
     public static DBConnection GetInstance(IConfiguration configuration)
     {
         if (instance == null)
