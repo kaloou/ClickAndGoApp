@@ -3,7 +3,7 @@ using ClickAndGoApp.Models.Enums;
 
 namespace ClickAndGoApp.Models;
 
-public class Order
+public class Order : IDisposable
 {
     private int orderId;
     private DateTime orderDate;
@@ -18,6 +18,8 @@ public class Order
     private Store? store;
     private List<OrderLine> orderLines = new List<OrderLine>();
 
+    private bool disposed = false;
+    
     public const float SERVICE_FEE = 5.95f;
     public const float BOX_DEPOSIT = 5.95f;
 
@@ -167,7 +169,28 @@ public class Order
     
     //==============================
     
-    public override string ToString() 
+    //==============================
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposed)
+        {
+            if (disposing)
+                orderLines.Clear();
+            disposed = true;
+        }
+    }
+
+    ~Order() => Dispose(false);
+
+    //==============================
+
+    public override string ToString()
         => $"[Order] Id={OrderId} | Status={Status} | PickupDate={PickupDate:dd/MM/yyyy HH:mm} | CustomerId={CustomerId}";
 
     public override bool Equals(object obj)

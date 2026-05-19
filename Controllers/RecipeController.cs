@@ -54,7 +54,7 @@ public class RecipeController : Controller
         try
         {
             // 2-3 : GetById(recipeId) → recipe
-            Recipe recipe = await Recipe.GetByIdAsync(recipeId, recipeDal);
+            using Recipe recipe = await Recipe.GetByIdAsync(recipeId, recipeDal);
 
             int? orderId = HttpContext.Session.GetInt32("orderId");
             if (orderId is null)
@@ -65,7 +65,7 @@ public class RecipeController : Controller
             }
 
             // 4-5 : GetById(orderId) → order
-            Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
+            using Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
 
             // 6-8 : GetIngredients() → ingredients
             List<RecipeIngredient> ingredients = await recipe.GetIngredientsAsync(recipeIngredientDal);

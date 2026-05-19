@@ -126,7 +126,7 @@ namespace ClickAndGoApp.Controllers
                 Store store = await cashier.GetStoreAsync();
                 List<Order> orders = await store.GetTodaysOrdersAsync(_orderDAL);
 
-                Order order = await Order.GetByIdAsync(orderId, _orderDAL);
+                using Order order = await Order.GetByIdAsync(orderId, _orderDAL);
                 await order.SetStatusAsync(OrderStatus.Honored, _orderDAL);
                 orders.Remove(order);
 
