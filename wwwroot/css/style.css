@@ -1102,3 +1102,321 @@ a.product-card {
     from { opacity: 1; transform: translateX(0); }
     to   { opacity: 0; transform: translateX(40px); }
 }
+
+/* ============================================
+   PROFILE PAGE
+   ============================================ */
+.section-card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 32px;
+}
+
+.section-card:last-child {
+    margin-bottom: 0;
+}
+
+.section-header {
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.section-form {
+    padding: 24px 32px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.input-disabled {
+    background: #f9f9f9;
+    color: var(--text-gray);
+}
+
+.order-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.order-row:last-child {
+    border-bottom: none;
+}
+
+.order-row-title {
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.order-row-meta {
+    margin: 4px 0 0;
+}
+
+/* ============================================
+   CART
+   ============================================ */
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.cart-item:last-child { border-bottom: none; }
+
+.cart-item-sm {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.cart-item-info { flex: 1; }
+
+.cart-item-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.cart-item-price {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.cart-item-right { text-align: right; }
+
+.cart-qty-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cart-qty-input { width: 64px; }
+
+.btn-remove {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #e53e3e;
+    font-size: 1.2rem;
+    width: auto;
+    padding: 0;
+}
+
+.btn-remove:hover {
+    background: transparent;
+    color: #c53030;
+}
+
+.cart-footer {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 32px;
+    align-items: center;
+}
+
+.price-summary { text-align: right; }
+
+.price-summary-label {
+    color: var(--text-gray);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.price-summary-amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* ============================================
+   CHECKOUT
+   ============================================ */
+.checkout-footer {
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.checkout-totals { text-align: right; }
+
+.checkout-total-line {
+    color: var(--text-gray);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.checkout-total-main {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+}
+
+/* ============================================
+   BUTTON VARIANTS
+   ============================================ */
+.btn-cta-sm {
+    display: inline-block;
+    background: var(--primary);
+    color: var(--white);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    transition: background 0.2s;
+}
+
+.btn-cta-sm:hover {
+    background: var(--primary-light);
+    color: var(--white);
+}
+
+.btn-card {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.btn-card:hover { background: transparent; }
+
+/* ============================================
+   NAVIGATION LINKS
+   ============================================ */
+.page-nav {
+    margin-top: 24px;
+    display: flex;
+    gap: 24px;
+}
+
+.nav-back {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.nav-back:hover { color: var(--text-dark); }
+
+/* ============================================
+   SELECT TIMESLOT
+   ============================================ */
+.timeslot-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    color: inherit;
+}
+
+.timeslot-btn:hover { background: #f9fafb; }
+
+.timeslot-title {
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.timeslot-meta {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    margin: 4px 0 0;
+}
+
+/* ============================================
+   CONFIRMATION PAGE
+   ============================================ */
+.confirmation-page {
+    text-align: center;
+    padding-top: 48px;
+}
+
+.confirmation-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+}
+
+.confirmation-card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 32px;
+    max-width: 480px;
+    margin: 32px auto;
+}
+
+.confirmation-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.confirmation-row-border {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.text-gray { color: var(--text-gray); }
+
+/* ============================================
+   MISC
+   ============================================ */
+.login-hint {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.add-to-cart-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.qty-input { width: 80px; }

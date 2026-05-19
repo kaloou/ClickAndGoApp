@@ -24,6 +24,7 @@ public class AuthController : Controller
     }
     // ====== Login ====== (Redirige selon le role)
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> LoginAsync(LoginViewModel model)
     {
         if (!ModelState.IsValid)
@@ -62,6 +63,7 @@ public class AuthController : Controller
     
     // Create Account
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(string firstName, string lastName, string email, string password, string? phoneNumber, string? address)
     {
         if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) ||
