@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
-// namespace via ClickAndGoApp.DAL
+using ClickAndGoApp.Exceptions;
 
 namespace ClickAndGoApp.DAL;
 
@@ -31,21 +31,29 @@ public class CashierDAL : ICashierDAL
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@cashierId", cashierId);
 
-        using SqlDataReader reader = await cmd.ExecuteReaderAsync();
-        if (!await reader.ReadAsync()) return null;
+        try
+        {
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            if (!await reader.ReadAsync())
+                throw new EntityNotFoundException("Cashier", cashierId);
 
-        var store = new Store(
-            (int)reader["storeId"],
-            (string)reader["storeName"],
-            (string)reader["storeAddress"]
-        );
-        return new Cashier(
-            (int)reader["userId"],
-            (string)reader["firstName"],
-            (string)reader["lastName"],
-            (string)reader["email"],
-            (string)reader["password"],
-            store
-        );
+            var store = new Store(
+                (int)reader["storeId"],
+                (string)reader["storeName"],
+                (string)reader["storeAddress"]
+            );
+            return new Cashier(
+                (int)reader["userId"],
+                (string)reader["firstName"],
+                (string)reader["lastName"],
+                (string)reader["email"],
+                (string)reader["password"],
+                store
+            );
+        }
+        catch (SqlException ex)
+        {
+            throw new DatabaseException("Failed to retrieve cashier.", ex);
+        }
     }
 }

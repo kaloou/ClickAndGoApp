@@ -3,6 +3,7 @@ using ClickAndGoApp.DAL;
 using ClickAndGoApp.Models;
 using ClickAndGoApp.Models.Enums;
 using ClickAndGoApp.ViewModels;
+using ClickAndGoApp.Exceptions;
 
 namespace ClickAndGoApp.Controllers
 {
@@ -31,15 +32,22 @@ namespace ClickAndGoApp.Controllers
 
             ViewBag.FirstName = HttpContext.Session.GetString("firstName");
 
-            int cashierId = (int)HttpContext.Session.GetInt32("userId");
-            Cashier cashier = await Cashier.GetByIdAsync(cashierId, _cashierDAL);
-            Store store = await cashier.GetStoreAsync();
-            List<Order> orders = await store.GetTodaysOrdersAsync(_orderDAL);
+            try
+            {
+                int cashierId = (int)HttpContext.Session.GetInt32("userId");
+                Cashier cashier = await Cashier.GetByIdAsync(cashierId, _cashierDAL);
+                Store store = await cashier.GetStoreAsync();
+                List<Order> orders = await store.GetTodaysOrdersAsync(_orderDAL);
 
-            if (orders.Count == 0)
-                ViewBag.Message = "No orders scheduled today";
+                if (orders.Count == 0)
+                    ViewBag.Message = "No orders scheduled today";
 
-            return View(orders);
+                return View(orders);
+            }
+            catch (EntityNotFoundException)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         // ============================================
@@ -53,14 +61,16 @@ namespace ClickAndGoApp.Controllers
 
             ViewBag.FirstName = HttpContext.Session.GetString("firstName");
 
-            Order order = await Order.GetByIdAsync(orderId, _orderDAL);
-
-            if (order == null)
+            try
+            {
+                Order order = await Order.GetByIdAsync(orderId, _orderDAL);
+                Order selectedOrder = order.GetSelected(true);
+                return View(new CashierOrderViewModel(selectedOrder, await selectedOrder.ComputeTotalAsync(_orderLineDAL)));
+            }
+            catch (EntityNotFoundException)
+            {
                 return RedirectToAction("Index");
-
-            Order selectedOrder = order.GetSelected(true);
-
-            return View(new CashierOrderViewModel(selectedOrder, await selectedOrder.ComputeTotalAsync(_orderLineDAL)));
+            }
         }
 
         // ============================================
@@ -75,19 +85,26 @@ namespace ClickAndGoApp.Controllers
 
             ViewBag.FirstName = HttpContext.Session.GetString("firstName");
 
-            Order order = await Order.GetByIdAsync(orderId, _orderDAL);
-
-            if (returnedBoxes < 0)
+            try
             {
-                ViewBag.Error = "Invalid value — number of returned boxes cannot be negative";
+                Order order = await Order.GetByIdAsync(orderId, _orderDAL);
+
+                if (returnedBoxes < 0)
+                {
+                    ViewBag.Error = "Invalid value — number of returned boxes cannot be negative";
+                    return View("SelectCommand", new CashierOrderViewModel(order, await order.ComputeTotalAsync(_orderLineDAL)));
+                }
+
+                await order.SetReturnedBoxesAsync(returnedBoxes, _orderDAL);
+
+                order = await Order.GetByIdAsync(orderId, _orderDAL);
+                ViewBag.Success = "Returned boxes saved successfully";
                 return View("SelectCommand", new CashierOrderViewModel(order, await order.ComputeTotalAsync(_orderLineDAL)));
             }
-
-            await order.SetReturnedBoxesAsync(returnedBoxes, _orderDAL);
-
-            order = await Order.GetByIdAsync(orderId, _orderDAL);
-            ViewBag.Success = "Returned boxes saved successfully";
-            return View("SelectCommand", new CashierOrderViewModel(order, await order.ComputeTotalAsync(_orderLineDAL)));
+            catch (EntityNotFoundException)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         // ============================================
@@ -102,20 +119,24 @@ namespace ClickAndGoApp.Controllers
 
             ViewBag.FirstName = HttpContext.Session.GetString("firstName");
 
-            int cashierId = (int)HttpContext.Session.GetInt32("userId");
-            Cashier cashier = await Cashier.GetByIdAsync(cashierId, _cashierDAL);
-            Store store = await cashier.GetStoreAsync();
-            List<Order> orders = await store.GetTodaysOrdersAsync(_orderDAL);
+            try
+            {
+                int cashierId = (int)HttpContext.Session.GetInt32("userId");
+                Cashier cashier = await Cashier.GetByIdAsync(cashierId, _cashierDAL);
+                Store store = await cashier.GetStoreAsync();
+                List<Order> orders = await store.GetTodaysOrdersAsync(_orderDAL);
 
-            Order order = await Order.GetByIdAsync(orderId, _orderDAL);
-            if (order == null)
+                Order order = await Order.GetByIdAsync(orderId, _orderDAL);
+                await order.SetStatusAsync(OrderStatus.Honored, _orderDAL);
+                orders.Remove(order);
+
+                ViewBag.Success = "Order marked as collected successfully";
+                return View("Index", orders);
+            }
+            catch (EntityNotFoundException)
+            {
                 return RedirectToAction("Index");
-
-            await order.SetStatusAsync(OrderStatus.Honored, _orderDAL);
-            orders.Remove(order);
-
-            ViewBag.Success = "Order marked as collected successfully";
-            return View("Index", orders);
+            }
         }
     }
 }

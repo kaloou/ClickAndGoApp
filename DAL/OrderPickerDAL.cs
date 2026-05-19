@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
+using ClickAndGoApp.Exceptions;
 
 namespace ClickAndGoApp.DAL;
 
@@ -30,24 +31,30 @@ public class OrderPickerDAL : IOrderPickerDAL
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@pickerId", pickerId);
 
-        using SqlDataReader reader = await cmd.ExecuteReaderAsync();
-
-        if (await reader.ReadAsync())
+        try
         {
-            var store = new Store(
-                (int)reader["storeId"],
-                (string)reader["storeName"],
-                (string)reader["storeAddress"]
-            );
-            return new OrderPicker(
-                (int)reader["userId"],
-                (string)reader["firstName"],
-                (string)reader["lastName"],
-                (string)reader["email"],
-                (string)reader["password"],
-                store
-            );
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                var store = new Store(
+                    (int)reader["storeId"],
+                    (string)reader["storeName"],
+                    (string)reader["storeAddress"]
+                );
+                return new OrderPicker(
+                    (int)reader["userId"],
+                    (string)reader["firstName"],
+                    (string)reader["lastName"],
+                    (string)reader["email"],
+                    (string)reader["password"],
+                    store
+                );
+            }
+            throw new EntityNotFoundException("OrderPicker", pickerId);
         }
-        return null;
+        catch (SqlException ex)
+        {
+            throw new DatabaseException("Failed to retrieve order picker.", ex);
+        }
     }
 }

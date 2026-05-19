@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
 using ClickAndGoApp.Models.Enums;
+using ClickAndGoApp.Exceptions;
 
 namespace ClickAndGoApp.DAL;
 
@@ -33,12 +34,17 @@ public class OrderDAL : IOrderDAL
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@orderId", orderId);
 
-        using SqlDataReader reader = await cmd.ExecuteReaderAsync();
-
-        if (await reader.ReadAsync())
-            return ReadOrder(reader);
-
-        return null;
+        try
+        {
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+                return ReadOrder(reader);
+            throw new EntityNotFoundException("Order", orderId);
+        }
+        catch (SqlException ex)
+        {
+            throw new DatabaseException("Failed to retrieve order.", ex);
+        }
     }
 
     public async Task<List<Order>> GetOrdersByStoreAsync(int storeId)

@@ -1,4 +1,5 @@
 using ClickAndGoApp.Models;
+using ClickAndGoApp.Exceptions;
 using Microsoft.Data.SqlClient;
 
 namespace ClickAndGoApp.DAL;
@@ -53,42 +54,53 @@ public class RecipeDAL : IRecipeDAL
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@recipeId", recipeId);
 
-        using SqlDataReader reader = await cmd.ExecuteReaderAsync();
-
-        Recipe recipe = null;
-        while (await reader.ReadAsync())
+        try
         {
-            if (recipe == null)
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            Recipe recipe = null;
+            while (await reader.ReadAsync())
             {
-                recipe = new Recipe(
-                    (int)reader["recipeId"],
-                    (string)reader["name"],
-                    (string)reader["description"]
-                ) { ImagePath = reader["recipeImagePath"] == DBNull.Value ? null : (string)reader["recipeImagePath"] };
+                if (recipe == null)
+                {
+                    recipe = new Recipe(
+                        (int)reader["recipeId"],
+                        (string)reader["name"],
+                        (string)reader["description"]
+                    ) { ImagePath = reader["recipeImagePath"] == DBNull.Value ? null : (string)reader["recipeImagePath"] };
+                }
+
+                if (reader["productId"] != DBNull.Value)
+                {
+                    var category = new Category(
+                        (int)reader["categoryId"],
+                        (string)reader["categoryName"]
+                    );
+                    var product = new Product(
+                        (int)reader["productId"],
+                        (string)reader["productName"],
+                        (float)(decimal)reader["price"],
+                        category,
+                        reader["productDescription"] == DBNull.Value ? null : (string)reader["productDescription"],
+                        reader["productImagePath"] == DBNull.Value ? null : (string)reader["productImagePath"]
+                    );
+                    recipe.Ingredients.AddLast(new RecipeIngredient(
+                        (int)reader["recipeId"],
+                        (int)reader["productId"],
+                        (int)reader["quantity"],
+                        product
+                    ));
+                }
             }
 
-            if (reader["productId"] != DBNull.Value)
-            {
-                var category = new Category(
-                    (int)reader["categoryId"],
-                    (string)reader["categoryName"]
-                );
-                var product = new Product(
-                    (int)reader["productId"],
-                    (string)reader["productName"],
-                    (float)(decimal)reader["price"],
-                    category,
-                    reader["productDescription"] == DBNull.Value ? null : (string)reader["productDescription"],
-                    reader["productImagePath"] == DBNull.Value ? null : (string)reader["productImagePath"]
-                );
-                recipe.Ingredients.AddLast(new RecipeIngredient(
-                    (int)reader["recipeId"],
-                    (int)reader["productId"],
-                    (int)reader["quantity"],
-                    product
-                ));
-            }
+            if (recipe == null)
+                throw new EntityNotFoundException("Recipe", recipeId);
+
+            return recipe;
         }
-        return recipe;
+        catch (SqlException ex)
+        {
+            throw new DatabaseException("Failed to retrieve recipe.", ex);
+        }
     }
 }
