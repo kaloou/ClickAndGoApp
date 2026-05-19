@@ -66,7 +66,11 @@ public class OrderDAL : IOrderDAL
         using SqlDataReader reader = await cmd.ExecuteReaderAsync();
         var orders = new List<Order>();
         while (await reader.ReadAsync())
-            orders.Add(ReadOrder(reader));
+        {
+            Order order = ReadOrder(reader);
+            order.SetStore(storeId);
+            orders.Add(order);
+        }
         return orders;
     }
 
@@ -95,7 +99,11 @@ public class OrderDAL : IOrderDAL
         using SqlDataReader reader = await cmd.ExecuteReaderAsync();
         var orders = new List<Order>();
         while (await reader.ReadAsync())
-            orders.Add(ReadOrder(reader));
+        {
+            Order order = ReadOrder(reader);
+            order.SetStore(storeId);
+            orders.Add(order);
+        }
         return orders;
     }
 

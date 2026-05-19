@@ -148,6 +148,14 @@ public class Order
     public async Task SetStatusAsync(OrderStatus status, IOrderDAL dal) =>
         await dal.SetStatusAsync(orderId, status);
     
+    public void SetStore(int storeId)
+    {
+        if (store == null)
+            store = new Store(storeId, "-", "-");
+        else
+            store.StoreId = storeId;
+    }
+    
     public async Task SetTimeSlotAsync(int timeSlotId, IOrderDAL dal) =>
         await dal.SetTimeSlotAsync(orderId, timeSlotId);
     
