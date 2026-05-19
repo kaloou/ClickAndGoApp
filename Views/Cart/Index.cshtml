@@ -64,6 +64,7 @@
                     <p style="color:var(--text-gray); font-size:0.85rem">Total (frais inclus)</p>
                     <p class="product-detail-price">@Model.Total.ToString("F2") €</p>
                 </div>
+                <a asp-controller="Order" asp-action="Index" class="btn-cta">Passer commande</a>
             </div>
 
         </div>

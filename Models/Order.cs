@@ -150,7 +150,7 @@ public class Order
     
     public void SetStore(int storeId)
     {
-        if (store == null)
+        if (store == null) // pour les OrderCart
             store = new Store(storeId, "-", "-");
         else
             store.StoreId = storeId;

@@ -163,7 +163,23 @@ public class OrderDAL : IOrderDAL
 
     public Task<List<Order>> GetOrdersByCustomerAsync(int customerId) => Task.FromResult(new List<Order>());
     public Task<List<Order>> GetOrdersToPrepareAsync(int storeId) => Task.FromResult(new List<Order>());
-    public Task SetTimeSlotAsync(int orderId, int timeSlotId) => Task.CompletedTask;
+
+    public async Task SetTimeSlotAsync(int orderId, int timeSlotId)
+    {
+        using SqlConnection conn = _db.GetConnexion();
+        await conn.OpenAsync();
+
+        string query = @"
+            UPDATE [Order]
+            SET timeSlotId = @timeSlotId,
+                pickupDate = (SELECT startTime FROM TimeSlot WHERE timeSlotId = @timeSlotId)
+            WHERE orderId = @orderId";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@orderId", orderId);
+        cmd.Parameters.AddWithValue("@timeSlotId", timeSlotId);
+        await cmd.ExecuteNonQueryAsync();
+    }
 
     private static Order ReadOrder(SqlDataReader reader)
     {
@@ -178,7 +194,7 @@ public class OrderDAL : IOrderDAL
             (string)reader["email"],
             (string)reader["password"],
             (int)reader["loyaltyPoints"],
-            (int)reader["phoneNumber"],
+            Convert.ToInt32(reader["phoneNumber"]),
             reader["address"] == DBNull.Value ? null : (string)reader["address"]
         );
 

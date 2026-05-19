@@ -1,0 +1,41 @@
+@model ClickAndGoApp.Models.Order
+@{
+    ViewData["Title"] = "Commande confirmée";
+    string storeName  = TempData["StoreName"] as string;
+    string total      = TempData["Total"]     as string;
+    string pickupDate = TempData["PickupDate"] as string;
+}
+
+<div class="browse-page" style="text-align:center; padding-top:48px">
+
+    <div style="font-size:3rem; margin-bottom:16px">✓</div>
+    <h1>Commande confirmée !</h1>
+    <p class="browse-subtitle">Votre commande #@Model.OrderId a bien été enregistrée.</p>
+
+    <div class="product-detail-card" style="max-width:480px; margin:32px auto; flex-direction:column; gap:12px; padding:32px">
+        @if (storeName != null)
+        {
+            <div style="display:flex; justify-content:space-between">
+                <span style="color:var(--text-gray)">Magasin</span>
+                <strong>@storeName</strong>
+            </div>
+        }
+        @if (pickupDate != null)
+        {
+            <div style="display:flex; justify-content:space-between">
+                <span style="color:var(--text-gray)">Retrait</span>
+                <strong>@pickupDate</strong>
+            </div>
+        }
+        @if (total != null)
+        {
+            <div style="display:flex; justify-content:space-between; border-top:1px solid #f0f0f0; padding-top:12px; margin-top:4px">
+                <span style="color:var(--text-gray)">Total estimé</span>
+                <strong class="product-detail-price">@total €</strong>
+            </div>
+        }
+    </div>
+
+    <a asp-controller="Product" asp-action="BrowseProducts" class="btn-cta">Continuer mes achats</a>
+
+</div>
