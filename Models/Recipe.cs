@@ -9,6 +9,8 @@ public class Recipe
     private string description;
     private LinkedList<RecipeIngredient> ingredients = new LinkedList<RecipeIngredient>();
 
+    public string? ImagePath { get; set; }
+
     public int RecipeId
     {
         get => recipeId;

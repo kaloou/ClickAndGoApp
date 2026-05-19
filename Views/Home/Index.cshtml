@@ -1,3 +1,4 @@
+@model List<ClickAndGoApp.Models.Recipe>
 @{
     ViewData["Title"] = "Accueil";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -49,15 +50,23 @@
                 </button>
             </div>
         </form>
+        <div id="store-map"></div>
     </div>
     <div class="recipes-block">
         <h3>Découvrez nos pack de recettes<br/>déjà préparé pour vous !</h3>
-        <a asp-controller="Recipe" asp-action="Index" class="recipes-link">Voir plus</a>
         <div class="recipes-row">
-            <div class="recipe-thumb"></div>
-            <div class="recipe-thumb"></div>
-            <div class="recipe-thumb"></div>
-            <div class="recipe-thumb"></div>
+            @foreach (var recipe in Model)
+            {
+                var style = recipe.ImagePath != null
+                    ? $"background-image: url('/images/{recipe.ImagePath}'); background-size: cover; background-position: center;"
+                    : "";
+                <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="@recipe.RecipeId" class="recipe-thumb" style="@style">
+                    <span class="recipe-thumb-name">@recipe.Name</span>
+                </a>
+            }
+        </div>
+        <div class="recipes-voir-plus">
+            <a asp-controller="Recipe" asp-action="Index" class="btn-cta">Voir plus</a>
         </div>
     </div>
 </section>
@@ -77,3 +86,28 @@
         <div class="phone-mock"></div>
     </div>
 </section>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('store-map').setView([50.4108, 4.4444], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var stores = [
+            { name: "Click & Go Jumet",      address: "Chaussée de Bruxelles 167, 6040 Jumet",     lat: 50.4421, lng: 4.4181 },
+            { name: "Click & Go Gosselies",  address: "Rue de la Motte 4, 6041 Gosselies",         lat: 50.4641, lng: 4.4349 },
+            { name: "Click & Go Marcinelle", address: "Rue de Philippeville 256, 6001 Marcinelle", lat: 50.3971, lng: 4.4321 },
+            { name: "Click & Go Gilly",      address: "Rue de Ransart 80, 6060 Gilly",             lat: 50.4211, lng: 4.4731 }
+        ];
+
+        stores.forEach(function(s) {
+            L.marker([s.lat, s.lng])
+             .addTo(map)
+             .bindPopup('<strong>' + s.name + '</strong><br/>' + s.address);
+        });
+    </script>
+}

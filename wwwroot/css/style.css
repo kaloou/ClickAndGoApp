@@ -625,6 +625,16 @@ button:hover {
     padding: 48px 40px;
 }
 
+#store-map {
+    margin-top: 24px;
+    height: 260px;
+    border-radius: 12px;
+    overflow: hidden;
+    isolation: isolate;
+    position: relative;
+    z-index: 0;
+}
+
 .store-block h2 {
     font-size: 1.8rem;
     font-weight: 800;
@@ -692,6 +702,12 @@ button:hover {
     color: var(--primary);
 }
 
+.recipes-voir-plus {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 .recipes-row {
     display: flex;
     gap: 12px;
@@ -702,7 +718,26 @@ button:hover {
     flex: 1;
     background: #D9D9D9;
     border-radius: 10px;
-    min-height: 80px;
+    min-height: 100px;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.recipe-thumb:hover {
+    opacity: 0.85;
+}
+
+.recipe-thumb-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    background: rgba(255,255,255,0.75);
+    border-radius: 6px;
+    padding: 3px 7px;
+    line-height: 1.3;
 }
 
 /* App section */
@@ -818,6 +853,66 @@ button:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.recipe-detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 32px;
+    align-items: start;
+    margin-top: 24px;
+}
+
+.recipe-detail-img {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f0f0f0;
+    aspect-ratio: 4/3;
+}
+
+.recipe-detail-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.recipe-detail-content h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.recipe-detail-desc {
+    color: var(--text-gray);
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+}
+
+.recipe-detail-content h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+}
+
+.recipe-detail-content .btn-cta {
+    margin-top: 20px;
+}
+
+.recipe-card-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #f0f0f0;
+    overflow: hidden;
+}
+
+.recipe-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .product-info {

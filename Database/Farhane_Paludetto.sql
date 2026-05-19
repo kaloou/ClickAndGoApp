@@ -133,7 +133,8 @@ GO
 CREATE TABLE Recipes (
     recipeId    INT IDENTITY(1,1) PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
-    description VARCHAR(500)
+    description VARCHAR(500), 
+    imagePath VARCHAR(255) NULL
 );
 GO
 
@@ -153,15 +154,15 @@ GO
 -- =============================================
 -- Données de test
 -- =============================================
-
+    
 -- =============================================
 -- STORES
 -- =============================================
 INSERT INTO Store (name, address) VALUES
-                                      ('Click & Go Bruxelles', 'Avenue Louise 42, 1050 Bruxelles'),
-                                      ('Click & Go Charleroi', 'Rue du Centre 15, 6000 Charleroi'),
-                                      ('Click & Go Liège',     'Boulevard de la Sauvenière 8, 4000 Liège'),
-                                      ('Click & Go Namur',     'Rue de Fer 22, 5000 Namur');
+                                      ('Click & Go Jumet', 'Chaussée de Bruxelles 167, 6040 Jumet'),
+                                      ('Click & Go Gosselies', 'Rue de la Motte 4, 6041 Gosselies'),
+                                      ('Click & Go Marcinelle',     'Rue de Philippeville 256, 6001 Marcinelle'),
+                                      ('Click & Go Gilly',     'Rue de Ransart 80, 6060 Gilly');
 GO
 
 -- =============================================
