@@ -43,12 +43,7 @@ public class ProductController : Controller
             products = new();
         }
         
-        var vm = new BrowseViewModel
-        {
-            Products           = products,
-            Categories         = categories,
-            SelectedCategoryId = categoryId
-        };
+        var vm = new BrowseViewModel(products, categories, categoryId);
 
         return View(vm);
     }

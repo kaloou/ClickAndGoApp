@@ -60,11 +60,7 @@ namespace ClickAndGoApp.Controllers
 
             Order selectedOrder = order.GetSelected(true);
 
-            return View(new CashierOrderViewModel
-            {
-                Order = selectedOrder,
-                TotalAmount = await selectedOrder.ComputeTotalAsync(_orderLineDAL)
-            });
+            return View(new CashierOrderViewModel(selectedOrder, await selectedOrder.ComputeTotalAsync(_orderLineDAL)));
         }
 
         // ============================================
@@ -84,22 +80,14 @@ namespace ClickAndGoApp.Controllers
             if (returnedBoxes < 0)
             {
                 ViewBag.Error = "Invalid value — number of returned boxes cannot be negative";
-                return View("SelectCommand", new CashierOrderViewModel
-                {
-                    Order = order,
-                    TotalAmount = await order.ComputeTotalAsync(_orderLineDAL)
-                });
+                return View("SelectCommand", new CashierOrderViewModel(order, await order.ComputeTotalAsync(_orderLineDAL)));
             }
 
             await order.SetReturnedBoxesAsync(returnedBoxes, _orderDAL);
 
             order = await Order.GetByIdAsync(orderId, _orderDAL);
             ViewBag.Success = "Returned boxes saved successfully";
-            return View("SelectCommand", new CashierOrderViewModel
-            {
-                Order = order,
-                TotalAmount = await order.ComputeTotalAsync(_orderLineDAL)
-            });
+            return View("SelectCommand", new CashierOrderViewModel(order, await order.ComputeTotalAsync(_orderLineDAL)));
         }
 
         // ============================================

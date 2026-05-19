@@ -64,12 +64,7 @@ namespace ClickAndGoApp.Controllers
                 products.Add(orderLine.GetProduct());
             }
 
-            var viewModel = new OrderDetailsViewModel
-            {
-                Order = order,
-                OrderLines = orderLines,
-                Products = products
-            };
+            var viewModel = new OrderDetailsViewModel(order, orderLines, products);
 
             return View(viewModel);
         }
@@ -96,12 +91,7 @@ namespace ClickAndGoApp.Controllers
             if (numberOfBoxes <= 0)
             {
                 ViewBag.Error = "Invalid value — number of boxes must be greater than 0";
-                return View("OrderDetails", new OrderDetailsViewModel
-                {
-                    Order = order,
-                    OrderLines = orderLines,
-                    Products = products
-                });
+                return View("OrderDetails", new OrderDetailsViewModel(order, orderLines, products));
             }
 
             await order.SetNumberOfBoxesAsync(numberOfBoxes, _orderDAL);
@@ -114,12 +104,7 @@ namespace ClickAndGoApp.Controllers
                 products.Add(orderLine.GetProduct());
 
             ViewBag.Success = "Number of boxes saved successfully";
-            return View("OrderDetails", new OrderDetailsViewModel
-            {
-                Order = order,
-                OrderLines = orderLines,
-                Products = products
-            });
+            return View("OrderDetails", new OrderDetailsViewModel(order, orderLines, products));
         }
     }
 }
