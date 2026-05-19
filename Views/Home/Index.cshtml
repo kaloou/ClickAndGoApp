@@ -1,4 +1,3 @@
-@model List<ClickAndGoApp.Models.Recipe>
 @{
     ViewData["Title"] = "Accueil";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -55,15 +54,22 @@
     <div class="recipes-block">
         <h3>Découvrez nos pack de recettes<br/>déjà préparé pour vous !</h3>
         <div class="recipes-row">
-            @foreach (var recipe in Model)
-            {
-                var style = recipe.ImagePath != null
-                    ? $"background-image: url('/images/{recipe.ImagePath}'); background-size: cover; background-position: center;"
-                    : "";
-                <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="@recipe.RecipeId" class="recipe-thumb" style="@style">
-                    <span class="recipe-thumb-name">@recipe.Name</span>
-                </a>
-            }
+            <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="1" class="recipe-thumb">
+                <img src="/images/recipes/pasta_bolognese.jpg" alt="Pâtes bolognaise" />
+                <span class="recipe-thumb-name">Pâtes bolognaise</span>
+            </a>
+            <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="2" class="recipe-thumb">
+                <img src="/images/recipes/chicken_curry_with_rice.jpg" alt="Curry de poulet au riz" />
+                <span class="recipe-thumb-name">Curry de poulet au riz</span>
+            </a>
+            <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="3" class="recipe-thumb">
+                <img src="/images/recipes/caesar_salad.jpg" alt="Salade César" />
+                <span class="recipe-thumb-name">Salade César</span>
+            </a>
+            <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="4" class="recipe-thumb">
+                <img src="/images/recipes/banana_almond_smoothie.webp" alt="Smoothie banane-amande" />
+                <span class="recipe-thumb-name">Smoothie banane-amande</span>
+            </a>
         </div>
         <div class="recipes-voir-plus">
             <a asp-controller="Recipe" asp-action="Index" class="btn-cta">Voir plus</a>
