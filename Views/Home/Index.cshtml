@@ -74,6 +74,29 @@
         <div class="recipes-voir-plus">
             <a asp-controller="Recipe" asp-action="Index" class="btn-cta">Voir plus</a>
         </div>
+
+        <h3 class="featured-title">Nos produits du moment</h3>
+        <div class="recipes-row">
+            <a asp-controller="Product" asp-action="SelectProduct" asp-route-productId="1" class="recipe-thumb">
+                <img src="/images/products/cherry_tomatoes.jpg" alt="Tomate cerise" />
+                <span class="recipe-thumb-name">Tomate cerise</span>
+            </a>
+            <a asp-controller="Product" asp-action="SelectProduct" asp-route-productId="14" class="recipe-thumb">
+                <img src="/images/products/chicken_breast.jpg" alt="Blanc de poulet" />
+                <span class="recipe-thumb-name">Blanc de poulet</span>
+            </a>
+            <a asp-controller="Product" asp-action="SelectProduct" asp-route-productId="21" class="recipe-thumb">
+                <img src="/images/products/fresh_salmon.jpg" alt="Saumon frais" />
+                <span class="recipe-thumb-name">Saumon frais</span>
+            </a>
+            <a asp-controller="Product" asp-action="SelectProduct" asp-route-productId="28" class="recipe-thumb">
+                <img src="/images/products/croissant.jpg" alt="Croissant" />
+                <span class="recipe-thumb-name">Croissant</span>
+            </a>
+        </div>
+        <div class="recipes-voir-plus">
+            <a asp-controller="Product" asp-action="BrowseProducts" class="btn-cta">Voir tous les produits</a>
+        </div>
     </div>
 </section>
 
@@ -93,8 +116,11 @@
     </div>
 </section>
 
-@section Scripts {
+@section HeadLinks {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+}
+
+@section Scripts {
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         var map = L.map('store-map').setView([50.4108, 4.4444], 12);
