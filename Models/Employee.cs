@@ -1,19 +1,8 @@
-using ClickAndGoApp.DAL;
-
 namespace ClickAndGoApp.Models;
 
 public abstract class Employee : User
 {
-    private int storeId;
     private Store store;
-
-    public int StoreId
-    {
-        get => storeId;
-        set => storeId = value > 0
-            ? value
-            : throw new ArgumentException("StoreId must be positive");
-    }
 
     public Store Store
     {
@@ -22,16 +11,9 @@ public abstract class Employee : User
     }
 
     public Employee(int userId, string firstName, string lastName,
-        string email, string password, int storeId)
+        string email, string password, Store store)
         : base(userId, firstName, lastName, email, password)
     {
-        StoreId = storeId;
+        Store = store;
     }
-
-    //==============================
-    public virtual async Task<Store> GetStoreAsync(IStoreDAL dal)
-        => await Store.GetStoreAsync(StoreId, dal);
-    
-    //==============================
-    
 }

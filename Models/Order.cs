@@ -10,14 +10,12 @@ public class Order
     private OrderStatus status;
     private int numberOfBoxes;
     private int returnedBoxes;
-    private DateTime pickupDate;    // DateTime.MinValue pour les orders cart
+    private DateTime pickupDate;
     private PaymentStatus paymentStatus;
-    private int customerId;
-    private int timeSlotId;
     private bool isSelected;
-    private Customer? customer;     // null si constructeur int-IDs
-    private TimeSlot? timeSlot;     // null pour les orders cart
-    private Store? store;           // null pour les orders cart
+    private Customer customer;
+    private TimeSlot? timeSlot;
+    private Store? store;
     private List<OrderLine> orderLines = new List<OrderLine>();
 
     public const float SERVICE_FEE = 5.95f;
@@ -73,23 +71,11 @@ public class Order
         set => paymentStatus = value;
     }
 
-    public int CustomerId
-    {
-        get => customer != null ? customer.UserId : customerId;
-        set => customerId = value > 0
-            ? value
-            : throw new ArgumentException("CustomerId must be positive");
-    }
+    public int CustomerId => customer.UserId;
 
-    public int TimeSlotId
-    {
-        get => timeSlotId;
-        set => timeSlotId = value >= 0
-            ? value
-            : throw new ArgumentException("TimeSlotId cannot be negative");
-    }
+    public int TimeSlotId => timeSlot?.TimeSlotId ?? 0;
 
-    public Customer? Customer
+    public Customer Customer
     {
         get => customer;
         set => customer = value ?? throw new ArgumentNullException("Customer cannot be null");
@@ -129,33 +115,17 @@ public class Order
         Customer      = customer;
         TimeSlot      = timeSlot;
         Store         = store;
-        customerId    = customer.UserId;
-    }
-
-    public Order(int orderId, DateTime orderDate, OrderStatus status,
-                 int numberOfBoxes, int returnedBoxes, DateTime pickupDate,
-                 PaymentStatus paymentStatus, int customerId, int timeSlotId)
-    {
-        OrderId       = orderId;
-        OrderDate     = orderDate;
-        Status        = status;
-        NumberOfBoxes = numberOfBoxes;
-        ReturnedBoxes = returnedBoxes;
-        PickupDate    = pickupDate;
-        PaymentStatus = paymentStatus;
-        CustomerId    = customerId;
-        TimeSlotId    = timeSlotId;
     }
 
     //==============================
-    public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal) =>
-        await dal.GetOrderLinesAsync(orderId);
+    public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal) 
+        => await dal.GetOrderLinesAsync(orderId);
     
-    public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) =>
-        await dal.SetNumberOfBoxesAsync(orderId, numberOfBoxes);
+    public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) 
+        => await dal.SetNumberOfBoxesAsync(orderId, numberOfBoxes);
     
-    public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal) =>
-        await dal.GetByIdAsync(orderId);
+    public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal) 
+        => await dal.GetByIdAsync(orderId);
     
     public Order GetSelected(bool selected)
     {
@@ -181,14 +151,6 @@ public class Order
     public async Task SetTimeSlotAsync(int timeSlotId, IOrderDAL dal) =>
         await dal.SetTimeSlotAsync(orderId, timeSlotId);
     
-    public void SetStore(int storeId)
-    {
-        if (store == null)
-            store = new Store(storeId, "-", "-");
-        else
-            store.StoreId = storeId;
-    }
-
     public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1) =>
         await dal.AddProductAsync(orderId, productId, quantity);
     

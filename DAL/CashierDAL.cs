@@ -20,10 +20,12 @@ public class CashierDAL : ICashierDAL
 
         const string query = @"
             SELECT u.userId, u.firstName, u.lastName,
-                   u.email, u.password, e.storeId
+                   u.email, u.password,
+                   s.storeId, s.name AS storeName, s.address AS storeAddress
             FROM [User] u
             JOIN Employee e ON u.userId = e.userId
             JOIN Cashier  c ON e.userId = c.userId
+            JOIN Store    s ON e.storeId = s.storeId
             WHERE c.userId = @cashierId";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
@@ -32,13 +34,18 @@ public class CashierDAL : ICashierDAL
         using SqlDataReader reader = await cmd.ExecuteReaderAsync();
         if (!await reader.ReadAsync()) return null;
 
+        var store = new Store(
+            (int)reader["storeId"],
+            (string)reader["storeName"],
+            (string)reader["storeAddress"]
+        );
         return new Cashier(
             (int)reader["userId"],
             (string)reader["firstName"],
             (string)reader["lastName"],
             (string)reader["email"],
             (string)reader["password"],
-            (int)reader["storeId"]
+            store
         );
     }
 }

@@ -8,17 +8,14 @@ namespace ClickAndGoApp.Controllers
     public class OrderPickerController : Controller
     {
         private readonly IOrderPickerDAL _orderPickerDAL;
-        private readonly IStoreDAL _storeDAL;
         private readonly IOrderDAL _orderDAL;
         private readonly IOrderLineDAL _orderLineDAL;
 
         public OrderPickerController(IOrderPickerDAL orderPickerDAL,
-            IStoreDAL storeDAL,
             IOrderDAL orderDAL,
             IOrderLineDAL orderLineDAL)
         {
             _orderPickerDAL = orderPickerDAL;
-            _storeDAL = storeDAL;
             _orderDAL = orderDAL;
             _orderLineDAL = orderLineDAL;
         }
@@ -35,7 +32,7 @@ namespace ClickAndGoApp.Controllers
 
             int pickerId = (int)HttpContext.Session.GetInt32("userId");
             OrderPicker orderPicker = await OrderPicker.GetByIdAsync(pickerId, _orderPickerDAL);
-            Store store = await orderPicker.GetStoreAsync(_storeDAL);
+            Store store = await orderPicker.GetStoreAsync();
             List<Order> orders = await store.GetOrdersByStoreAsync(_orderDAL);
 
             if (orders.Count == 0)
