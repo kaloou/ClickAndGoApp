@@ -1407,3 +1407,33 @@ a.product-card {
 }
 
 .qty-input { width: 80px; }
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+/* -- Transition entre pages (toutes les pages) -- */
+@keyframes pageEnter {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+}
+
+main {
+    animation: pageEnter 0.3s ease both;
+}
+
+/* -- Home : arrivée en cascade des éléments du hero -- */
+@keyframes heroFromLeft {
+    from { opacity: 0; transform: translateX(-28px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes heroFromRight {
+    from { opacity: 0; transform: translateX(28px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.hero-text h1      { animation: heroFromLeft  0.55s ease 0.05s both; }
+.hero-text p       { animation: heroFromLeft  0.55s ease 0.2s  both; }
+.hero-text .btn-cta { animation: heroFromLeft 0.55s ease 0.35s both; }
+.hero-visual       { animation: heroFromRight 0.55s ease 0.1s  both; }
