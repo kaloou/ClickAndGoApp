@@ -103,14 +103,22 @@
     white-space: nowrap;
 }
 
-.cart-dot {
+.cart-badge {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
-    width: 8px;
-    height: 8px;
+    bottom: 0px;
+    right: -2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
     background: var(--cg-orange);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
     border-radius: var(--cg-radius-round);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 
@@ -753,6 +761,71 @@
     gap: var(--cg-space-5);
 }
 
+.store-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--cg-space-5);
+}
+
+.store-card {
+    background: var(--cg-white);
+    border-radius: var(--cg-radius-2xl);
+    box-shadow: var(--cg-shadow-card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.store-map-wrapper {
+    height: 180px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.store-map {
+    width: 100%;
+    height: 215px;
+    border: none;
+    margin-top: -1px;
+}
+
+.store-card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.store-card-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--cg-gray-900);
+    margin: 0 0 4px;
+}
+
+.store-card-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--cg-teal-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    margin: 0;
+}
+
+.store-card-address [data-lucide] {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.store-card-btn { width: 100%; }
+
 .product-card {
     background: var(--cg-white);
     border-radius: var(--cg-radius-2xl);
@@ -1051,6 +1124,39 @@ a.product-card {
     margin-top: var(--cg-space-2);
 }
 
+.profile-logout {
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+    padding-top: 24px;
+    padding-bottom: 8px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #c0392b;
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    opacity: 1;
+    transition: opacity 0.15s;
+}
+
+.btn-logout:hover {
+    opacity: 0.82;
+    color: var(--white);
+    background: #c0392b;
+}
+
 .input-disabled {
     background: #f9f9f9;
     color: var(--cg-text-muted);
@@ -1263,33 +1369,76 @@ a.product-card {
 /* ============================================
    SELECT TIMESLOT
    ============================================ */
-.timeslot-btn {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--cg-border);
-    padding: 18px var(--cg-space-8);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-align: left;
-    color: inherit;
-    border-radius: 0;
-    font-weight: inherit;
-    font-size: inherit;
+.timeslot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--cg-space-5);
 }
-.timeslot-btn:hover { background: var(--cg-bg-soft); }
 
-.timeslot-title {
+.timeslot-card {
+    background: var(--cg-white);
+    border-radius: var(--cg-radius-2xl);
+    box-shadow: var(--cg-shadow-card);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.timeslot-card-date,
+.timeslot-card-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.timeslot-card-date {
     font-weight: var(--cg-fw-semibold);
+    color: var(--cg-gray-900);
+    text-transform: capitalize;
+}
+
+.timeslot-card-time { color: var(--cg-text-muted); }
+
+.timeslot-card-date [data-lucide],
+.timeslot-card-time [data-lucide] {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--cg-teal-600);
+}
+
+.timeslot-card-btn { width: 100%; margin-top: 6px; }
+
+.timeslot-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 60px 24px;
+    background: var(--cg-white);
+    border-radius: var(--cg-radius-2xl);
+    box-shadow: var(--cg-shadow-card);
+    text-align: center;
+}
+
+.timeslot-empty [data-lucide] {
+    width: 48px;
+    height: 48px;
+    color: var(--cg-text-muted);
+}
+
+.timeslot-empty-title {
+    font-weight: var(--cg-fw-semibold);
+    font-size: 1.1rem;
     margin: 0;
 }
 
-.timeslot-meta {
+.timeslot-empty-sub {
     color: var(--cg-text-muted);
     font-size: 0.9rem;
-    margin: 4px 0 0;
+    margin: 0;
 }
 
 

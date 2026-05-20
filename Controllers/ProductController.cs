@@ -77,9 +77,15 @@ public class ProductController : Controller
         OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
         
         if (existing == null)
+        {
             await order.AddProductAsync(productId, orderLineDal, quantity);
+            int count = HttpContext.Session.GetInt32("cartCount") ?? 0;
+            HttpContext.Session.SetInt32("cartCount", count + 1);
+        }
         else
+        {
             await existing.SetQuantityAsync(existing.Quantity + quantity, orderLineDal);
+        }
 
         TempData["Success"] = "Produit ajouté au panier";
         return RedirectToAction("SelectProduct", new { productId = productId });
