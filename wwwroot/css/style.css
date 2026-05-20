@@ -1482,6 +1482,28 @@ a.product-card {
 /* ============================================
    SELECT TIMESLOT
    ============================================ */
+.timeslot-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px var(--cg-space-8);
+    border-bottom: 1px solid var(--cg-border);
+    transition: background var(--cg-dur-fast) var(--cg-ease);
+}
+.timeslot-btn:last-child { border-bottom: none; }
+.timeslot-btn:hover { background: var(--cg-bg-soft); }
+
+.timeslot-title {
+    font-weight: var(--cg-fw-semibold);
+    margin: 0;
+}
+
+.timeslot-meta {
+    color: var(--cg-text-muted);
+    font-size: 0.9rem;
+    margin: 4px 0 0;
+}
+
 .timeslot-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1528,30 +1550,33 @@ a.product-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    padding: 60px 24px;
+    gap: var(--cg-space-3);
+    padding: var(--cg-space-12) var(--cg-space-6);
     background: var(--cg-white);
     border-radius: var(--cg-radius-2xl);
     box-shadow: var(--cg-shadow-card);
     text-align: center;
+    max-width: 480px;
 }
 
 .timeslot-empty [data-lucide] {
     width: 48px;
     height: 48px;
     color: var(--cg-text-muted);
+    stroke-width: 1.5;
 }
 
 .timeslot-empty-title {
-    font-weight: var(--cg-fw-semibold);
-    font-size: 1.1rem;
+    font-size: var(--cg-fs-l);
+    font-weight: var(--cg-fw-bold);
     margin: 0;
 }
 
 .timeslot-empty-sub {
+    font-size: var(--cg-fs-sm);
     color: var(--cg-text-muted);
-    font-size: 0.9rem;
     margin: 0;
+    line-height: var(--cg-lh-body);
 }
 
 

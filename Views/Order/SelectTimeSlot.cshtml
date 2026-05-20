@@ -38,7 +38,12 @@
 
         @if (!Model.Any())
         {
-            <div class="no-results">Aucun créneau disponible pour cette date. Essayez une autre date.</div>
+            <div class="timeslot-empty">
+                <i data-lucide="calendar-x"></i>
+                <p class="timeslot-empty-title">Aucun créneau disponible</p>
+                <p class="timeslot-empty-sub">Ce magasin n'a pas de créneaux pour cette date. Essayez une autre date ou choisissez un autre magasin.</p>
+                <a asp-action="SelectStore" class="btn-cta">Choisir un autre magasin</a>
+            </div>
         }
         else
         {
@@ -47,10 +52,10 @@
                 {
                     <form asp-action="SelectTimeSlot" method="post">
                         <input type="hidden" name="timeSlotId" value="@slot.TimeSlotId"/>
-                        <button type="submit" class="timeslot-btn">
+                        <div class="timeslot-btn">
                             <p class="timeslot-title">@slot.StartTime.ToString("HH:mm") – @slot.EndTime.ToString("HH:mm")</p>
-                            <span class="btn-cta-sm">Choisir</span>
-                        </button>
+                            <button type="submit" class="btn-cta-sm">Choisir</button>
+                        </div>
                     </form>
                 }
             </div>
