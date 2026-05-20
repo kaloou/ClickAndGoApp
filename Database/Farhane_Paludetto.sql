@@ -248,6 +248,56 @@ INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
                                                                           ('Sucre en poudre',   0.99, 7, 'Sucre blanc en poudre, 1kg',          '/images/products/powdered_sugar.jpg'),
                                                                           ('Huile d''olive',    4.99, 7, 'Huile d''olive vierge extra, 75cl',   '/images/products/olive_oil.jpg'),
                                                                           ('Sauce tomate',      1.79, 7, 'Sauce tomate basilic, bocal 400g',    '/images/products/tomato_sauce.jpg');
+
+-- =============================================
+-- NOUVEAUX PRODUITS
+-- =============================================
+
+-- Fruits et légumes (cat 1) → produits 47-50
+INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
+    ('Fraises',          3.49, 1, 'Fraises de saison, barquette 250g',       '/images/products/strawberries.jpg'),
+    ('Avocat',           1.29, 1, 'Avocat Hass bien mûr',                    '/images/products/avocado.jpg'),
+    ('Épinards frais',   1.99, 1, 'Épinards jeunes pousses, sachet 200g',    '/images/products/spinach.jpg'),
+    ('Oignons jaunes',   1.49, 1, 'Oignons jaunes filet, 1kg',              '/images/products/yellow_onions.jpg');
+
+-- Produits laitiers (cat 2) → produits 51-54
+INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
+    ('Mozzarella',            1.79, 2, 'Mozzarella di bufala, 125g',              '/images/products/mozzarella.jpg'),
+    ('Fromage blanc',         1.99, 2, 'Fromage blanc 0% MG, 500g',              '/images/products/fromage_blanc.jpg'),
+    ('Comté râpé',            3.99, 2, 'Comté AOP râpé finement, 150g',          '/images/products/comte_cheese.jpg'),
+    ('Crème dessert chocolat',0.99, 2, 'Crème dessert au chocolat, 4×125g',      '/images/products/chocolate_cream_dessert.jpg');
+
+-- Viandes et volailles (cat 3) → produits 55-57
+INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
+    ('Saucisses de porc',  4.49, 3, 'Saucisses de porc grillades x6, 400g',   '/images/products/pork_sausages.jpg'),
+    ('Cuisses de poulet',  5.99, 3, 'Cuisses de poulet fermier x4, 700g',      '/images/products/chicken_thighs.jpg'),
+    ('Jambon blanc',       2.99, 3, 'Jambon blanc supérieur x4 tranches, 160g','/images/products/cooked_ham.jpg');
+
+-- Poissons (cat 4) → produits 58-61
+INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
+    ('Truite fumée',      5.49, 4, 'Truite fumée tranchée, 150g',             '/images/products/smoked_trout.jpg'),
+    ('Lieu noir',         6.99, 4, 'Filet de lieu noir frais, 300g',          '/images/products/black_saithe.jpg'),
+    ('Maquereau fumé',    3.99, 4, 'Filets de maquereau fumé, 200g',          '/images/products/smoked_mackerel.jpg'),
+    ('Bar frais',         9.49, 4, 'Bar (loup de mer) entier, 400g',          '/images/products/sea_bass.jpg');
+
+-- Boulangerie (cat 5) → produits 62-65
+INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
+    ('Pain aux céréales',   2.79, 5, 'Pain multicéréales, 500g',              '/images/products/multigrain_bread.jpg'),
+    ('Tarte aux pommes',    5.99, 5, 'Tarte aux pommes maison, 6 parts',      '/images/products/apple_tart.jpg'),
+    ('Chausson aux pommes', 1.19, 5, 'Chausson aux pommes feuilleté',         '/images/products/apple_turnover.jpg'),
+    ('Pain au chocolat',    1.09, 5, 'Pain au chocolat pur beurre',           '/images/products/pain_au_chocolat.jpg');
+
+-- Boissons (cat 6) → produits 66-68
+INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
+    ('Jus de pomme',       1.89, 6, 'Jus de pomme pur fruit, 1L',             '/images/products/apple_juice.jpg'),
+    ('Kombucha gingembre', 2.99, 6, 'Kombucha gingembre-citron bio, 330ml',   '/images/products/kombucha.jpg'),
+    ('Ice tea pêche',      1.69, 6, 'Ice tea saveur pêche, 1.5L',             '/images/products/ice_tea_peach.jpg');
+
+-- Épicerie sèche (cat 7) → produits 69-71
+INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
+    ('Quinoa blanc',   3.49, 7, 'Quinoa blanc bio, 500g',                '/images/products/quinoa.jpg'),
+    ('Pois chiches',   1.29, 7, 'Pois chiches en boîte, 400g',           '/images/products/chickpeas.jpg'),
+    ('Miel d''acacia', 4.99, 7, 'Miel d''acacia pur, pot 350g',          '/images/products/acacia_honey.jpg');
 GO
 
 -- =============================================
@@ -318,9 +368,38 @@ GO
 
 -- =============================================
 -- TIME SLOTS + ORDERS (dynamiques)
+-- 4 magasins × 7 jours × 6 créneaux = 168 créneaux
+-- Ordre d'insertion : store 1 (jours 0-6), store 2 (jours 0-6), ...
+--   Store 1 : IDs 1-42   (jour 0 → 1-6, jour 1 → 7-12, ...)
+--   Store 2 : IDs 43-84
+--   Store 3 : IDs 85-126
+--   Store 4 : IDs 127-168
+-- Les orders ci-dessous utilisent store 1 : today=1-6, tomorrow=7-12
 -- =============================================
 DECLARE @today    DATETIME = CAST(CAST(GETDATE() AS DATE) AS DATETIME);
 DECLARE @tomorrow DATETIME = DATEADD(day, 1, @today);
+DECLARE @tsStore  INT = 1;
+DECLARE @tsDay    INT;
+DECLARE @tsBase   DATETIME;
+
+WHILE @tsStore <= 4
+BEGIN
+    SET @tsDay = 0;
+    WHILE @tsDay <= 6
+    BEGIN
+        SET @tsBase = DATEADD(day, @tsDay, @today);
+        INSERT INTO TimeSlot (startTime, endTime, storeId) VALUES
+            (DATEADD(hour,  9, @tsBase), DATEADD(hour, 10, @tsBase), @tsStore),
+            (DATEADD(hour, 10, @tsBase), DATEADD(hour, 11, @tsBase), @tsStore),
+            (DATEADD(hour, 11, @tsBase), DATEADD(hour, 12, @tsBase), @tsStore),
+            (DATEADD(hour, 14, @tsBase), DATEADD(hour, 15, @tsBase), @tsStore),
+            (DATEADD(hour, 15, @tsBase), DATEADD(hour, 16, @tsBase), @tsStore),
+            (DATEADD(hour, 16, @tsBase), DATEADD(hour, 17, @tsBase), @tsStore);
+        SET @tsDay = @tsDay + 1;
+    END
+    SET @tsStore = @tsStore + 1;
+END
+
 -- Commandes d'aujourd'hui (visible par le cashier)
 INSERT INTO [Order] (orderDate, status, numberOfBoxes, returnedBoxes, pickupDate, paymentStatus, customerId, timeSlotId) VALUES
                                                                                                                              (GETDATE(), 'Pending', 2, 0, DATEADD(hour,  9, @today), 'AwaitingPayment', 7, 1),
@@ -328,11 +407,11 @@ INSERT INTO [Order] (orderDate, status, numberOfBoxes, returnedBoxes, pickupDate
                                                                                                                              (GETDATE(), 'Pending', 1, 0, DATEADD(hour, 11, @today), 'AwaitingPayment', 7, 3),
                                                                                                                              (GETDATE(), 'Ready',   2, 0, DATEADD(hour, 14, @today), 'AwaitingPayment', 8, 4);
 
--- Commandes de demain (visible par l'order picker)
+-- Commandes de demain (visible par l'order picker) — IDs demain store 1 : 7=9h, 8=10h, 9=11h
 INSERT INTO [Order] (orderDate, status, numberOfBoxes, returnedBoxes, pickupDate, paymentStatus, customerId, timeSlotId) VALUES
-                                                                                                                             (GETDATE(), 'Pending', 0, 0, DATEADD(hour,  9, @tomorrow), 'AwaitingPayment', 7, 6),
-                                                                                                                             (GETDATE(), 'Pending', 0, 0, DATEADD(hour, 10, @tomorrow), 'AwaitingPayment', 8, 7),
-                                                                                                                             (GETDATE(), 'Ready',   0, 0, DATEADD(hour, 11, @tomorrow), 'AwaitingPayment', 7, 8);
+                                                                                                                             (GETDATE(), 'Pending', 0, 0, DATEADD(hour,  9, @tomorrow), 'AwaitingPayment', 7, 7),
+                                                                                                                             (GETDATE(), 'Pending', 0, 0, DATEADD(hour, 10, @tomorrow), 'AwaitingPayment', 8, 8),
+                                                                                                                             (GETDATE(), 'Ready',   0, 0, DATEADD(hour, 11, @tomorrow), 'AwaitingPayment', 7, 9);
 
 -- Produits dans les commandes
 INSERT INTO OrderLine (orderId, productId, quantity) VALUES
