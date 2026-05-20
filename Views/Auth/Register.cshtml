@@ -13,51 +13,79 @@
     <link rel="stylesheet" href="~/css/base.css"/>
     <link rel="stylesheet" href="~/css/style.css"/>
 </head>
-<body class="login-page">
+<body class="auth-page">
 
-<div class="login-card">
-    <a href="/" class="login-back">← Retour</a>
+<div class="auth-split">
 
-    <h1>Click & Go</h1>
-    <p class="subtitle">Créer un compte</p>
+    @* ====== Panneau gauche ====== *@
+    <div class="auth-panel-left">
+        <a href="/" class="auth-panel-logo">
+            <img src="~/images/logo.png" alt="Logo"/>
+            <span>Click & Go</span>
+        </a>
+        <div class="auth-panel-content">
+            <h2 class="auth-panel-title">Rejoignez<br/>Click & Go.</h2>
+            <p class="auth-panel-sub">Créez votre compte et faites vos courses en quelques clics.</p>
+            <ul class="auth-features">
+                <li><i data-lucide="user-plus"></i> Inscription rapide et gratuite</li>
+                <li><i data-lucide="shopping-basket"></i> Large choix de produits frais</li>
+                <li><i data-lucide="map-pin"></i> Retrait en magasin sans attente</li>
+            </ul>
+        </div>
+    </div>
 
-    @if (ViewBag.Error != null)
-    {
-        <div class="error">@ViewBag.Error</div>
-    }
+    @* ====== Panneau droit (formulaire) ====== *@
+    <div class="auth-panel-right">
+        <a href="/" class="login-back">← Retour</a>
 
-    <form method="post" asp-action="Register">
-        <div class="form-group">
-            <label for="firstName">Prénom</label>
-            <input type="text" id="firstName" name="firstName" placeholder="Jean" required/>
-        </div>
-        <div class="form-group">
-            <label for="lastName">Nom</label>
-            <input type="text" id="lastName" name="lastName" placeholder="Dupont" required/>
-        </div>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="votre@email.com" required/>
-        </div>
-        <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" placeholder="••••••••" required/>
-        </div>
-        <div class="form-group">
-            <label for="phoneNumber">Téléphone</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="0612345678"/>
-        </div>
-        <div class="form-group">
-            <label for="address">Adresse</label>
-            <input type="text" id="address" name="address" placeholder="12 rue des Lilas, Paris"/>
-        </div>
-        <button type="submit">Créer mon compte</button>
-    </form>
+        <h1 class="auth-form-title">Créer un compte</h1>
+        <p class="auth-form-sub">Remplissez les informations ci-dessous</p>
 
-    <p class="login-hint">
-        Déjà un compte ? <a asp-action="Login">Se connecter</a>
-    </p>
+        @if (ViewBag.Error != null)
+        {
+            <div class="error">@ViewBag.Error</div>
+        }
+
+        <form method="post" asp-action="Register">
+            <div class="auth-row">
+                <div class="form-group">
+                    <label for="firstName">Prénom</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="Jean" required/>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Nom</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Dupont" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="votre@email.com" required/>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required/>
+            </div>
+            <div class="auth-row">
+                <div class="form-group">
+                    <label for="phoneNumber">Téléphone</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="0612345678"/>
+                </div>
+                <div class="form-group">
+                    <label for="address">Adresse</label>
+                    <input type="text" id="address" name="address" placeholder="12 rue des Lilas"/>
+                </div>
+            </div>
+            <button type="submit">Créer mon compte</button>
+        </form>
+
+        <p class="login-hint">
+            Déjà un compte ? <a asp-action="Login">Se connecter</a>
+        </p>
+    </div>
+
 </div>
 
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

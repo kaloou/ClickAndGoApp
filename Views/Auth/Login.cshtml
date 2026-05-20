@@ -14,38 +14,62 @@
     <link rel="stylesheet" href="~/css/base.css"/>
     <link rel="stylesheet" href="~/css/style.css"/>
 </head>
-<body class="login-page">
+<body class="auth-page">
 
-<div class="login-card">
-    <a href="/" class="login-back">← Retour</a>
+<div class="auth-split">
 
-    <h1>Click & Go</h1>
-    <p class="subtitle">Connectez-vous à votre compte</p>
-
-    <form method="post" asp-controller="Auth" asp-action="Login">
-        @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
-        {
-            <div asp-validation-summary="All" class="error"></div>
-        }
-
-        <div class="form-group">
-            <label asp-for="Email">Email</label>
-            <input asp-for="Email" placeholder="votre@email.com"/>
+    @* ====== Panneau gauche ====== *@
+    <div class="auth-panel-left">
+        <a href="/" class="auth-panel-logo">
+            <img src="~/images/logo.png" alt="Logo"/>
+            <span>Click & Go</span>
+        </a>
+        <div class="auth-panel-content">
+            <h2 class="auth-panel-title">Vos courses,<br/>à votre rythme.</h2>
+            <p class="auth-panel-sub">Commandez en ligne et retirez en magasin en quelques minutes.</p>
+            <ul class="auth-features">
+                <li><i data-lucide="shopping-basket"></i> Large choix de produits frais</li>
+                <li><i data-lucide="map-pin"></i> Retrait dans votre magasin</li>
+                <li><i data-lucide="clock"></i> Créneau de retrait flexible</li>
+            </ul>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label asp-for="Password">Mot de passe</label>
-            <input asp-for="Password" placeholder="••••••••" type="password"/>
-        </div>
+    @* ====== Panneau droit (formulaire) ====== *@
+    <div class="auth-panel-right">
+        <a href="/" class="login-back">← Retour</a>
 
-        <button type="submit">Se connecter</button>
-    </form>
+        <h1 class="auth-form-title">Connexion</h1>
+        <p class="auth-form-sub">Connectez-vous à votre compte</p>
 
-    <p class="login-register">
-        Pas de compte ? <a asp-controller="Auth" asp-action="Register">Créez-en un</a>
-    </p>
+        <form method="post" asp-controller="Auth" asp-action="Login">
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+            {
+                <div asp-validation-summary="All" class="error"></div>
+            }
+
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" placeholder="votre@email.com"/>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password">Mot de passe</label>
+                <input asp-for="Password" placeholder="••••••••" type="password"/>
+            </div>
+
+            <button type="submit">Se connecter</button>
+        </form>
+
+        <p class="login-register">
+            Pas de compte ? <a asp-controller="Auth" asp-action="Register">Créez-en un</a>
+        </p>
+    </div>
+
 </div>
 
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>lucide.createIcons();</script>
 @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 </body>
 </html>
