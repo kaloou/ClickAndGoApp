@@ -125,58 +125,156 @@
 /* ============================================
    LOGIN
    ============================================ */
-.login-page {
+/* ============================================
+   AUTH SPLIT LAYOUT (Login / Register)
+   ============================================ */
+.auth-page {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.auth-split {
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
 }
 
-.login-card {
+/* -- Panneau gauche -- */
+.auth-panel-left {
+    width: 42%;
+    background: linear-gradient(160deg, var(--cg-teal-dark) 0%, var(--cg-teal) 100%);
+    display: flex;
+    flex-direction: column;
+    padding: 40px 48px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.auth-panel-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: white;
+}
+
+.auth-panel-logo img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: white;
+    padding: 4px;
+}
+
+.auth-panel-logo span {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.auth-panel-content {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.auth-panel-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    color: white;
+}
+
+.auth-panel-sub {
+    font-size: 1rem;
+    opacity: 0.85;
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.auth-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.auth-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    opacity: 0.92;
+}
+
+.auth-features [data-lucide] {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke: white;
+}
+
+/* -- Panneau droit -- */
+.auth-panel-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 56px;
+    overflow-y: auto;
     background: var(--cg-white);
-    padding: var(--cg-space-10);
-    border-radius: var(--cg-radius-xl);
-    box-shadow: var(--cg-shadow-lifted);
-    width: 100%;
-    max-width: 400px;
-    position: relative;
+}
+
+.auth-form-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--cg-gray-900);
+    margin: 0 0 6px;
+}
+
+.auth-form-sub {
+    font-size: 0.9rem;
+    color: var(--cg-text-muted);
+    margin: 0 0 28px;
+}
+
+.auth-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
 }
 
 .login-back {
     display: inline-block;
-    margin-bottom: var(--cg-space-4);
+    margin-bottom: 28px;
     font-size: 13px;
     color: var(--cg-teal);
 }
 
 .login-back:hover { text-decoration: underline; }
 
-.login-register {
+.login-register,
+.login-hint {
     margin-top: var(--cg-space-5);
-    text-align: center;
     font-size: 13px;
     color: var(--cg-text-muted);
+    text-align: center;
 }
 
-.login-register a {
+.login-register a,
+.login-hint a {
     color: var(--cg-teal);
     font-weight: var(--cg-fw-semibold);
 }
 
-.login-register a:hover { text-decoration: underline; }
+.login-register a:hover,
+.login-hint a:hover { text-decoration: underline; }
 
-.login-card h1 {
-    font-size: 24px;
-    margin-bottom: var(--cg-space-2);
-    color: var(--cg-orange);
-    text-align: center;
-}
-
-.login-card .subtitle {
-    color: var(--cg-teal);
-    margin-bottom: var(--cg-space-7);
-    font-size: 14px;
-    text-align: center;
+@media (max-width: 768px) {
+    .auth-panel-left { display: none; }
+    .auth-panel-right { padding: 32px 24px; }
 }
 
 .form-group { margin-bottom: 18px; }
