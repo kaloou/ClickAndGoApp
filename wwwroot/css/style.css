@@ -1273,26 +1273,67 @@ a.product-card {
     color: #e53e3e;
 }
 
-.cart-footer {
-    padding: 24px 32px;
+/* layout 2 colonnes */
+.cart-layout {
     display: flex;
-    justify-content: flex-end;
-    gap: 32px;
-    align-items: center;
+    gap: 24px;
+    align-items: flex-start;
 }
 
-.price-summary { text-align: right; }
-
-.price-summary-label {
-    color: var(--text-gray);
-    font-size: 0.85rem;
-    margin: 0;
+.cart-items-col {
+    flex: 1;
+    min-width: 0;
 }
 
-.price-summary-amount {
+/* carte récapitulatif */
+.cart-summary-card {
+    width: 300px;
+    flex-shrink: 0;
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 2px 12px var(--shadow);
+}
+
+.cart-summary-title {
     font-size: 1.1rem;
     font-weight: 700;
-    margin: 0;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.cart-summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.92rem;
+    color: var(--text-gray);
+}
+
+.cart-summary-divider {
+    border-top: 1px solid var(--border);
+    margin: 4px 0;
+}
+
+.cart-summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+.cart-total-amount {
+    font-size: 1.3rem;
+    color: var(--primary);
+}
+
+.cart-summary-btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
 }
 
 /* ============================================
