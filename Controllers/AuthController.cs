@@ -97,6 +97,7 @@ public class AuthController : Controller
     public IActionResult Logout()
     {
         HttpContext.Session.Clear();
+        TempData["Success"] = "Vous avez été déconnecté.";
         return RedirectToAction("Index", "Home");
     }
 }

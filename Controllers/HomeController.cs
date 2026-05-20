@@ -17,8 +17,9 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetInt32("welcomed") == null)
         {
-            TempData["Success"] = "Bienvenue sur notre site";
             HttpContext.Session.SetInt32("welcomed", 1);
+            if (TempData["Success"] == null)
+                TempData["Success"] = "Bienvenue sur notre site";
         }
 
         return View();
