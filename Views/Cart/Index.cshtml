@@ -48,7 +48,9 @@
                     @* RemoveProduct *@
                     <form asp-action="RemoveProduct" method="post">
                         <input type="hidden" name="productId" value="@line.Product.ProductId"/>
-                        <button type="submit" class="btn-remove" title="Retirer">✕</button>
+                        <button type="submit" class="btn-remove" title="Retirer">
+                            <i data-lucide="trash-2"></i>
+                        </button>
                     </form>
 
                 </div>
