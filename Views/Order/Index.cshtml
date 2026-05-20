@@ -1,7 +1,7 @@
 @model ClickAndGoApp.ViewModels.CartViewModel
 @{
     ViewData["Title"] = "Passer commande";
-    var store     = ViewBag.SelectedStore as ClickAndGoApp.Models.Store;
+    var store    = ViewBag.SelectedStore as ClickAndGoApp.Models.Store;
     bool hasStore = store != null;
     bool hasSlot  = Model.Order.TimeSlotId > 0;
     float? total  = ViewBag.Total as float?;
@@ -10,91 +10,105 @@
 <div class="browse-page">
 
     <div class="browse-header">
+        <a asp-controller="Cart" asp-action="Index" class="detail-back">← Retour au panier</a>
         <h1>Récapitulatif de commande</h1>
     </div>
 
-    @* Liste des produits (lecture seule) *@
-    <div class="section-card">
-        @foreach (var line in Model.OrderLines)
-        {
-            <div class="cart-item-sm">
-                <div class="product-detail-img cart-item-img">
-                    @if (line.Product.ImagePath != null)
+    <div class="cart-layout">
+
+        @* -- Colonne gauche : articles (lecture seule) -- *@
+        <div class="section-card cart-items-col">
+            @foreach (var line in Model.OrderLines)
+            {
+                <div class="cart-item">
+                    <div class="cart-item-img">
+                        @if (line.Product.ImagePath != null)
+                        {
+                            <img src="@line.Product.ImagePath" alt="@line.Product.Name"/>
+                        }
+                    </div>
+                    <div class="cart-item-info">
+                        <p class="product-detail-category">@line.Product.Category.Name</p>
+                        <p class="cart-item-name">@line.Product.Name</p>
+                        <p class="cart-item-price">@((line.Product.Price * line.Quantity).ToString("F2")) €</p>
+                    </div>
+                    <span class="order-qty-badge">x@(line.Quantity)</span>
+                </div>
+            }
+        </div>
+
+        @* -- Colonne droite : options + total -- *@
+        <div class="cart-summary-card">
+
+            @* Magasin *@
+            <div class="checkout-option">
+                <div class="checkout-option-info">
+                    <p class="checkout-option-label">Magasin</p>
+                    @if (hasStore)
                     {
-                        <img src="@line.Product.ImagePath" alt="@line.Product.Name"/>
+                        <p class="checkout-option-value">@store.Name</p>
+                        <p class="checkout-option-sub">@store.Address</p>
+                    }
+                    else
+                    {
+                        <p class="checkout-option-empty">Non sélectionné</p>
                     }
                 </div>
-                <div class="cart-item-info">
-                    <p class="product-detail-category">@line.Product.Category.Name</p>
-                    <p class="cart-item-name">@line.Product.Name</p>
-                </div>
-                <div class="cart-item-right">
-                    <p class="price-summary-label">x@(line.Quantity)</p>
-                    <p class="cart-item-price">@((line.Product.Price * line.Quantity).ToString("F2")) €</p>
-                </div>
+                <a asp-action="SelectStore" class="btn-cta-sm">@(hasStore ? "Modifier" : "Choisir")</a>
             </div>
-        }
-        <div class="cart-footer">
-            <p class="price-summary-label">Sous-total : <strong>@Model.ProductsTotal.ToString("F2") €</strong></p>
-        </div>
-    </div>
 
-    @* Étapes de checkout *@
-    <div class="section-card">
+            <div class="cart-summary-divider"></div>
 
-        @* Étape 1 : Magasin *@
-        <div class="order-row">
-            <div>
-                <p class="order-row-title">Magasin</p>
+            @* Créneau *@
+            <div class="checkout-option">
+                <div class="checkout-option-info">
+                    <p class="checkout-option-label">Créneau de retrait</p>
+                    @if (hasSlot)
+                    {
+                        <p class="checkout-option-value">@Model.Order.PickupDate.ToString("dddd dd MMMM — HH:mm")</p>
+                    }
+                    else
+                    {
+                        <p class="checkout-option-empty">Non sélectionné</p>
+                    }
+                </div>
                 @if (hasStore)
                 {
-                    <p class="order-row-meta">@store.Name — @store.Address</p>
+                    <a asp-action="SelectTimeSlot" class="btn-cta-sm">@(hasSlot ? "Modifier" : "Choisir")</a>
                 }
                 else
                 {
-                    <p class="order-row-meta">Non sélectionné</p>
+                    <span class="checkout-option-hint">Choisir un magasin d'abord</span>
                 }
             </div>
-            <a asp-action="SelectStore" class="btn-cta-sm">@(hasStore ? "Modifier" : "Choisir")</a>
-        </div>
 
-        @* Étape 2 : Créneau horaire *@
-        <div class="order-row">
-            <div>
-                <p class="order-row-title">Créneau de retrait</p>
-                @if (hasSlot)
-                {
-                    <p class="order-row-meta">@Model.Order.PickupDate.ToString("dddd dd MMMM yyyy — HH:mm")</p>
-                }
-                else
-                {
-                    <p class="order-row-meta">Non sélectionné</p>
-                }
+            <div class="cart-summary-divider"></div>
+
+            @* Totaux *@
+            <div class="cart-summary-line">
+                <span>Sous-total</span>
+                <span>@Model.ProductsTotal.ToString("F2") €</span>
             </div>
-            @if (hasStore)
-            {
-                <a asp-action="SelectTimeSlot" class="btn-cta-sm">@(hasSlot ? "Modifier" : "Choisir")</a>
-            }
-            else
-            {
-                <span class="nav-back">Choisir un magasin d'abord</span>
-            }
-        </div>
+            <div class="cart-summary-line">
+                <span>Frais de service</span>
+                <span>+ @ClickAndGoApp.Models.Order.SERVICE_FEE.ToString("F2") €</span>
+            </div>
 
-        @* Total + confirmation si tout est sélectionné *@
-        @if (hasStore && hasSlot && total != null)
-        {
-            <div class="checkout-footer">
-                <div class="checkout-totals">
-                    <p class="checkout-total-line">Produits : @Model.ProductsTotal.ToString("F2") €</p>
-                    <p class="checkout-total-line">Frais de service : @ClickAndGoApp.Models.Order.SERVICE_FEE.ToString("F2") €</p>
-                    <p class="checkout-total-main">Total estimé : @((float)total).ToString("F2") €</p>
-                </div>
+            <div class="cart-summary-divider"></div>
+
+            <div class="cart-summary-total">
+                <span>Total estimé</span>
+                <span class="cart-total-amount">@Model.Total.ToString("F2") €</span>
+            </div>
+
+            @if (hasStore && hasSlot)
+            {
                 <form asp-action="ConfirmOrder" method="post">
-                    <button type="submit" class="btn-cta">Confirmer la commande</button>
+                    <button type="submit" class="btn-cta cart-summary-btn">Confirmer la commande</button>
                 </form>
-            </div>
-        }
+            }
+
+        </div>
 
     </div>
 
