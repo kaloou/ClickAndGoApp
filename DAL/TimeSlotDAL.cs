@@ -38,4 +38,17 @@ public class TimeSlotDAL : ITimeSlotDAL
             slots.Add(new TimeSlot((int)reader["timeSlotId"], (DateTime)reader["startTime"], (DateTime)reader["endTime"]));
         return slots;
     }
+
+    public async Task<int?> GetStoreIdAsync(int timeSlotId)
+    {
+        using SqlConnection conn = db.GetConnexion();
+        await conn.OpenAsync();
+
+        const string query = "SELECT storeId FROM TimeSlot WHERE timeSlotId = @timeSlotId";
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@timeSlotId", timeSlotId);
+
+        object? result = await cmd.ExecuteScalarAsync();
+        return result is null ? null : (int)result;
+    }
 }

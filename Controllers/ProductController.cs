@@ -87,6 +87,7 @@ public class ProductController : Controller
             await existing.SetQuantityAsync(existing.Quantity + quantity, orderLineDal);
         }
 
+        await HttpContext.Session.CommitAsync();
         TempData["Success"] = "Produit ajouté au panier";
         return RedirectToAction("SelectProduct", new { productId = productId });
     }

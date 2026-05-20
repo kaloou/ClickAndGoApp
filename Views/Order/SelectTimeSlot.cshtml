@@ -6,65 +6,127 @@
     string minDate      = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
 }
 
-<div class="browse-page">
+@section HeadLinks {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+}
 
-    <div class="browse-header">
+<div class="checkout-page">
+
+    <div class="checkout-stepper">
+        <div class="checkout-step checkout-step--done">
+            <div class="checkout-step-circle"><i data-lucide="check"></i></div>
+            <span class="checkout-step-label">Magasin</span>
+        </div>
+        <div class="checkout-step-line checkout-step-line--done"></div>
+        <div class="checkout-step checkout-step--active">
+            <div class="checkout-step-circle">2</div>
+            <span class="checkout-step-label">Créneau</span>
+        </div>
+        <div class="checkout-step-line"></div>
+        <div class="checkout-step">
+            <div class="checkout-step-circle">3</div>
+            <span class="checkout-step-label">Confirmation</span>
+        </div>
+    </div>
+
+    <div class="checkout-header">
         <h1>Choisir un créneau</h1>
-        <p class="browse-subtitle">@storeName</p>
-    </div>
-
-    @* Sélecteur de date *@
-    <div class="section-card" style="max-width:480px; margin-bottom:24px">
-        <form method="get" asp-action="SelectTimeSlot" class="section-form">
-            <label for="datePicker">Date de retrait</label>
-            <input type="date"
-                   id="datePicker"
-                   name="selectedDate"
-                   value="@selectedDate"
-                   min="@minDate"
-                   required/>
-            <div class="form-actions">
-                <button type="submit" class="btn-cta">Voir les créneaux</button>
-            </div>
-        </form>
-    </div>
-
-    @* Créneaux du jour choisi *@
-    @if (selectedDate != null)
-    {
-        <p style="font-weight:600; margin-bottom:12px">
-            Créneaux du @DateTime.Parse(selectedDate).ToString("dddd dd MMMM yyyy")
+        <p class="checkout-store-badge">
+            <i data-lucide="map-pin"></i>
+            @storeName
         </p>
+    </div>
 
-        @if (!Model.Any())
-        {
-            <div class="timeslot-empty">
-                <i data-lucide="calendar-x"></i>
-                <p class="timeslot-empty-title">Aucun créneau disponible</p>
-                <p class="timeslot-empty-sub">Ce magasin n'a pas de créneaux pour cette date. Essayez une autre date ou choisissez un autre magasin.</p>
-                <a asp-action="SelectStore" class="btn-cta">Choisir un autre magasin</a>
+    <div class="checkout-cols">
+
+        <div class="checkout-left">
+            <div class="checkout-card">
+                <div class="checkout-card-title">
+                    <i data-lucide="calendar"></i>
+                    Date de retrait
+                </div>
+                <form method="get" asp-action="SelectTimeSlot" id="dateForm">
+                    <input type="text"
+                           id="datePicker"
+                           name="selectedDate"
+                           value="@selectedDate"
+                           placeholder="Choisissez une date"
+                           autocomplete="off" />
+                    <button type="submit" class="btn-cta">Voir les créneaux</button>
+                </form>
             </div>
-        }
-        else
-        {
-            <div class="section-card">
-                @foreach (var slot in Model)
+            <div class="page-nav">
+                <a asp-action="SelectStore" class="nav-back">← Changer de magasin</a>
+                <a asp-action="Index" class="nav-back">← Récapitulatif</a>
+            </div>
+        </div>
+
+        <div class="checkout-right">
+            @if (selectedDate != null)
+            {
+                <p class="checkout-date-label">
+                    Créneaux du @DateTime.Parse(selectedDate).ToString("dddd dd MMMM yyyy")
+                </p>
+
+                @if (!Model.Any())
                 {
-                    <form asp-action="SelectTimeSlot" method="post">
-                        <input type="hidden" name="timeSlotId" value="@slot.TimeSlotId"/>
-                        <div class="timeslot-btn">
-                            <p class="timeslot-title">@slot.StartTime.ToString("HH:mm") – @slot.EndTime.ToString("HH:mm")</p>
-                            <button type="submit" class="btn-cta-sm">Choisir</button>
-                        </div>
-                    </form>
+                    <div class="timeslot-empty">
+                        <i data-lucide="calendar-x"></i>
+                        <p class="timeslot-empty-title">Aucun créneau disponible</p>
+                        <p class="timeslot-empty-sub">Ce magasin n'a pas de créneaux pour cette date. Essayez une autre date ou choisissez un autre magasin.</p>
+                        <a asp-action="SelectStore" class="btn-cta">Choisir un autre magasin</a>
+                    </div>
                 }
-            </div>
-        }
-    }
+                else
+                {
+                    <div class="slot-list">
+                        @foreach (var slot in Model)
+                        {
+                            <form asp-action="SelectTimeSlot" method="post">
+                                <input type="hidden" name="timeSlotId" value="@slot.TimeSlotId"/>
+                                <button type="submit" class="slot-row">
+                                    <div class="slot-row-left">
+                                        <div class="slot-icon">
+                                            <i data-lucide="clock"></i>
+                                        </div>
+                                        <div>
+                                            <p class="slot-time">@slot.StartTime.ToString("HH:mm") – @slot.EndTime.ToString("HH:mm")</p>
+                                            <p class="slot-sub">Retrait en magasin</p>
+                                        </div>
+                                    </div>
+                                    <span class="slot-cta">Choisir →</span>
+                                </button>
+                            </form>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="slot-placeholder">
+                    <i data-lucide="calendar-search"></i>
+                    <p>Sélectionnez une date pour voir les créneaux disponibles</p>
+                </div>
+            }
+        </div>
 
-    <div class="page-nav">
-        <a asp-action="SelectStore" class="nav-back">← Changer de magasin</a>
-        <a asp-action="Index" class="nav-back">← Retour au récapitulatif</a>
     </div>
 
 </div>
+
+@*FlatPickr C'est un site où on peut personnalisé le calendrier comme on veut grace a son constructeur*@
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+    <script>
+        flatpickr("#datePicker", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "j F Y",
+            minDate: "@minDate",
+            locale: "fr",
+            disableMobile: true
+        });
+    </script>
+}
