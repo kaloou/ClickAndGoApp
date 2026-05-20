@@ -1,9 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Error";
+@{
+    ViewData["Title"] = "Erreur";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<h1 style="color: var(--cg-error-fg)">Erreur.</h1>
+<h2 style="color: var(--cg-error-fg)">Une erreur est survenue lors du traitement de votre requête.</h2>
 
 @if (Model.ShowRequestId)
 {
@@ -12,13 +12,13 @@
     </p>
 }
 
-<h3>Development Mode</h3>
+<h3>Mode développement</h3>
 <p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+    Passer en environnement <strong>Development</strong> affichera plus de détails sur l'erreur.
 </p>
 <p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
+    <strong>L'environnement Development ne doit pas être activé en production.</strong>
+    Il peut exposer des informations sensibles aux utilisateurs.
+    Pour déboguer en local, définissez la variable d'environnement <strong>ASPNETCORE_ENVIRONMENT</strong>
+    à <strong>Development</strong> et redémarrez l'application.
 </p>
