@@ -1,32 +1,48 @@
 @model List<ClickAndGoApp.Models.Store>
 @{
     ViewData["Title"] = "Choisir un magasin";
+    var storeMaps = new Dictionary<int, string>
+    {
+        [1] = "https://www.openstreetmap.org/export/embed.html?bbox=4.428525567054749%2C50.45176262224261%2C4.4331926107406625%2C50.45442677229329&layer=mapnik&marker=50.45309471602116%2C4.430859088897705",
+        [2] = "https://www.openstreetmap.org/export/embed.html?bbox=4.433458149433137%2C50.45901354065456%2C4.435791671276093%2C50.46034543026745&layer=mapnik&marker=50.459680001201995%2C4.43462605000002",
+        [3] = "https://www.openstreetmap.org/export/embed.html?bbox=4.445895552635194%2C50.397194841055494%2C4.44822907447815%2C50.398528470626296&layer=mapnik&marker=50.397861551460025%2C4.447062899999992",
+        [4] = "https://www.openstreetmap.org/export/embed.html?bbox=4.4767624139785775%2C50.42066124081146%2C4.479095935821534%2C50.42199421007636&layer=mapnik&marker=50.421327600065375%2C4.477929000000017",
+    };
 }
 
 <div class="browse-page">
 
     <div class="browse-header">
+        <a asp-action="Index" class="detail-back">← Retour au récapitulatif</a>
         <h1>Choisir un magasin</h1>
         <p class="browse-subtitle">Sélectionnez le magasin où vous souhaitez retirer votre commande</p>
     </div>
 
-    <div class="products-grid">
+    <div class="store-grid">
         @foreach (var store in Model)
         {
-            <form asp-action="SelectStore" method="post">
-                <input type="hidden" name="storeId" value="@store.StoreId"/>
-                <button type="submit" class="product-card btn-card">
-                    <div class="product-info">
-                        <p class="product-name">@store.Name</p>
-                        <p class="product-category">@store.Address</p>
+            <div class="store-card">
+                @if (storeMaps.TryGetValue(store.StoreId, out var mapUrl))
+                {
+                    <div class="store-map-wrapper">
+                        <iframe src="@mapUrl" class="store-map" loading="lazy"></iframe>
                     </div>
-                </button>
-            </form>
+                }
+                <div class="store-card-body">
+                    <div>
+                        <p class="store-card-name">@store.Name</p>
+                        <p class="store-card-address">
+                            <i data-lucide="map-pin"></i>
+                            @store.Address
+                        </p>
+                    </div>
+                    <form asp-action="SelectStore" method="post">
+                        <input type="hidden" name="storeId" value="@store.StoreId"/>
+                        <button type="submit" class="btn-cta store-card-btn">Choisir ce magasin</button>
+                    </form>
+                </div>
+            </div>
         }
-    </div>
-
-    <div class="page-nav">
-        <a asp-action="Index" class="nav-back">← Retour au récapitulatif</a>
     </div>
 
 </div>

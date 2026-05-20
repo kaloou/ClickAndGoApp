@@ -444,3 +444,16 @@ UPDATE Recipes SET imagePath = 'recipes/banana_almond_smoothie.webp'  WHERE reci
 UPDATE Recipes SET imagePath = 'recipes/vegetable_stir-fry.jpg'       WHERE recipeId = 5;
 UPDATE Recipes SET imagePath = 'recipes/creamed_salmon.jpg'           WHERE recipeId = 6;
 GO
+
+INSERT INTO Store (name, address) VALUES
+                                      ('Click & Go Jumet', 'Rue Hubert Bastin 7, 6040 Jumet'),
+                                      ('Click & Go Gosselies', 'Rue Tahon 37, 6041 Gosselies'),
+                                      ('Click & Go Marcinelle',     'Rue du Grand Pont 16, 6001 Charleroi'),
+                                      ('Click & Go Gilly',     'Chaussée Impériale 61, 6060 Gilly');
+
+Update Store Set name = 'Click & Go Jumet', address = 'Rue Hubert Bastin 7, 6040 Jumet' where storeId = 1;
+Update Store Set name = 'Click & Go Gosselies', address = 'ue Tahon 37, 6041 Gosselies' where storeId = 2;
+Update Store Set name = 'Click & Go Marcinelle', address = 'ue du Grand Pont 16, 6001 Charleroi' where storeId = 3;
+Update Store Set name = 'Click & Go Gilly', address = 'Chaussée Impériale 61, 6060 Gilly' where storeId = 4;
+
+
