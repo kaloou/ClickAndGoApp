@@ -321,23 +321,6 @@ GO
 -- =============================================
 DECLARE @today    DATETIME = CAST(CAST(GETDATE() AS DATE) AS DATETIME);
 DECLARE @tomorrow DATETIME = DATEADD(day, 1, @today);
-
--- Créneaux aujourd'hui store 1 (pour le cashier)
-INSERT INTO TimeSlot (startTime, endTime, storeId) VALUES
-                                                       (DATEADD(hour,  9, @today), DATEADD(hour, 10, @today), 1),  -- 1
-                                                       (DATEADD(hour, 10, @today), DATEADD(hour, 11, @today), 1),  -- 2
-                                                       (DATEADD(hour, 11, @today), DATEADD(hour, 12, @today), 1),  -- 3
-                                                       (DATEADD(hour, 14, @today), DATEADD(hour, 15, @today), 1),  -- 4
-                                                       (DATEADD(hour, 15, @today), DATEADD(hour, 16, @today), 1);  -- 5
-
--- Créneaux demain store 1 (pour l'order picker)
-INSERT INTO TimeSlot (startTime, endTime, storeId) VALUES
-                                                       (DATEADD(hour,  9, @tomorrow), DATEADD(hour, 10, @tomorrow), 1),  -- 6
-                                                       (DATEADD(hour, 10, @tomorrow), DATEADD(hour, 11, @tomorrow), 1),  -- 7
-                                                       (DATEADD(hour, 11, @tomorrow), DATEADD(hour, 12, @tomorrow), 1),  -- 8
-                                                       (DATEADD(hour, 14, @tomorrow), DATEADD(hour, 15, @tomorrow), 1),  -- 9
-                                                       (DATEADD(hour, 15, @tomorrow), DATEADD(hour, 16, @tomorrow), 1);  -- 10
-
 -- Commandes d'aujourd'hui (visible par le cashier)
 INSERT INTO [Order] (orderDate, status, numberOfBoxes, returnedBoxes, pickupDate, paymentStatus, customerId, timeSlotId) VALUES
                                                                                                                              (GETDATE(), 'Pending', 2, 0, DATEADD(hour,  9, @today), 'AwaitingPayment', 7, 1),

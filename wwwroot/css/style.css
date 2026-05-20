@@ -568,6 +568,20 @@
 
 .encode-boxes-card h3 { margin-top: 0; }
 
+.btn-ready {
+    width: 100%;
+    margin-top: var(--cg-space-4);
+    background: var(--cg-teal);
+    color: var(--cg-white);
+    border: none;
+    padding: 12px;
+    border-radius: var(--cg-radius-xl);
+    font-weight: var(--cg-fw-semibold);
+    cursor: pointer;
+    transition: background var(--cg-dur-fast);
+}
+.btn-ready:hover { background: var(--cg-teal-dark); }
+
 .success {
     background: var(--cg-status-ready-bg);
     color:      var(--cg-status-ready-fg);

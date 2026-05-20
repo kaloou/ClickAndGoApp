@@ -1,4 +1,5 @@
 @model ClickAndGoApp.ViewModels.OrderDetailsViewModel
+@using ClickAndGoApp.Models.Enums
 @{
     ViewData["Title"] = "Order Details";
     ViewData["NavbarType"] = "Staff";
@@ -73,6 +74,14 @@
             }
             <button type="submit">Confirm</button>
         </form>
+
+        @if (Model.Order.NumberOfBoxes > 0 && Model.Order.Status == OrderStatus.Pending)
+        {
+            <form method="post" asp-controller="OrderPicker" asp-action="MarkAsReadyAsync">
+                <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
+                <button type="submit" class="btn-ready">Mark as Ready</button>
+            </form>
+        }
     </div>
 
 </div>
