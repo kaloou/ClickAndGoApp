@@ -22,10 +22,11 @@ public class TimeSlotDAL : ITimeSlotDAL
             FROM TimeSlot ts
             WHERE ts.storeId = @storeId
               AND ts.startTime > GETDATE()
-              AND NOT EXISTS (
-                  SELECT 1 FROM [Order] o
+              AND (
+                  SELECT COUNT(*) FROM [Order] o
                   WHERE o.timeSlotId = ts.timeSlotId
-                    AND o.status != 'InTheCart')
+                    AND o.status != 'InTheCart'
+              ) < 10
             ORDER BY ts.startTime";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
@@ -36,5 +37,18 @@ public class TimeSlotDAL : ITimeSlotDAL
         while (await reader.ReadAsync())
             slots.Add(new TimeSlot((int)reader["timeSlotId"], (DateTime)reader["startTime"], (DateTime)reader["endTime"]));
         return slots;
+    }
+
+    public async Task<int?> GetStoreIdAsync(int timeSlotId)
+    {
+        using SqlConnection conn = db.GetConnexion();
+        await conn.OpenAsync();
+
+        const string query = "SELECT storeId FROM TimeSlot WHERE timeSlotId = @timeSlotId";
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@timeSlotId", timeSlotId);
+
+        object? result = await cmd.ExecuteScalarAsync();
+        return result is null ? null : (int)result;
     }
 }

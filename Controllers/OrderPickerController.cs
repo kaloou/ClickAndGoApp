@@ -3,7 +3,7 @@ using ClickAndGoApp.DAL;
 using ClickAndGoApp.Models;
 using ClickAndGoApp.ViewModels;
 using ClickAndGoApp.Exceptions;
-
+using ClickAndGoApp.Models.Enums;
 namespace ClickAndGoApp.Controllers
 {
     public class OrderPickerController : Controller
@@ -105,6 +105,38 @@ namespace ClickAndGoApp.Controllers
 
                 ViewBag.Success = "Number of boxes saved successfully";
                 return View("OrderDetails", new OrderDetailsViewModel(order, orderLines, products));
+            }
+            catch (EntityNotFoundException)
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        // ============================================
+        // Mark Order As Ready
+        // ============================================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkAsReadyAsync(int orderId)
+        {
+            if (HttpContext.Session.GetString("role") != "OrderPicker")
+                return RedirectToAction("Login", "Auth");
+
+            try
+            {
+                Order order = await Order.GetByIdAsync(orderId, _orderDAL);
+                List<OrderLine> orderLines = await order.GetOrderLinesAsync(_orderLineDAL);
+                List<Product> products = orderLines.Select(ol => ol.GetProduct()).ToList();
+
+                if (order.NumberOfBoxes <= 0)
+                {
+                    ViewBag.Error = "Please encode the number of boxes before marking the order as ready.";
+                    return View("OrderDetails", new OrderDetailsViewModel(order, orderLines, products));
+                }
+
+                await order.SetStatusAsync(OrderStatus.Ready, _orderDAL);
+                TempData["Success"] = "Order is ready";
+                return RedirectToAction("Index");
             }
             catch (EntityNotFoundException)
             {

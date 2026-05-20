@@ -75,17 +75,23 @@ public class RecipeController : Controller
             {
                 List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
-                // loop [foreach ingredient in ingredients]
+                int newProducts = 0;
                 foreach (RecipeIngredient ingredient in ingredients)
                 {
                     OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == ingredient.ProductId);
                     if (existing == null)
+                    {
                         await order.AddProductAsync(ingredient.ProductId, orderLineDal, ingredient.Quantity);
+                        newProducts++;
+                    }
                     else
                         await existing.SetQuantityAsync(existing.Quantity + ingredient.Quantity, orderLineDal);
                 }
 
-                // 11 : updatedCart
+                int count = HttpContext.Session.GetInt32("cartCount") ?? 0;
+                HttpContext.Session.SetInt32("cartCount", count + newProducts);
+
+                await HttpContext.Session.CommitAsync();
                 TempData["Success"] = "Ingrédients ajoutés au panier";
                 return RedirectToAction("SelectRecipe", new { recipeId });
             }

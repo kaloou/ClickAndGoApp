@@ -11,13 +11,15 @@ public class AuthController : Controller
     private readonly ICustomerDAL  customerDal;
     private readonly IOrderDAL     orderDal;
     private readonly IOrderLineDAL orderLineDal;
+    private readonly ITimeSlotDAL  timeSlotDal;
 
-    public AuthController(UserDAL userDal, ICustomerDAL customerDal, IOrderDAL orderDal, IOrderLineDAL orderLineDal)
+    public AuthController(UserDAL userDal, ICustomerDAL customerDal, IOrderDAL orderDal, IOrderLineDAL orderLineDal, ITimeSlotDAL timeSlotDal)
     {
-        this.userDal     = userDal;
-        this.customerDal = customerDal;
-        this.orderDal    = orderDal;
+        this.userDal      = userDal;
+        this.customerDal  = customerDal;
+        this.orderDal     = orderDal;
         this.orderLineDal = orderLineDal;
+        this.timeSlotDal  = timeSlotDal;
     }
     
     // ====== Login page ======
@@ -51,6 +53,14 @@ public class AuthController : Controller
                 HttpContext.Session.SetInt32("orderId", existingCartId.Value);
                 List<OrderLine> lines = await orderLineDal.GetOrderLinesAsync(existingCartId.Value);
                 HttpContext.Session.SetInt32("cartCount", lines.Count);
+
+                Order cart = await Order.GetByIdAsync(existingCartId.Value, orderDal);
+                if (cart.TimeSlotId != 0)
+                {
+                    int? storeId = await timeSlotDal.GetStoreIdAsync(cart.TimeSlotId);
+                    if (storeId.HasValue)
+                        HttpContext.Session.SetInt32("selectedStoreId", storeId.Value);
+                }
             }
             return Redirect("/");
         }
