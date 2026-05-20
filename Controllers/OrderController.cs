@@ -39,7 +39,7 @@ public class OrderController : Controller
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
         if (order == null)
         {
-            TempData["error"] = "Commande introuvable";
+            TempData["Error"] = "Commande introuvable";
             return RedirectToAction("Index", "Cart");
         }
 

@@ -21,7 +21,7 @@ public class CustomerController : Controller
     public async Task<IActionResult> Profile()
     {
         int? userId = HttpContext.Session.GetInt32("userId");
-        if (userId == null)
+        if (userId == null || HttpContext.Session.GetString("role") != "Customer")
             return RedirectToAction("Login", "Auth");
 
         try

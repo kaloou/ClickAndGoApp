@@ -220,8 +220,6 @@ public class OrderDAL : IOrderDAL
             throw new DatabaseException("Failed to retrieve orders for customer.", ex);
         }
     }
-    public Task<List<Order>> GetOrdersToPrepareAsync(int storeId) => Task.FromResult(new List<Order>());
-
     public async Task SetTimeSlotAsync(int orderId, int timeSlotId)
     {
         using SqlConnection conn = _db.GetConnexion();
