@@ -12,6 +12,7 @@ public interface IOrderDAL
     Task SetReturnedBoxesAsync(int orderId, int returnedBoxes);
     Task SetStatusAsync(int orderId, OrderStatus status);
     Task<int> CreateOrderAsync(int customerId);
+    Task<int?> GetActiveCartAsync(int customerId);
     Task<List<Order>> GetOrdersByCustomerAsync(int customerId);
     Task<List<Order>> GetOrdersToPrepareAsync(int storeId);
     Task SetTimeSlotAsync(int orderId, int timeSlotId);
