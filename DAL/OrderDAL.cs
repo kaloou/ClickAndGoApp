@@ -202,7 +202,7 @@ public class OrderDAL : IOrderDAL
             LEFT JOIN TimeSlot ts ON o.timeSlotId = ts.timeSlotId
             WHERE o.customerId = @customerId
               AND o.status != 'InTheCart'
-            ORDER BY o.orderDate DESC";
+            ORDER BY o.orderDate DESC, o.orderId ASC";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@customerId", customerId);
