@@ -103,14 +103,22 @@
     white-space: nowrap;
 }
 
-.cart-dot {
+.cart-badge {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
-    width: 8px;
-    height: 8px;
+    bottom: 0px;
+    right: -2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
     background: var(--cg-orange);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
     border-radius: var(--cg-radius-round);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 

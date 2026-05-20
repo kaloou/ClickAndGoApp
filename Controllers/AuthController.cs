@@ -7,15 +7,17 @@ namespace ClickAndGoApp.Controllers;
 
 public class AuthController : Controller
 {
-    private readonly IUserDAL     userDal;
-    private readonly ICustomerDAL customerDal;
-    private readonly IOrderDAL    orderDal;
+    private readonly IUserDAL      userDal;
+    private readonly ICustomerDAL  customerDal;
+    private readonly IOrderDAL     orderDal;
+    private readonly IOrderLineDAL orderLineDal;
 
-    public AuthController(UserDAL userDal, ICustomerDAL customerDal, IOrderDAL orderDal)
+    public AuthController(UserDAL userDal, ICustomerDAL customerDal, IOrderDAL orderDal, IOrderLineDAL orderLineDal)
     {
         this.userDal     = userDal;
         this.customerDal = customerDal;
         this.orderDal    = orderDal;
+        this.orderLineDal = orderLineDal;
     }
     
     // ====== Login page ======
@@ -45,7 +47,11 @@ public class AuthController : Controller
         {
             int? existingCartId = await orderDal.GetActiveCartAsync(user.UserId);
             if (existingCartId.HasValue)
+            {
                 HttpContext.Session.SetInt32("orderId", existingCartId.Value);
+                List<OrderLine> lines = await orderLineDal.GetOrderLinesAsync(existingCartId.Value);
+                HttpContext.Session.SetInt32("cartCount", lines.Count);
+            }
             return Redirect("/");
         }
 

@@ -32,6 +32,9 @@ public class CartController : Controller
         // on récupère sa liste de produits
         List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
+        // sync du badge panier
+        HttpContext.Session.SetInt32("cartCount", orderLines.Count);
+
         return View(new CartViewModel(order, orderLines));
     }
 
@@ -52,7 +55,11 @@ public class CartController : Controller
         // on check bien si le produit choisi est dans la liste de produits
         OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
         if (existing != null)
+        {
             await existing.RemoveAsync(orderLineDal);
+            int count = HttpContext.Session.GetInt32("cartCount") ?? 0;
+            HttpContext.Session.SetInt32("cartCount", Math.Max(0, count - 1));
+        }
 
         TempData["Success"] = "Produit retiré du panier";
         return RedirectToAction("Index");
