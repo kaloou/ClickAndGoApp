@@ -22,10 +22,11 @@ public class TimeSlotDAL : ITimeSlotDAL
             FROM TimeSlot ts
             WHERE ts.storeId = @storeId
               AND ts.startTime > GETDATE()
-              AND NOT EXISTS (
-                  SELECT 1 FROM [Order] o
+              AND (
+                  SELECT COUNT(*) FROM [Order] o
                   WHERE o.timeSlotId = ts.timeSlotId
-                    AND o.status != 'InTheCart')
+                    AND o.status != 'InTheCart'
+              ) < 10
             ORDER BY ts.startTime";
 
         using SqlCommand cmd = new SqlCommand(query, conn);

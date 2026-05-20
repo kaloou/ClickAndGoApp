@@ -169,6 +169,7 @@ public class OrderController : Controller
 
         HttpContext.Session.Remove("orderId");
         HttpContext.Session.Remove("selectedStoreId");
+        HttpContext.Session.SetInt32("cartCount", 0);
 
         return RedirectToAction("Confirmation", new { orderId = order.OrderId });
     }
