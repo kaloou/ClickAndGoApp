@@ -67,7 +67,7 @@ public class Store
     public async Task<List<Order>> GetTodaysOrdersAsync(IOrderDAL dal) 
         => await dal.GetTodaysOrdersAsync(storeId);
     
-    public async Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(IStoreDAL dal)
+    public async Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(ITimeSlotDAL dal)
         => await dal.GetAvailableTimeSlotsAsync(storeId);
     
     public static async Task<List<Store>> GetAllStoresAsync(IStoreDAL dal) 

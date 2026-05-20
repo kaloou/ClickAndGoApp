@@ -11,12 +11,14 @@ public class OrderController : Controller
     private readonly IOrderDAL     orderDal;
     private readonly IOrderLineDAL orderLineDal;
     private readonly IStoreDAL     storeDal;
+    private readonly ITimeSlotDAL  timeSlotDal;
 
-    public OrderController(IOrderDAL orderDal, IOrderLineDAL orderLineDal, IStoreDAL storeDal)
+    public OrderController(IOrderDAL orderDal, IOrderLineDAL orderLineDal, IStoreDAL storeDal, ITimeSlotDAL timeSlotDal)
     {
         this.orderDal     = orderDal;
         this.orderLineDal = orderLineDal;
         this.storeDal     = storeDal;
+        this.timeSlotDal  = timeSlotDal;
     }
 
     // ====== PlaceOrder ===== résumé panier + choix magasin et créneau 
@@ -39,7 +41,7 @@ public class OrderController : Controller
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
         if (order == null)
         {
-            TempData["error"] = "Commande introuvable";
+            TempData["Error"] = "Commande introuvable";
             return RedirectToAction("Index", "Cart");
         }
 
@@ -108,7 +110,7 @@ public class OrderController : Controller
         }
 
         Store store = await Store.GetStoreAsync(storeId.Value, storeDal);
-        List<TimeSlot> allSlots = await store.GetAvailableTimeSlotsAsync(storeDal);
+        List<TimeSlot> allSlots = await store.GetAvailableTimeSlotsAsync(timeSlotDal);
 
         ViewBag.StoreName = store.Name;
 

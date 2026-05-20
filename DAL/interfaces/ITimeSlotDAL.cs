@@ -4,5 +4,5 @@ namespace ClickAndGoApp.DAL;
 
 public interface ITimeSlotDAL
 {
-    Task<List<TimeSlot>> GetByStoreAsync(int storeId);
+    Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(int storeId);
 }

@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
-// namespace via ClickAndGoApp.DAL
+using ClickAndGoApp.Exceptions;
 
 namespace ClickAndGoApp.DAL;
 
@@ -37,11 +37,7 @@ public class CategoryDAL : ICategoryDAL
         }
         catch (SqlException e)
         {
-            throw new Exception($"SQL Error : {e.Message}");
-        }
-        catch (Exception e)
-        {
-            throw new Exception($"Error : {e.Message}");
+            throw new DatabaseException("Failed to retrieve categories.", e);
         }
 
         return categories;
