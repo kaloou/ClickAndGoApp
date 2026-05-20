@@ -1,0 +1,22 @@
+<header class="site-header">
+    <nav class="site-nav">
+
+        <div class="nav-brand">
+            <div class="nav-logo">
+                <img src="~/images/logo.png" alt="Logo Click & Go"/>
+            </div>
+            <span class="nav-name">Click & Go</span>
+        </div>
+
+        <div class="nav-actions">
+            <div class="nav-icon-btn nav-profile">
+                <i data-lucide="user"></i>
+                <span class="nav-username">@ViewBag.FirstName</span>
+            </div>
+            <a asp-controller="Auth" asp-action="Logout" class="nav-icon-btn" aria-label="Déconnexion">
+                <i data-lucide="log-out"></i>
+            </a>
+        </div>
+
+    </nav>
+</header>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8"/>
@@ -12,64 +12,14 @@
 </head>
 <body>
 
-<header class="site-header">
-    <nav class="site-nav">
-
-        @* logo et nom du site *@
-        <a asp-controller="Home" asp-action="Index" class="nav-brand">
-            <div class="nav-logo">
-                <img src="~/images/logo.png" alt="Logo Click & Go"/>
-            </div>
-            <span class="nav-name">Click & Go</span>
-        </a>
-
-        @* liens de navigation centre *@
-        <nav class="nav-links">
-            <a asp-controller="Home"    asp-action="Index"           class="nav-link-item">Accueil</a>
-            <a asp-controller="Product" asp-action="BrowseProducts" class="nav-link-item">Produits</a>
-            <a asp-controller="Recipe"  asp-action="Index"           class="nav-link-item">Recettes</a>
-        </nav>
-
-        @* icônes de navigation droite *@
-        <div class="nav-actions">
-
-            @* hamburger *@
-            <button class="nav-icon-btn" aria-label="Menu">
-                <i data-lucide="menu"></i>
-            </button>
-
-            @* bouton connexion / profil *@
-            @if (Context.Session.GetString("role") == "Customer")
-            {
-                <a asp-controller="Customer" asp-action="Profile" class="nav-icon-btn nav-profile" aria-label="Mon compte">
-                    <i data-lucide="user"></i>
-                    <span class="nav-username">@Context.Session.GetString("firstName")</span>
-                </a>
-            }
-            else
-            {
-                <a asp-controller="Auth" asp-action="Login" class="nav-icon-btn" aria-label="Se connecter">
-                    <i data-lucide="user"></i>
-                </a>
-            }
-
-            @* bouton panier *@
-            @{
-                var cartCount = Context.Session.GetInt32("userId") != null
-                    ? (Context.Session.GetInt32("cartCount") ?? 0)
-                    : 0;
-            }
-            <a asp-controller="Cart" asp-action="Index" class="nav-icon-btn nav-cart" aria-label="Panier">
-                <i data-lucide="shopping-cart"></i>
-                @if (cartCount > 0)
-                {
-                    <span class="cart-badge">@cartCount</span>
-                }
-            </a>
-
-        </div>
-    </nav>
-</header>
+@if (ViewData["NavbarType"]?.ToString() == "Staff")
+{
+    <partial name="_NavbarStaff" />
+}
+else
+{
+    <partial name="_NavbarPublic" />
+}
 
 <div class="container">
     <main role="main" class="pb-3">
@@ -77,44 +27,11 @@
     </main>
 </div>
 
-<footer class="site-footer">
-    <div class="footer-inner">
+@if (ViewData["HideFooter"] == null)
+{
+    <partial name="_Footer" />
+}
 
-        <div class="footer-brand">
-            <img src="~/images/logo.png" alt="Click & Go" class="footer-logo" />
-            <span class="footer-name">Click &amp; Go</span>
-            <p class="footer-tagline">Commandez en ligne,<br/>retirez en magasin.</p>
-        </div>
-
-        <div class="footer-col">
-            <h4 class="footer-heading">Navigation</h4>
-            <a asp-controller="Product" asp-action="BrowseProducts" class="footer-link">Produits</a>
-            <a asp-controller="Recipe"  asp-action="Index"           class="footer-link">Recettes</a>
-            <a asp-controller="Cart"    asp-action="Index"           class="footer-link">Mon panier</a>
-        </div>
-
-        <div class="footer-col">
-            <h4 class="footer-heading">Nos magasins</h4>
-            <p class="footer-text">Click &amp; Go Jumet</p>
-            <p class="footer-text">Click &amp; Go Gosselies</p>
-            <p class="footer-text">Click &amp; Go Marcinelle</p>
-            <p class="footer-text">Click &amp; Go Gilly</p>
-        </div>
-
-        <div class="footer-col">
-            <h4 class="footer-heading">Infos</h4>
-            <p class="footer-text">Frais de service&nbsp;: 5,95&nbsp;€</p>
-            <p class="footer-text">Retrait gratuit en magasin</p>
-            <p class="footer-text">Lun – Sam&nbsp;: 8h – 20h</p>
-        </div>
-
-    </div>
-    <div class="footer-bottom">
-        <span>© 2026 Click &amp; Go — Tous droits réservés</span>
-    </div>
-</footer>
-
-@* Notif notifications *@
 @{
     var toastSuccess = TempData["Success"] as string;
     var toastError   = TempData["Error"]   as string;

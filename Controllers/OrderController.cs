@@ -95,7 +95,7 @@ public class OrderController : Controller
     }
 
     // ====== SelectTimeSlot ======
-    public async Task<IActionResult> SelectTimeSlot()
+    public async Task<IActionResult> SelectTimeSlot(string selectedDate = null)
     {
         if (HttpContext.Session.GetInt32("orderId") == null)
             return RedirectToAction("Index", "Cart");
@@ -108,11 +108,18 @@ public class OrderController : Controller
         }
 
         Store store = await Store.GetStoreAsync(storeId.Value, storeDal);
-        List<TimeSlot> slots = await store.GetAvailableTimeSlotsAsync(storeDal);
+        List<TimeSlot> allSlots = await store.GetAvailableTimeSlotsAsync(storeDal);
 
         ViewBag.StoreName = store.Name;
-        ViewBag.StoreId   = storeId.Value;
-        return View(slots);
+
+        if (selectedDate != null && DateTime.TryParse(selectedDate, out DateTime parsedDate))
+        {
+            ViewBag.SelectedDate = selectedDate;
+            return View(allSlots.Where(s => s.StartTime.Date == parsedDate.Date).ToList());
+        }
+
+        ViewBag.SelectedDate = null;
+        return View(new List<TimeSlot>());
     }
 
     [HttpPost]
