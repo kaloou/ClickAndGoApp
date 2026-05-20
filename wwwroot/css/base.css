@@ -1,0 +1,367 @@
+/* ── 1. WEBFONT ─────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+
+
+/* ── 2. DESIGN TOKENS ───────────────────────────────────────── */
+:root {
+
+    /* Brand */
+    --cg-orange:          #FFA01C;
+    --cg-orange-light:    #FFBF69;
+    --cg-orange-50:       #FFF1DC;
+
+    --cg-mint:            #CBF3F0;
+    --cg-mint-50:         #E8F9F7;
+    --cg-teal:            #30C4B6;
+    --cg-teal-dark:       #1F8B81;
+
+    --cg-cream:           #FFF8EE;
+
+    /* Neutrals */
+    --cg-white:           #FFFFFF;
+    --cg-bg-soft:         #F9FAFB;
+    --cg-bg-tint:         #F0F0F0;
+    --cg-border:          #DDDDDD;
+    --cg-border-soft:     #F0F0F0;
+    --cg-text:            #1A1A2E;
+    --cg-text-label:      #444444;
+    --cg-text-muted:      #888888;
+    --cg-shadow-rgb:      0, 0, 0;
+
+    /* Status */
+    --cg-status-pending-bg:   #FEF3C7;
+    --cg-status-pending-fg:   #D97706;
+    --cg-status-ready-bg:     #D1FAE5;
+    --cg-status-ready-fg:     #059669;
+    --cg-status-honored-bg:   #E8F9F7;
+    --cg-status-honored-fg:   #1F8B81;
+
+    /* Feedback */
+    --cg-success-bg:      #FFF8EE;
+    --cg-success-fg:      #1F8B81;
+    --cg-success-line:    #30C4B6;
+    --cg-error-bg:        #FDF0F0;
+    --cg-error-fg:        #9B1C1C;
+    --cg-error-line:      #E53E3E;
+    --cg-error-soft-bg:   #FEE2E2;
+    --cg-error-soft-fg:   #DC2626;
+
+    /* Typography */
+    --cg-font-sans:
+            "Nunito",
+            "Segoe UI",
+            system-ui,
+            -apple-system,
+            "Helvetica Neue",
+            sans-serif;
+
+    --cg-fs-xxs:   0.72rem;
+    --cg-fs-xs:    0.75rem;
+    --cg-fs-sm:    0.85rem;
+    --cg-fs-base:  0.95rem;
+    --cg-fs-m:     1rem;
+    --cg-fs-l:     1.1rem;
+    --cg-fs-xl:    1.4rem;
+    --cg-fs-2xl:   1.8rem;
+    --cg-fs-3xl:   2rem;
+
+    --cg-fw-regular:  400;
+    --cg-fw-medium:   500;
+    --cg-fw-semibold: 600;
+    --cg-fw-bold:     700;
+    --cg-fw-black:    800;
+    --cg-fw-heavy:    900;
+
+    --cg-lh-tight:   1.2;
+    --cg-lh-snug:    1.25;
+    --cg-lh-body:    1.4;
+    --cg-lh-loose:   1.7;
+
+    /* Spacing (4px base) */
+    --cg-space-1:   4px;
+    --cg-space-2:   8px;
+    --cg-space-3:   12px;
+    --cg-space-4:   16px;
+    --cg-space-5:   20px;
+    --cg-space-6:   24px;
+    --cg-space-7:   28px;
+    --cg-space-8:   32px;
+    --cg-space-10:  40px;
+    --cg-space-12:  48px;
+    --cg-space-14:  56px;
+
+    /* Radii */
+    --cg-radius-sm:    6px;
+    --cg-radius-m:     8px;
+    --cg-radius-l:     10px;
+    --cg-radius-xl:    12px;
+    --cg-radius-2xl:   14px;
+    --cg-radius-3xl:   16px;
+    --cg-radius-pill:  20px;
+    --cg-radius-block: 20px;
+    --cg-radius-round: 50%;
+
+    /* Shadows */
+    --cg-shadow-card:   0 2px 10px rgba(var(--cg-shadow-rgb), 0.10);
+    --cg-shadow-lifted: 0 4px 20px rgba(var(--cg-shadow-rgb), 0.10);
+    --cg-shadow-hover:  0 6px 20px rgba(var(--cg-shadow-rgb), 0.10);
+    --cg-shadow-notif:  0 4px 20px rgba(var(--cg-shadow-rgb), 0.12);
+
+    /* Motion */
+    --cg-ease:         ease;
+    --cg-dur-fast:     0.2s;
+    --cg-dur-slide:    0.3s;
+
+    /* Layout */
+    --cg-container-max: 1400px;
+
+    /* ── Legacy aliases ──────────────────────────────────────── */
+    --primary:        var(--cg-orange);
+    --primary-light:  var(--cg-orange-light);
+    --white:          var(--cg-white);
+    --bg-light:       var(--cg-mint);
+    --accent:         var(--cg-teal);
+    --text-dark:      var(--cg-text);
+    --text-gray:      var(--cg-text-muted);
+    --text-muted:     var(--cg-text-muted);
+    --text-label:     var(--cg-text-label);
+    --border:         var(--cg-border);
+    --shadow:         rgba(0, 0, 0, 0.10);
+    --error-bg:       var(--cg-error-soft-bg);
+    --error-text:     var(--cg-error-soft-fg);
+}
+
+
+/* ── 3. GLOBAL RESET ────────────────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ── 4. HTML / BODY ─────────────────────────────────────────── */
+html {
+    height: 100%;
+    font-size: 16px;
+}
+@media (max-width: 767.98px) { html { font-size: 14px; } }
+
+body {
+    font-family: var(--cg-font-sans);
+    font-size: var(--cg-fs-base);
+    line-height: var(--cg-lh-body);
+    color: var(--cg-text);
+    background: var(--cg-mint);
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    flex: 1;
+}
+
+
+/* ── 5. DEFAULT STYLING ON HTML ELEMENTS ────────────────────── */
+h1 {
+    font-size: var(--cg-fs-3xl);
+    font-weight: var(--cg-fw-black);
+    line-height: var(--cg-lh-snug);
+    color: var(--cg-text);
+}
+
+h2 {
+    font-size: var(--cg-fs-2xl);
+    font-weight: var(--cg-fw-black);
+    line-height: var(--cg-lh-tight);
+    color: var(--cg-text);
+}
+
+h3 {
+    font-size: var(--cg-fs-l);
+    font-weight: var(--cg-fw-bold);
+    line-height: var(--cg-lh-snug);
+    color: var(--cg-text);
+}
+
+h4 {
+    font-size: var(--cg-fs-m);
+    font-weight: var(--cg-fw-bold);
+    color: var(--cg-text);
+}
+
+h5, h6 {
+    font-size: var(--cg-fs-sm);
+    font-weight: var(--cg-fw-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cg-text-muted);
+}
+
+p {
+    color: inherit;
+    line-height: var(--cg-lh-body);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--cg-dur-fast) var(--cg-ease);
+}
+
+ul, ol {
+    list-style: none;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: var(--cg-fw-semibold);
+    color: var(--cg-orange);
+    margin-bottom: 6px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--cg-border);
+    border-radius: var(--cg-radius-m);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--cg-text);
+    background: var(--cg-white);
+    outline: none;
+    transition: border var(--cg-dur-fast) var(--cg-ease);
+}
+
+input:focus,
+textarea:focus,
+select:focus { border-color: var(--cg-teal); }
+
+input::placeholder,
+textarea::placeholder { color: var(--cg-text-muted); }
+
+button {
+    width: 100%;
+    padding: var(--cg-space-3);
+    background: var(--cg-orange);
+    color: var(--cg-white);
+    border: none;
+    border-radius: var(--cg-radius-m);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: var(--cg-fw-semibold);
+    cursor: pointer;
+    transition: background var(--cg-dur-fast) var(--cg-ease);
+}
+button:hover { background: var(--cg-orange-light); }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: var(--cg-text);
+}
+
+th {
+    text-align: left;
+    font-weight: var(--cg-fw-semibold);
+}
+
+td, th {
+    padding: 14px 18px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--cg-border-soft);
+    margin: var(--cg-space-5) 0;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+code, pre, kbd, samp {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92em;
+}
+
+
+/* ── 6. LUCIDE ICONS ────────────────────────────────────────── */
+[data-lucide] {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2;
+    display: block;
+}
+
+
+/* ── 7. TYPE ROLE UTILITIES ─────────────────────────────────── */
+.display {
+    font-size: var(--cg-fs-3xl);
+    font-weight: var(--cg-fw-heavy);
+    line-height: var(--cg-lh-snug);
+    color: var(--cg-text);
+}
+
+.h1 {
+    font-size: var(--cg-fs-3xl);
+    font-weight: var(--cg-fw-black);
+    line-height: var(--cg-lh-snug);
+    color: var(--cg-text);
+}
+
+.h2 {
+    font-size: var(--cg-fs-2xl);
+    font-weight: var(--cg-fw-black);
+    line-height: var(--cg-lh-tight);
+    color: var(--cg-text);
+}
+
+.h3 {
+    font-size: var(--cg-fs-l);
+    font-weight: var(--cg-fw-bold);
+    color: var(--cg-text);
+}
+
+.eyebrow {
+    font-size: var(--cg-fs-xxs);
+    font-weight: var(--cg-fw-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cg-text-muted);
+}
+
+.body {
+    font-size: var(--cg-fs-base);
+    line-height: var(--cg-lh-loose);
+    color: var(--cg-text);
+}
+
+.body-sm {
+    font-size: var(--cg-fs-sm);
+    color: var(--cg-text);
+}
+
+.price {
+    font-size: var(--cg-fs-2xl);
+    font-weight: var(--cg-fw-heavy);
+    color: var(--cg-orange);
+}
+
+.muted {
+    color: var(--cg-text-muted);
+    font-size: var(--cg-fs-sm);
+}
+
+.strong {
+    font-weight: var(--cg-fw-bold);
+    color: var(--cg-text);
+}
