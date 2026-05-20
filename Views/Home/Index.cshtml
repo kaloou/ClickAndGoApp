@@ -1,4 +1,3 @@
-@model List<ClickAndGoApp.Models.Recipe>
 @{
     ViewData["Title"] = "Accueil";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,11 +6,11 @@
 <!-- HERO -->
 <section class="hero-section">
     <div class="hero-text">
-        <h1>Cliquez, commandez<br/>et retirez vos courses sans frais !</h1>
+        <h1>Cliquez, commandez<br/>et retirez vos courses en magasin !</h1>
         <p>
-            Oui, vous avez bien entendu, dès maintenant, le collect est toujours GRATUIT !<br/>
-            Faites vite vos courses en ligne et retirez-les sans frais dans un point collect près de chez vous.<br/>
-            Grâce à Click &amp; Go, vous gérez votre temps et votre argent super facilement !
+            Composez votre panier en ligne, choisissez votre créneau de retrait<br/>
+            et récupérez vos courses directement en magasin — sans file d'attente.<br/>
+            Frais de service : <strong>5,95&nbsp;€</strong> par commande.
         </p>
         <a asp-controller="Product" asp-action="BrowseProducts" class="btn-cta">Faire vos courses</a>
     </div>
@@ -31,8 +30,8 @@
         <p>Choisissez votre créneau et récupérez vos courses sans attendre.</p>
     </div>
     <div class="feature-card">
-        <h3>Collect gratuit</h3>
-        <p>Aucun frais de livraison, le service Click &amp; Collect est offert.</p>
+        <h3>Frais de service</h3>
+        <p>Seulement 5,95&nbsp;€ par commande, sans frais de livraison supplémentaires.</p>
     </div>
 </section>
 
@@ -55,18 +54,48 @@
     <div class="recipes-block">
         <h3>Découvrez nos pack de recettes<br/>déjà préparé pour vous !</h3>
         <div class="recipes-row">
-            @foreach (var recipe in Model)
-            {
-                var style = recipe.ImagePath != null
-                    ? $"background-image: url('/images/{recipe.ImagePath}'); background-size: cover; background-position: center;"
-                    : "";
-                <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="@recipe.RecipeId" class="recipe-thumb" style="@style">
-                    <span class="recipe-thumb-name">@recipe.Name</span>
-                </a>
-            }
+            <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="1" class="recipe-thumb">
+                <img src="/images/recipes/pasta_bolognese.jpg" alt="Pâtes bolognaise" />
+                <span class="recipe-thumb-name">Pâtes bolognaise</span>
+            </a>
+            <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="2" class="recipe-thumb">
+                <img src="/images/recipes/chicken_curry_with_rice.jpg" alt="Curry de poulet au riz" />
+                <span class="recipe-thumb-name">Curry de poulet au riz</span>
+            </a>
+            <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="3" class="recipe-thumb">
+                <img src="/images/recipes/caesar_salad.jpg" alt="Salade César" />
+                <span class="recipe-thumb-name">Salade César</span>
+            </a>
+            <a asp-controller="Recipe" asp-action="SelectRecipe" asp-route-recipeId="4" class="recipe-thumb">
+                <img src="/images/recipes/banana_almond_smoothie.webp" alt="Smoothie banane-amande" />
+                <span class="recipe-thumb-name">Smoothie banane-amande</span>
+            </a>
         </div>
         <div class="recipes-voir-plus">
             <a asp-controller="Recipe" asp-action="Index" class="btn-cta">Voir plus</a>
+        </div>
+
+        <h3 class="featured-title">Nos produits du moment</h3>
+        <div class="recipes-row">
+            <a asp-controller="Product" asp-action="SelectProduct" asp-route-productId="1" class="recipe-thumb">
+                <img src="/images/products/cherry_tomatoes.jpg" alt="Tomate cerise" />
+                <span class="recipe-thumb-name">Tomate cerise</span>
+            </a>
+            <a asp-controller="Product" asp-action="SelectProduct" asp-route-productId="14" class="recipe-thumb">
+                <img src="/images/products/chicken_breast.jpg" alt="Blanc de poulet" />
+                <span class="recipe-thumb-name">Blanc de poulet</span>
+            </a>
+            <a asp-controller="Product" asp-action="SelectProduct" asp-route-productId="21" class="recipe-thumb">
+                <img src="/images/products/fresh_salmon.jpg" alt="Saumon frais" />
+                <span class="recipe-thumb-name">Saumon frais</span>
+            </a>
+            <a asp-controller="Product" asp-action="SelectProduct" asp-route-productId="28" class="recipe-thumb">
+                <img src="/images/products/croissant.jpg" alt="Croissant" />
+                <span class="recipe-thumb-name">Croissant</span>
+            </a>
+        </div>
+        <div class="recipes-voir-plus">
+            <a asp-controller="Product" asp-action="BrowseProducts" class="btn-cta">Voir tous les produits</a>
         </div>
     </div>
 </section>
@@ -74,21 +103,24 @@
 <!-- APP -->
 <section class="app-section">
     <div class="app-text">
-        <h2>Rendez vous dans notre app !</h2>
+        <h2>Click &amp; Go dans votre poche !</h2>
         <p>
-            Oui, vous avez bien entendu, dès maintenant, le collect est toujours GRATUIT !<br/>
-            Faites vite vos courses en ligne et retirez-les sans frais dans un point collect près de chez vous.<br/>
-            Grâce à Delhaize collect, vous gérez votre temps et votre argent super facilement !
+            Commandez vos courses où que vous soyez, à n'importe quelle heure.<br/>
+            Suivez l'état de votre commande en temps réel et recevez une notification<br/>
+            dès que votre panier est prêt à être retiré.
         </p>
-        <a href="#" class="btn-cta">Installer</a>
+        <a href="#" class="btn-cta">Installer l'app</a>
     </div>
     <div class="app-visual">
         <div class="phone-mock"></div>
     </div>
 </section>
 
-@section Scripts {
+@section HeadLinks {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+}
+
+@section Scripts {
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         var map = L.map('store-map').setView([50.4108, 4.4444], 12);

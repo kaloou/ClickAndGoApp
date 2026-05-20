@@ -9,11 +9,13 @@ public class AuthController : Controller
 {
     private readonly IUserDAL     userDal;
     private readonly ICustomerDAL customerDal;
+    private readonly IOrderDAL    orderDal;
 
-    public AuthController(UserDAL userDal, ICustomerDAL customerDal)
+    public AuthController(UserDAL userDal, ICustomerDAL customerDal, IOrderDAL orderDal)
     {
         this.userDal     = userDal;
         this.customerDal = customerDal;
+        this.orderDal    = orderDal;
     }
     
     // ====== Login page ======
@@ -24,6 +26,7 @@ public class AuthController : Controller
     }
     // ====== Login ====== (Redirige selon le role)
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> LoginAsync(LoginViewModel model)
     {
         if (!ModelState.IsValid)
@@ -38,12 +41,18 @@ public class AuthController : Controller
 
         CreateSession(user);
 
+        if (user.Role == "Customer")
+        {
+            int? existingCartId = await orderDal.GetActiveCartAsync(user.UserId);
+            if (existingCartId.HasValue)
+                HttpContext.Session.SetInt32("orderId", existingCartId.Value);
+            return Redirect("/");
+        }
+
         if (user.Role == "OrderPicker")
             return RedirectToAction("Index", "OrderPicker");
-        else if (user.Role == "Cashier")
-            return RedirectToAction("Index", "Cashier");
-        else
-            return Redirect($"/");
+
+        return RedirectToAction("Index", "Cashier");
     }
     
     private void CreateSession(Models.User user)
@@ -62,6 +71,7 @@ public class AuthController : Controller
     
     // Create Account
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(string firstName, string lastName, string email, string password, string? phoneNumber, string? address)
     {
         if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) ||

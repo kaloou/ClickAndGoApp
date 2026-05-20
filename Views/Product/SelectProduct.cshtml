@@ -26,10 +26,9 @@
             <p>@Model.Description</p>
 
             @* AddProductToCart *@
-            <form asp-action="AddProductToCart" method="post" style="display:flex; align-items:center; gap:12px; margin-top:8px">
+            <form asp-action="AddProductToCart" method="post" class="add-to-cart-form">
                 <input type="hidden" name="productId" value="@Model.ProductId" />
-                <input type="number" name="quantity" value="1" min="1"
-                       style="width:80px; padding:8px; border:1px solid #ddd; border-radius:8px; font-size:1rem" />
+                <input type="number" name="quantity" value="1" min="1" class="qty-input" />
                 <button type="submit" class="btn-cta">Ajouter au panier</button>
             </form>
         </div>

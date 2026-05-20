@@ -167,6 +167,24 @@ public class OrderDAL : IOrderDAL
         return (int)(await cmd.ExecuteScalarAsync())!;
     }
 
+    //This function is for the session, to get the activeCart and let It on the Cart even
+    //If the user disconnect
+    public async Task<int?> GetActiveCartAsync(int customerId)
+    {
+        using SqlConnection conn = _db.GetConnexion();
+        await conn.OpenAsync();
+
+        const string query = @"
+            SELECT TOP 1 orderId FROM [Order]
+            WHERE customerId = @customerId AND status = 'InTheCart'";
+
+        using SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@customerId", customerId);
+        //returns only 1 value
+        object? result = await cmd.ExecuteScalarAsync();
+        return result is null ? null : (int)result;
+    }
+
     public async Task<List<Order>> GetOrdersByCustomerAsync(int customerId)
     {
         using SqlConnection conn = _db.GetConnexion();

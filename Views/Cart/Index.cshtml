@@ -9,62 +9,75 @@
         <h1>Mon panier</h1>
     </div>
 
-    @if (Model.Order == null || !Model.OrderLines.Any()) // si pas d'order lié ou que la liste de produit est vide
+    @if (Model.Order == null || !Model.OrderLines.Any())
     {
         <div class="no-results">Votre panier est vide. <a asp-controller="Product" asp-action="BrowseProducts">Parcourir les produits</a></div>
     }
     else
     {
-        <div class="product-detail-card" style="flex-direction:column; gap:0; padding:0; overflow:hidden">
+        <div class="cart-layout">
 
-            @foreach (var line in Model.OrderLines)
-            {
-                <div style="display:flex; align-items:center; gap:24px; padding:20px 32px; border-bottom:1px solid #f0f0f0">
+            @* -- Colonne gauche : articles -- *@
+            <div class="section-card cart-items-col">
+                @foreach (var line in Model.OrderLines)
+                {
+                    <div class="cart-item">
 
-                    <div class="product-detail-img" style="width:72px; height:72px; flex-shrink:0; font-size:1.5rem">
-                        @if (line.Product.ImagePath != null)
-                        {
-                            <img src="@line.Product.ImagePath" alt="@line.Product.Name"/>
-                        }
-                        else
-                        {
-                            <span> pas de photo</span>
-                        }
+                        <div class="cart-item-img">
+                            @if (line.Product.ImagePath != null)
+                            {
+                                <img src="@line.Product.ImagePath" alt="@line.Product.Name"/>
+                            }
+                            else
+                            {
+                                <i data-lucide="shopping-basket"></i>
+                            }
+                        </div>
+
+                        <div class="cart-item-info">
+                            <p class="product-detail-category">@line.Product.Category.Name</p>
+                            <p class="cart-item-name">@line.Product.Name</p>
+                            <p class="cart-item-price">@line.Product.Price.ToString("F2") €</p>
+                        </div>
+
+                        <form asp-action="UpdateQuantity" method="post" class="cart-qty-form">
+                            <input type="hidden" name="productId" value="@line.Product.ProductId"/>
+                            <input type="number" name="quantity" value="@line.Quantity" min="1" class="cart-qty-input"/>
+                            <button type="submit" class="btn-cta-sm">Appliquer</button>
+                        </form>
+
+                        <form asp-action="RemoveProduct" method="post">
+                            <input type="hidden" name="productId" value="@line.Product.ProductId"/>
+                            <button type="submit" class="btn-remove" title="Retirer">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        </form>
+
                     </div>
+                }
+            </div>
 
-                    <div style="flex:1">
-                        <p class="product-detail-category">@line.Product.Category.Name</p>
-                        <p class="product-detail-name" style="font-size:1rem">@line.Product.Name</p>
-                        <p class="product-detail-price" style="font-size:1rem">@line.Product.Price.ToString("F2") €</p>
-                    </div>
+            @* -- Colonne droite : récapitulatif -- *@
+            <div class="cart-summary-card">
+                <h2 class="cart-summary-title">Récapitulatif</h2>
 
-                    @* UpdateQuantity *@
-                    <form asp-action="UpdateQuantity" method="post" style="display:flex; align-items:center; gap:8px">
-                        <input type="hidden" name="productId" value="@line.Product.ProductId"/>
-                        <input type="number" name="quantity" value="@line.Quantity" min="1"
-                               style="width:64px; padding:6px; border:1px solid #ddd; border-radius:8px; font-size:0.9rem"/>
-                        <button type="submit" class="btn-cta" style="padding:8px 14px; font-size:0.85rem">Appliquer</button>
-                    </form>
-
-                    @* RemoveProduct *@
-                    <form asp-action="RemoveProduct" method="post">
-                        <input type="hidden" name="productId" value="@line.Product.ProductId"/>
-                        <button type="submit" style="background:none; border:none; cursor:pointer; color:#e53e3e; font-size:1.2rem" title="Retirer">✕</button>
-                    </form>
-
+                <div class="cart-summary-line">
+                    <span>Sous-total</span>
+                    <span>@Model.ProductsTotal.ToString("F2") €</span>
                 </div>
-            }
+                <div class="cart-summary-line">
+                    <span>Frais de service</span>
+                    <span>+ 5,95 €</span>
+                </div>
 
-            <div style="padding:24px 32px; display:flex; justify-content:flex-end; gap:32px; align-items:center">
-                <div style="text-align:right">
-                    <p style="color:var(--text-gray); font-size:0.85rem">Sous-total</p>
-                    <p style="font-size:1.1rem; font-weight:700">@Model.ProductsTotal.ToString("F2") €</p>
+                <div class="cart-summary-divider"></div>
+
+                <div class="cart-summary-total">
+                    <span>Total</span>
+                    <span class="cart-total-amount">@Model.Total.ToString("F2") €</span>
                 </div>
-                <div style="text-align:right">
-                    <p style="color:var(--text-gray); font-size:0.85rem">Total (frais inclus)</p>
-                    <p class="product-detail-price">@Model.Total.ToString("F2") €</p>
-                </div>
-                <a asp-controller="Order" asp-action="Index" class="btn-cta">Passer commande</a>
+
+                <a asp-controller="Order" asp-action="Index" class="btn-cta cart-summary-btn">Passer commande</a>
             </div>
 
         </div>

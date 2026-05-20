@@ -6,31 +6,31 @@
     string pickupDate = TempData["PickupDate"] as string;
 }
 
-<div class="browse-page" style="text-align:center; padding-top:48px">
+<div class="browse-page confirmation-page">
 
-    <div style="font-size:3rem; margin-bottom:16px">✓</div>
+    <div class="confirmation-icon">✓</div>
     <h1>Commande confirmée !</h1>
     <p class="browse-subtitle">Votre commande #@Model.OrderId a bien été enregistrée.</p>
 
-    <div class="product-detail-card" style="max-width:480px; margin:32px auto; flex-direction:column; gap:12px; padding:32px">
+    <div class="confirmation-card">
         @if (storeName != null)
         {
-            <div style="display:flex; justify-content:space-between">
-                <span style="color:var(--text-gray)">Magasin</span>
+            <div class="confirmation-row">
+                <span class="text-gray">Magasin</span>
                 <strong>@storeName</strong>
             </div>
         }
         @if (pickupDate != null)
         {
-            <div style="display:flex; justify-content:space-between">
-                <span style="color:var(--text-gray)">Retrait</span>
+            <div class="confirmation-row">
+                <span class="text-gray">Retrait</span>
                 <strong>@pickupDate</strong>
             </div>
         }
         @if (total != null)
         {
-            <div style="display:flex; justify-content:space-between; border-top:1px solid #f0f0f0; padding-top:12px; margin-top:4px">
-                <span style="color:var(--text-gray)">Total estimé</span>
+            <div class="confirmation-row-border">
+                <span class="text-gray">Total estimé</span>
                 <strong class="product-detail-price">@total €</strong>
             </div>
         }

@@ -184,82 +184,82 @@ GO
 
 -- Fruits et légumes (cat 1) → produits 1-7
 INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
-                                                                          ('Tomate cerise',    1.99, 1, 'Tomates cerises sucrées, 500g',       NULL),
-                                                                          ('Pomme Gala',       0.99, 1, 'Pomme croquante et sucrée',            NULL),
-                                                                          ('Banane',           0.79, 1, 'Banane mûre à point',                  NULL),
-                                                                          ('Courgette',        0.89, 1, 'Courgette verte fraîche',              NULL),
-                                                                          ('Carotte',          0.59, 1, 'Carotte de plein champ, 1kg',          NULL),
-                                                                          ('Salade iceberg',   1.29, 1, 'Laitue iceberg croquante',             NULL),
-                                                                          ('Poivron rouge',    1.49, 1, 'Poivron rouge charnu',                 NULL);
+                                                                          ('Tomate cerise',    1.99, 1, 'Tomates cerises sucrées, 500g',       '/images/products/cherry_tomatoes.jpg'),
+                                                                          ('Pomme Gala',       0.99, 1, 'Pomme croquante et sucrée',            '/images/products/gala_apple.jpg'),
+                                                                          ('Banane',           0.79, 1, 'Banane mûre à point',                  '/images/products/banana.jpg'),
+                                                                          ('Courgette',        0.89, 1, 'Courgette verte fraîche',              '/images/products/zucchini.jpg'),
+                                                                          ('Carotte',          0.59, 1, 'Carotte de plein champ, 1kg',          '/images/products/carrot.jpg'),
+                                                                          ('Salade iceberg',   1.29, 1, 'Laitue iceberg croquante',             '/images/products/iceberg_letuce.jpg'),
+                                                                          ('Poivron rouge',    1.49, 1, 'Poivron rouge charnu',                 '/images/products/red_pepper.jpg');
 
 -- Produits laitiers (cat 2) → produits 8-13
 INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
-                                                                          ('Lait demi-écrémé', 1.49, 2, 'Lait demi-écrémé UHT, 1L',            'product/milk.png'),
-                                                                          ('Yaourt nature',    0.49, 2, 'Yaourt au lait entier, 125g',          NULL),
-                                                                          ('Beurre doux',      2.99, 2, 'Beurre doux 82% MG, 250g',            NULL),
-                                                                          ('Fromage Gouda',    3.49, 2, 'Gouda affiné, tranche 200g',           NULL),
-                                                                          ('Crème fraîche',    1.79, 2, 'Crème fraîche épaisse 40%, 20cl',      NULL),
-                                                                          ('Emmental râpé',    2.29, 2, 'Emmental râpé, 150g',                  NULL);
+                                                                          ('Lait demi-écrémé', 1.49, 2, 'Lait demi-écrémé UHT, 1L',            '/images/products/semi-skimmed_milk.jpg'),
+                                                                          ('Yaourt nature',    0.49, 2, 'Yaourt au lait entier, 125g',          '/images/products/natural_yogurt.jpg'),
+                                                                          ('Beurre doux',      2.99, 2, 'Beurre doux 82% MG, 250g',            '/images/products/soft_butter.jpeg'),
+                                                                          ('Fromage Gouda',    3.49, 2, 'Gouda affiné, tranche 200g',           '/images/products/gouda_cheese.jpg'),
+                                                                          ('Crème fraîche',    1.79, 2, 'Crème fraîche épaisse 40%, 20cl',      '/images/products/sour_cream.jpg'),
+                                                                          ('Emmental râpé',    2.29, 2, 'Emmental râpé, 150g',                  '/images/products/emmental_snuff.jpg');
 
 -- Viandes et volailles (cat 3) → produits 14-20
 INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
-                                                                          ('Blanc de poulet',   6.99, 3, 'Filets de poulet fermier, 500g',      NULL),
-                                                                          ('Steak haché',       5.49, 3, 'Boeuf haché 15% MG, 2x150g',         NULL),
-                                                                          ('Côte de porc',      4.99, 3, 'Côte de porc à griller',              NULL),
-                                                                          ('Filet de boeuf',   14.99, 3, 'Filet de boeuf, pièce 200g',         NULL),
-                                                                          ('Escalope de dinde', 5.99, 3, 'Escalope de dinde fine, 300g',        NULL),
-                                                                          ('Merguez',           4.29, 3, 'Merguez agneau-boeuf, 400g',          NULL),
-                                                                          ('Lardons fumés',     2.49, 3, 'Lardons fumés, 200g',                 NULL);
+                                                                          ('Blanc de poulet',   6.99, 3, 'Filets de poulet fermier, 500g',      '/images/products/chicken_breast.jpg'),
+                                                                          ('Steak haché',       5.49, 3, 'Boeuf haché 15% MG, 2x150g',         '/images/products/chopped_steak.jpg'),
+                                                                          ('Côte de porc',      4.99, 3, 'Côte de porc à griller',              '/images/products/pork_chop.jpg'),
+                                                                          ('Filet de boeuf',   14.99, 3, 'Filet de boeuf, pièce 200g',         '/images/products/beef_fillet.jpg'),
+                                                                          ('Escalope de dinde', 5.99, 3, 'Escalope de dinde fine, 300g',        '/images/products/turkey_escalope.jpg'),
+                                                                          ('Merguez',           4.29, 3, 'Merguez agneau-boeuf, 400g',          '/images/products/merguez.jpg'),
+                                                                          ('Lardons fumés',     2.49, 3, 'Lardons fumés, 200g',                 '/images/products/smoked_bacon.jpg');
 
 -- Poissons (cat 4) → produits 21-26
 INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
-                                                                          ('Saumon frais',     9.99, 4, 'Saumon Atlantique, pavé 200g',         NULL),
-                                                                          ('Thon en boîte',    1.99, 4, 'Thon au naturel, boîte 160g',          NULL),
-                                                                          ('Crevettes roses',  5.99, 4, 'Crevettes cuites décortiquées, 200g',  NULL),
-                                                                          ('Cabillaud',        8.49, 4, 'Filet de cabillaud frais, 300g',       NULL),
-                                                                          ('Sardines',         1.49, 4, 'Sardines à l''huile, boîte 125g',      NULL),
-                                                                          ('Moules',           3.99, 4, 'Moules de bouchot, 1kg',               NULL);
+                                                                          ('Saumon frais',     9.99, 4, 'Saumon Atlantique, pavé 200g',         '/images/products/fresh_salmon.jpg'),
+                                                                          ('Thon en boîte',    1.99, 4, 'Thon au naturel, boîte 160g',          '/images/products/canned_tuna.jpg'),
+                                                                          ('Crevettes roses',  5.99, 4, 'Crevettes cuites décortiquées, 200g',  '/images/products/pink_shrimp.jpeg'),
+                                                                          ('Cabillaud',        8.49, 4, 'Filet de cabillaud frais, 300g',       '/images/products/cod.jpg'),
+                                                                          ('Sardines',         1.49, 4, 'Sardines à l''huile, boîte 125g',      '/images/products/sardinnes.jpg'),
+                                                                          ('Moules',           3.99, 4, 'Moules de bouchot, 1kg',               '/images/products/mussels.jpg');
 
 -- Boulangerie (cat 5) → produits 27-32
 INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
-                                                                          ('Pain de campagne',  2.49, 5, 'Pain au levain à la croûte dorée',    NULL),
-                                                                          ('Croissant',         0.89, 5, 'Croissant au beurre pur',             NULL),
-                                                                          ('Baguette tradition',1.10, 5, 'Baguette tradition artisanale',       NULL),
-                                                                          ('Pain complet',      2.19, 5, 'Pain complet aux graines, 500g',      NULL),
-                                                                          ('Brioche',           3.49, 5, 'Brioche moelleuse, 400g',             NULL),
-                                                                          ('Muffin chocolat',   1.29, 5, 'Muffin aux pépites de chocolat',      NULL);
+                                                                          ('Pain de campagne',  2.49, 5, 'Pain au levain à la croûte dorée',    '/images/products/country_bread.jpg'),
+                                                                          ('Croissant',         0.89, 5, 'Croissant au beurre pur',             '/images/products/croissant.jpg'),
+                                                                          ('Baguette tradition',1.10, 5, 'Baguette tradition artisanale',       '/images/products/traditional_baguette.jpg'),
+                                                                          ('Pain complet',      2.19, 5, 'Pain complet aux graines, 500g',      '/images/products/wholemeal_bread.jpg'),
+                                                                          ('Brioche',           3.49, 5, 'Brioche moelleuse, 400g',             '/images/products/bun.jpg'),
+                                                                          ('Muffin chocolat',   1.29, 5, 'Muffin aux pépites de chocolat',      '/images/products/chocolate_muffin.jpg');
 
 -- Boissons (cat 6) → produits 33-39
 INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
-                                                                          ('Eau minérale',     0.59, 6, 'Eau minérale naturelle, 1.5L',         NULL),
-                                                                          ('Jus d''orange',    1.99, 6, 'Jus d''orange pressé, 1L',             NULL),
-                                                                          ('Limonade',         1.49, 6, 'Limonade pétillante, 1.5L',            NULL),
-                                                                          ('Café moulu',       4.99, 6, 'Café arabica moulu, 250g',             NULL),
-                                                                          ('Thé vert',         2.49, 6, 'Thé vert sencha, 20 sachets',          NULL),
-                                                                          ('Lait d''amande',   2.29, 6, 'Boisson végétale amande, 1L',          NULL),
-                                                                          ('Coca-Cola',        1.79, 6, 'Coca-Cola, bouteille 1.5L',            NULL);
+                                                                          ('Eau minérale',     0.59, 6, 'Eau minérale naturelle, 1.5L',         '/images/products/mineral_water.jpeg'),
+                                                                          ('Jus d''orange',    1.99, 6, 'Jus d''orange pressé, 1L',             '/images/products/orange_juice.jpg'),
+                                                                          ('Limonade',         1.49, 6, 'Limonade pétillante, 1.5L',            '/images/products/lemonade.jpg'),
+                                                                          ('Café moulu',       4.99, 6, 'Café arabica moulu, 250g',             '/images/products/ground_coffee.jpg'),
+                                                                          ('Thé vert',         2.49, 6, 'Thé vert sencha, 20 sachets',          '/images/products/green_tea.jpg'),
+                                                                          ('Lait d''amande',   2.29, 6, 'Boisson végétale amande, 1L',          '/images/products/almond_milk.jpg'),
+                                                                          ('Coca-Cola',        1.79, 6, 'Coca-Cola, bouteille 1.5L',            '/images/products/coca_cola.jpg');
 
 -- Épicerie sèche (cat 7) → produits 40-46
 INSERT INTO Product (name, price, categoryId, description, imagePath) VALUES
-                                                                          ('Pâtes tagliatelles',1.49, 7, 'Tagliatelles aux oeufs, 500g',        NULL),
-                                                                          ('Riz long grain',    1.29, 7, 'Riz blanc long grain, 1kg',           NULL),
-                                                                          ('Lentilles vertes',  1.19, 7, 'Lentilles vertes du Puy, 500g',       NULL),
-                                                                          ('Farine de blé',     0.89, 7, 'Farine T55, 1kg',                     NULL),
-                                                                          ('Sucre en poudre',   0.99, 7, 'Sucre blanc en poudre, 1kg',          NULL),
-                                                                          ('Huile d''olive',    4.99, 7, 'Huile d''olive vierge extra, 75cl',   NULL),
-                                                                          ('Sauce tomate',      1.79, 7, 'Sauce tomate basilic, bocal 400g',    NULL);
+                                                                          ('Pâtes tagliatelles',1.49, 7, 'Tagliatelles aux oeufs, 500g',        '/images/products/tagliatate_pasta.jpeg'),
+                                                                          ('Riz long grain',    1.29, 7, 'Riz blanc long grain, 1kg',           '/images/products/long_grain_rice.jpg'),
+                                                                          ('Lentilles vertes',  1.19, 7, 'Lentilles vertes du Puy, 500g',       '/images/products/green_lentils.jpg'),
+                                                                          ('Farine de blé',     0.89, 7, 'Farine T55, 1kg',                     '/images/products/wheat_flour.jpg'),
+                                                                          ('Sucre en poudre',   0.99, 7, 'Sucre blanc en poudre, 1kg',          '/images/products/powdered_sugar.jpg'),
+                                                                          ('Huile d''olive',    4.99, 7, 'Huile d''olive vierge extra, 75cl',   '/images/products/olive_oil.jpg'),
+                                                                          ('Sauce tomate',      1.79, 7, 'Sauce tomate basilic, bocal 400g',    '/images/products/tomato_sauce.jpg');
 GO
 
 -- =============================================
 -- RECIPES (6)
 -- =============================================
-INSERT INTO Recipes (name, description) VALUES
-                                            ('Pâtes bolognaise',       'Un classique italien réconfortant, facile et rapide à préparer.'),
-                                            ('Curry de poulet au riz', 'Un curry parfumé et doux servi sur un lit de riz.'),
-                                            ('Salade César',           'La célèbre salade croustillante et crémeuse.'),
-                                            ('Smoothie banane-amande', 'Un smoothie énergisant pour bien commencer la journée.'),
-                                            ('Poêlée de légumes',      'Un mélange coloré de légumes sautés à l''huile d''olive.'),
-                                            ('Saumon à la crème',      'Pavé de saumon nappé d''une sauce crémeuse sur lit de riz.');
+INSERT INTO Recipes (name, description, imagePath) VALUES
+                                            ('Pâtes bolognaise',       'Un classique italien réconfortant, facile et rapide à préparer.',  'recipes/pasta_bolognese.jpg'),
+                                            ('Curry de poulet au riz', 'Un curry parfumé et doux servi sur un lit de riz.',                'recipes/chicken_curry_with_rice.jpg'),
+                                            ('Salade César',           'La célèbre salade croustillante et crémeuse.',                    'recipes/caesar_salad.jpg'),
+                                            ('Smoothie banane-amande', 'Un smoothie énergisant pour bien commencer la journée.',           'recipes/banana_almond_smoothie.webp'),
+                                            ('Poêlée de légumes',      'Un mélange coloré de légumes sautés à l''huile d''olive.',         'recipes/vegetable_stir-fry.jpg'),
+                                            ('Saumon à la crème',      'Pavé de saumon nappé d''une sauce crémeuse sur lit de riz.',       'recipes/creamed_salmon.jpg');
 GO
 
 -- =============================================
@@ -362,3 +362,85 @@ INSERT INTO OrderLine (orderId, productId, quantity) VALUES
                                                          (7,  6, 1), (7, 14, 1), (7, 13, 1);
 GO
 
+-- =============================================
+-- PATCH : ajout des imagePath sur la BD existante
+-- À exécuter si la BD existe déjà sans les images
+-- =============================================
+
+-- Ajouter la colonne imagePath aux tables si elle n'existe pas encore
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Product' AND COLUMN_NAME = 'imagePath')
+    ALTER TABLE Product ADD imagePath VARCHAR(255) NULL;
+GO
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Recipes' AND COLUMN_NAME = 'imagePath')
+    ALTER TABLE Recipes ADD imagePath VARCHAR(255) NULL;
+GO
+
+-- Produits - Fruits et légumes (1-7)
+UPDATE Product SET imagePath = '/images/products/cherry_tomatoes.jpg'     WHERE productId = 1;
+UPDATE Product SET imagePath = '/images/products/gala_apple.jpg'          WHERE productId = 2;
+UPDATE Product SET imagePath = '/images/products/banana.jpg'              WHERE productId = 3;
+UPDATE Product SET imagePath = '/images/products/zucchini.jpg'            WHERE productId = 4;
+UPDATE Product SET imagePath = '/images/products/carrot.jpg'              WHERE productId = 5;
+UPDATE Product SET imagePath = '/images/products/iceberg_letuce.jpg'      WHERE productId = 6;
+UPDATE Product SET imagePath = '/images/products/red_pepper.jpg'          WHERE productId = 7;
+
+-- Produits laitiers (8-13)
+UPDATE Product SET imagePath = '/images/products/semi-skimmed_milk.jpg'   WHERE productId = 8;
+UPDATE Product SET imagePath = '/images/products/natural_yogurt.jpg'      WHERE productId = 9;
+UPDATE Product SET imagePath = '/images/products/soft_butter.jpeg'        WHERE productId = 10;
+UPDATE Product SET imagePath = '/images/products/gouda_cheese.jpg'        WHERE productId = 11;
+UPDATE Product SET imagePath = '/images/products/sour_cream.jpg'          WHERE productId = 12;
+UPDATE Product SET imagePath = '/images/products/emmental_snuff.jpg'      WHERE productId = 13;
+
+-- Viandes et volailles (14-20)
+UPDATE Product SET imagePath = '/images/products/chicken_breast.jpg'      WHERE productId = 14;
+UPDATE Product SET imagePath = '/images/products/chopped_steak.jpg'       WHERE productId = 15;
+UPDATE Product SET imagePath = '/images/products/pork_chop.jpg'           WHERE productId = 16;
+UPDATE Product SET imagePath = '/images/products/beef_fillet.jpg'         WHERE productId = 17;
+UPDATE Product SET imagePath = '/images/products/turkey_escalope.jpg'     WHERE productId = 18;
+UPDATE Product SET imagePath = '/images/products/merguez.jpg'             WHERE productId = 19;
+UPDATE Product SET imagePath = '/images/products/smoked_bacon.jpg'        WHERE productId = 20;
+
+-- Poissons (21-26)
+UPDATE Product SET imagePath = '/images/products/fresh_salmon.jpg'        WHERE productId = 21;
+UPDATE Product SET imagePath = '/images/products/canned_tuna.jpg'         WHERE productId = 22;
+UPDATE Product SET imagePath = '/images/products/pink_shrimp.jpeg'        WHERE productId = 23;
+UPDATE Product SET imagePath = '/images/products/cod.jpg'                 WHERE productId = 24;
+UPDATE Product SET imagePath = '/images/products/sardinnes.jpg'           WHERE productId = 25;
+UPDATE Product SET imagePath = '/images/products/mussels.jpg'             WHERE productId = 26;
+
+-- Boulangerie (27-32)
+UPDATE Product SET imagePath = '/images/products/country_bread.jpg'       WHERE productId = 27;
+UPDATE Product SET imagePath = '/images/products/croissant.jpg'           WHERE productId = 28;
+UPDATE Product SET imagePath = '/images/products/traditional_baguette.jpg' WHERE productId = 29;
+UPDATE Product SET imagePath = '/images/products/wholemeal_bread.jpg'     WHERE productId = 30;
+UPDATE Product SET imagePath = '/images/products/bun.jpg'                 WHERE productId = 31;
+UPDATE Product SET imagePath = '/images/products/chocolate_muffin.jpg'    WHERE productId = 32;
+
+-- Boissons (33-39)
+UPDATE Product SET imagePath = '/images/products/mineral_water.webp'      WHERE productId = 33;
+UPDATE Product SET imagePath = '/images/products/orange_juice.jpg'        WHERE productId = 34;
+UPDATE Product SET imagePath = '/images/products/lemonade.jpg'            WHERE productId = 35;
+UPDATE Product SET imagePath = '/images/products/ground_coffee.jpg'       WHERE productId = 36;
+UPDATE Product SET imagePath = '/images/products/green_tea.jpg'           WHERE productId = 37;
+UPDATE Product SET imagePath = '/images/products/almond_milk.jpg'         WHERE productId = 38;
+UPDATE Product SET imagePath = '/images/products/coca_cola.jpg'           WHERE productId = 39;
+
+-- Épicerie sèche (40-46)
+UPDATE Product SET imagePath = '/images/products/tagliatate_pasta.jpeg'   WHERE productId = 40;
+UPDATE Product SET imagePath = '/images/products/long_grain_rice.jpg'     WHERE productId = 41;
+UPDATE Product SET imagePath = '/images/products/green_lentils.jpg'       WHERE productId = 42;
+UPDATE Product SET imagePath = '/images/products/wheat_flour.jpg'         WHERE productId = 43;
+UPDATE Product SET imagePath = '/images/products/powdered_sugar.jpg'      WHERE productId = 44;
+UPDATE Product SET imagePath = '/images/products/olive_oil.jpg'           WHERE productId = 45;
+UPDATE Product SET imagePath = '/images/products/tomato_sauce.jpg'        WHERE productId = 46;
+GO
+
+-- Recettes (1-6)
+UPDATE Recipes SET imagePath = 'recipes/pasta_bolognese.jpg'          WHERE recipeId = 1;
+UPDATE Recipes SET imagePath = 'recipes/chicken_curry_with_rice.jpg'  WHERE recipeId = 2;
+UPDATE Recipes SET imagePath = 'recipes/caesar_salad.jpg'             WHERE recipeId = 3;
+UPDATE Recipes SET imagePath = 'recipes/banana_almond_smoothie.webp'  WHERE recipeId = 4;
+UPDATE Recipes SET imagePath = 'recipes/vegetable_stir-fry.jpg'       WHERE recipeId = 5;
+UPDATE Recipes SET imagePath = 'recipes/creamed_salmon.jpg'           WHERE recipeId = 6;
+GO

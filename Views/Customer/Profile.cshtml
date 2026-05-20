@@ -10,13 +10,13 @@
     </div>
 
     @* ====== Informations personnelles ====== *@
-    <div class="product-detail-card" style="flex-direction:column; gap:0; padding:0; overflow:hidden; margin-bottom:32px">
+    <div class="section-card">
 
-        <div style="padding:20px 32px; border-bottom:1px solid var(--border)">
-            <h2 style="font-size:1.1rem; font-weight:700; margin:0; color:var(--text-dark)">Informations personnelles</h2>
+        <div class="section-header">
+            <h2>Informations personnelles</h2>
         </div>
 
-        <form asp-action="UpdateProfile" method="post" style="padding:24px 32px">
+        <form asp-action="UpdateProfile" method="post" class="section-form">
             @Html.AntiForgeryToken()
 
             <div class="row g-3 mb-3">
@@ -36,7 +36,7 @@
 
             <div class="form-group mb-3">
                 <label>Email</label>
-                <input type="text" value="@Model.Customer.Email" disabled style="background:#f9f9f9; color:var(--text-gray)" />
+                <input type="text" value="@Model.Customer.Email" class="input-disabled" disabled />
             </div>
 
             <div class="row g-3 mb-3">
@@ -59,7 +59,7 @@
                 <input type="password" name="password" placeholder="••••••" required />
             </div>
 
-            <div style="display:flex; justify-content:flex-end">
+            <div class="form-actions">
                 <button type="submit" class="btn-cta">Enregistrer</button>
             </div>
         </form>
@@ -67,10 +67,10 @@
     </div>
 
     @* ====== Historique des commandes ====== *@
-    <div class="product-detail-card" style="flex-direction:column; gap:0; padding:0; overflow:hidden">
+    <div class="section-card">
 
-        <div style="padding:20px 32px; border-bottom:1px solid var(--border)">
-            <h2 style="font-size:1.1rem; font-weight:700; margin:0; color:var(--text-dark)">Historique des commandes</h2>
+        <div class="section-header">
+            <h2>Historique des commandes</h2>
         </div>
 
         @if (!Model.Orders.Any())
@@ -81,10 +81,10 @@
         {
             foreach (var order in Model.Orders)
             {
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:20px 32px; border-bottom:1px solid var(--border)">
+                <div class="order-row">
                     <div>
-                        <p style="font-weight:600; margin:0; color:var(--text-dark)">Commande #@order.OrderId</p>
-                        <p class="label" style="margin:4px 0 0">
+                        <p class="order-row-title">Commande #@order.OrderId</p>
+                        <p class="label order-row-meta">
                             @order.OrderDate.ToString("dd/MM/yyyy")
                             @if (order.PickupDate != DateTime.MinValue)
                             {

@@ -20,28 +20,26 @@
     }
     else
     {
-        <div class="product-detail-card" style="flex-direction:column; gap:0; padding:0; overflow:hidden">
+        <div class="section-card">
             @foreach (var slot in Model)
             {
                 <form asp-action="SelectTimeSlot" method="post">
                     <input type="hidden" name="timeSlotId" value="@slot.TimeSlotId"/>
-                    <button type="submit" style="width:100%; background:none; border:none; border-bottom:1px solid #f0f0f0; padding:18px 32px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; text-align:left">
+                    <button type="submit" class="timeslot-btn">
                         <div>
-                            <p style="font-weight:600; margin:0">@slot.StartTime.ToString("dddd dd MMMM yyyy")</p>
-                            <p style="color:var(--text-gray); font-size:0.9rem; margin:4px 0 0">
-                                @slot.StartTime.ToString("HH:mm") – @slot.EndTime.ToString("HH:mm")
-                            </p>
+                            <p class="timeslot-title">@slot.StartTime.ToString("dddd dd MMMM yyyy")</p>
+                            <p class="timeslot-meta">@slot.StartTime.ToString("HH:mm") – @slot.EndTime.ToString("HH:mm")</p>
                         </div>
-                        <span class="btn-cta" style="padding:8px 16px; font-size:0.85rem; pointer-events:none">Choisir</span>
+                        <span class="btn-cta-sm">Choisir</span>
                     </button>
                 </form>
             }
         </div>
     }
 
-    <div style="margin-top:24px; display:flex; gap:24px">
-        <a asp-action="SelectStore" style="color:var(--text-gray); font-size:0.9rem">← Changer de magasin</a>
-        <a asp-action="Index" style="color:var(--text-gray); font-size:0.9rem">← Retour au récapitulatif</a>
+    <div class="page-nav">
+        <a asp-action="SelectStore" class="nav-back">← Changer de magasin</a>
+        <a asp-action="Index" class="nav-back">← Retour au récapitulatif</a>
     </div>
 
 </div>
