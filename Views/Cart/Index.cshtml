@@ -42,7 +42,7 @@
 
                         <form asp-action="UpdateQuantity" method="post" class="cart-qty-form">
                             <input type="hidden" name="productId" value="@line.Product.ProductId"/>
-                            <input type="number" name="quantity" value="@line.Quantity" min="1" class="cart-qty-input"/>
+                            <input type="number" name="quantity" value="@line.Quantity" class="cart-qty-input"/>
                             <button type="submit" class="btn-cta-sm">Appliquer</button>
                         </form>
 

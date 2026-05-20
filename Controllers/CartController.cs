@@ -72,13 +72,13 @@ public class CartController : Controller
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
         List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
-        if (quantity > 0) 
+        if (quantity > 0 && quantity <= 10)
         {
             // on check bien si le produit choisi est dans la liste de produits
             OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
             if (existing != null)
                 await existing.SetQuantityAsync(quantity, orderLineDal);
-            
+
             TempData["Success"] = "Quantité mise à jour";
             return RedirectToAction("Index");
         }
