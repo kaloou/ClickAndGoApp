@@ -1,47 +1,65 @@
 @model List<ClickAndGoApp.Models.TimeSlot>
 @{
     ViewData["Title"] = "Choisir un créneau";
-    string storeName = ViewBag.StoreName as string;
+    string storeName    = ViewBag.StoreName as string;
+    string selectedDate = ViewBag.SelectedDate as string;
+    string minDate      = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
 }
 
 <div class="browse-page">
 
     <div class="browse-header">
-        <a asp-action="SelectStore" class="detail-back">← Changer de magasin</a>
         <h1>Choisir un créneau</h1>
-        <p class="browse-subtitle">Créneaux disponibles pour <strong>@storeName</strong></p>
+        <p class="browse-subtitle">@storeName</p>
     </div>
 
-    @if (!Model.Any())
+    @* Sélecteur de date *@
+    <div class="section-card" style="max-width:480px; margin-bottom:24px">
+        <form method="get" asp-action="SelectTimeSlot" class="section-form">
+            <label for="datePicker">Date de retrait</label>
+            <input type="date"
+                   id="datePicker"
+                   name="selectedDate"
+                   value="@selectedDate"
+                   min="@minDate"
+                   required/>
+            <div class="form-actions">
+                <button type="submit" class="btn-cta">Voir les créneaux</button>
+            </div>
+        </form>
+    </div>
+
+    @* Créneaux du jour choisi *@
+    @if (selectedDate != null)
     {
-        <div class="timeslot-empty">
-            <i data-lucide="calendar-x"></i>
-            <p class="timeslot-empty-title">Aucun créneau disponible</p>
-            <p class="timeslot-empty-sub">Ce magasin n'a pas de créneaux pour le moment.</p>
-            <a asp-action="SelectStore" class="btn-cta">Choisir un autre magasin</a>
-        </div>
-    }
-    else
-    {
-        <div class="timeslot-grid">
-            @foreach (var slot in Model)
-            {
-                <div class="timeslot-card">
-                    <div class="timeslot-card-date">
-                        <i data-lucide="calendar"></i>
-                        <span>@slot.StartTime.ToString("dddd dd MMMM yyyy")</span>
-                    </div>
-                    <div class="timeslot-card-time">
-                        <i data-lucide="clock"></i>
-                        <span>@slot.StartTime.ToString("HH:mm") – @slot.EndTime.ToString("HH:mm")</span>
-                    </div>
+        <p style="font-weight:600; margin-bottom:12px">
+            Créneaux du @DateTime.Parse(selectedDate).ToString("dddd dd MMMM yyyy")
+        </p>
+
+        @if (!Model.Any())
+        {
+            <div class="no-results">Aucun créneau disponible pour cette date. Essayez une autre date.</div>
+        }
+        else
+        {
+            <div class="section-card">
+                @foreach (var slot in Model)
+                {
                     <form asp-action="SelectTimeSlot" method="post">
                         <input type="hidden" name="timeSlotId" value="@slot.TimeSlotId"/>
-                        <button type="submit" class="btn-cta timeslot-card-btn">Choisir ce créneau</button>
+                        <button type="submit" class="timeslot-btn">
+                            <p class="timeslot-title">@slot.StartTime.ToString("HH:mm") – @slot.EndTime.ToString("HH:mm")</p>
+                            <span class="btn-cta-sm">Choisir</span>
+                        </button>
                     </form>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
     }
+
+    <div class="page-nav">
+        <a asp-action="SelectStore" class="nav-back">← Changer de magasin</a>
+        <a asp-action="Index" class="nav-back">← Retour au récapitulatif</a>
+    </div>
 
 </div>

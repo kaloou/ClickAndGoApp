@@ -63,7 +63,10 @@ public class StoreDAL : IStoreDAL
             FROM TimeSlot ts
             WHERE ts.storeId = @storeId
               AND ts.startTime > GETDATE()
-              AND (SELECT COUNT(*) FROM [Order] o WHERE o.timeSlotId = ts.timeSlotId) < 10
+              AND NOT EXISTS (
+                  SELECT 1 FROM [Order] o
+                  WHERE o.timeSlotId = ts.timeSlotId
+                    AND o.status != 'InTheCart')
             ORDER BY ts.startTime";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
@@ -75,4 +78,5 @@ public class StoreDAL : IStoreDAL
             slots.Add(new TimeSlot((int)reader["timeSlotId"], (DateTime)reader["startTime"], (DateTime)reader["endTime"]));
         return slots;
     }
+
 }

@@ -1,95 +1,78 @@
 @model ClickAndGoApp.ViewModels.OrderDetailsViewModel
 @{
     ViewData["Title"] = "Order Details";
-    Layout = null;
+    ViewData["NavbarType"] = "Staff";
+    ViewData["HideFooter"] = true;
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Order Details</title>
-    <link rel="stylesheet" href="~/css/style.css"/>
-</head>
-<body>
+<div class="content">
 
-<div class="dashboard">
+    <a asp-controller="OrderPicker" asp-action="Index" class="btn-back">← Back to Orders</a>
 
-    <partial name="_Navbar" />
-
-    <div class="content">
-
-        <a asp-controller="OrderPicker" asp-action="Index" class="btn-back">← Back to Orders</a>
-
-        <div class="order-info-card">
-            <h2>Order #@Model.Order.OrderId</h2>
-            <div class="order-info-grid">
-                <div>
-                    <span class="label">Pickup Date</span>
-                    <span>@Model.Order.PickupDate.ToString("dd/MM/yyyy HH:mm")</span>
-                </div>
-                <div>
-                    <span class="label">Status</span>
-                    <span class="badge badge-@Model.Order.Status.ToString().ToLower()">
-                        @Model.Order.Status
-                    </span>
-                </div>
-                <div>
-                    <span class="label">Number of Boxes</span>
-                    <span>@Model.Order.NumberOfBoxes</span>
-                </div>
+    <div class="order-info-card">
+        <h2>Order #@Model.Order.OrderId</h2>
+        <div class="order-info-grid">
+            <div>
+                <span class="label">Pickup Date</span>
+                <span>@Model.Order.PickupDate.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+            <div>
+                <span class="label">Status</span>
+                <span class="badge badge-@Model.Order.Status.ToString().ToLower()">
+                    @Model.Order.Status
+                </span>
+            </div>
+            <div>
+                <span class="label">Number of Boxes</span>
+                <span>@Model.Order.NumberOfBoxes</span>
             </div>
         </div>
-
-        <h3>Products</h3>
-        <table class="orders-table">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < Model.OrderLines.Count; i++)
-                {
-                    var line = Model.OrderLines[i];
-                    var product = Model.Products[i];
-                    <tr>
-                        <td>@product.Name</td>
-                        <td>@product.Price.ToString("0.00") €</td>
-                        <td>@line.Quantity</td>
-                        <td>@((product.Price * line.Quantity).ToString("0.00")) €</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        <div class="encode-boxes-card">
-            <h3>Encode Number of Boxes Used</h3>
-            <form method="post" asp-controller="OrderPicker" asp-action="EncodeBoxes">
-                <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
-                <div class="form-group">
-                    <label for="numberOfBoxes">Number of boxes</label>
-                    <input type="number" id="numberOfBoxes" name="numberOfBoxes"
-                           min="1" required/>
-                </div>
-                @if (ViewBag.Error != null)
-                {
-                    <div class="error">@ViewBag.Error</div>
-                }
-                @if (ViewBag.Success != null)
-                {
-                    <div class="success">@ViewBag.Success</div>
-                }
-                <button type="submit">Confirm</button>
-            </form>
-        </div>
-
     </div>
-</div>
 
-</body>
-</html>
+    <h3>Products</h3>
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.OrderLines.Count; i++)
+            {
+                var line = Model.OrderLines[i];
+                var product = Model.Products[i];
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Price.ToString("0.00") €</td>
+                    <td>@line.Quantity</td>
+                    <td>@((product.Price * line.Quantity).ToString("0.00")) €</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="encode-boxes-card">
+        <h3>Encode Number of Boxes Used</h3>
+        <form method="post" asp-controller="OrderPicker" asp-action="EncodeBoxes">
+            <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
+            <div class="form-group">
+                <label for="numberOfBoxes">Number of boxes</label>
+                <input type="number" id="numberOfBoxes" name="numberOfBoxes"
+                       min="1" required/>
+            </div>
+            @if (ViewBag.Error != null)
+            {
+                <div class="error">@ViewBag.Error</div>
+            }
+            @if (ViewBag.Success != null)
+            {
+                <div class="success">@ViewBag.Success</div>
+            }
+            <button type="submit">Confirm</button>
+        </form>
+    </div>
+
+</div>

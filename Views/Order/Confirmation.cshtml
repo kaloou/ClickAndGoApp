@@ -16,21 +16,21 @@
         @if (storeName != null)
         {
             <div class="confirmation-row">
-                <span class="text-gray">Magasin</span>
+                <span class="muted">Magasin</span>
                 <strong>@storeName</strong>
             </div>
         }
         @if (pickupDate != null)
         {
             <div class="confirmation-row">
-                <span class="text-gray">Retrait</span>
+                <span class="muted">Retrait</span>
                 <strong>@pickupDate</strong>
             </div>
         }
         @if (total != null)
         {
             <div class="confirmation-row-border">
-                <span class="text-gray">Total estimé</span>
+                <span class="muted">Total estimé</span>
                 <strong class="product-detail-price">@total €</strong>
             </div>
         }

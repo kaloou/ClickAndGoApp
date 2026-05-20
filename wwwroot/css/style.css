@@ -481,6 +481,21 @@
 }
 .btn-remove:hover { background: transparent; color: var(--cg-error-line); }
 
+.btn-danger {
+    background: var(--cg-error-line);
+    color: var(--cg-white);
+    padding: 10px var(--cg-space-5);
+    border-radius: var(--cg-radius-m);
+    font-size: var(--cg-fs-sm);
+    font-weight: var(--cg-fw-semibold);
+    width: auto;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background var(--cg-dur-fast) var(--cg-ease);
+}
+.btn-danger:hover { background: var(--cg-error-fg); }
+
 
 /* ============================================
    EMPTY MESSAGE

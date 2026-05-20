@@ -1,68 +1,51 @@
 @model List<ClickAndGoApp.Models.Order>
 @{
     ViewData["Title"] = "Orders to Prepare";
-    Layout = null;
+    ViewData["NavbarType"] = "Staff";
+    ViewData["HideFooter"] = true;
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Orders to Prepare</title>
-    <link rel="stylesheet" href="~/css/style.css"/>
-</head>
-<body>
+<div class="content">
+    <h2>Orders to Prepare for Tomorrow</h2>
 
-<div class="dashboard">
-
-    <partial name="_Navbar" />
-
-    <div class="content">
-        <h2>Orders to Prepare for Tomorrow</h2>
-
-        @if (ViewBag.Message != null)
-        {
-            <div class="empty-message">@ViewBag.Message</div>
-        }
-        else
-        {
-            <table class="orders-table">
-                <thead>
+    @if (ViewBag.Message != null)
+    {
+        <div class="empty-message">@ViewBag.Message</div>
+    }
+    else
+    {
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer ID</th>
+                    <th>Pickup Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
                     <tr>
-                        <th>Order ID</th>
-                        <th>Customer ID</th>
-                        <th>Pickup Date</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <td>@order.OrderId</td>
+                        <td>@order.CustomerId</td>
+                        <td>@order.PickupDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>
+                            <span class="badge badge-@order.Status.ToString().ToLower()">
+                                @order.Status
+                            </span>
+                        </td>
+                        <td>
+                            <a asp-controller="OrderPicker" asp-action="OrderDetails"
+                               asp-route-id="@order.OrderId"
+                               class="btn-primary">
+                                View Details
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var order in Model)
-                    {
-                        <tr>
-                            <td>@order.OrderId</td>
-                            <td>@order.CustomerId</td>
-                            <td>@order.PickupDate.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>
-                                <span class="badge badge-@order.Status.ToString().ToLower()">
-                                    @order.Status
-                                </span>
-                            </td>
-                            <td>
-                                <a asp-controller="OrderPicker" asp-action="OrderDetails"
-                                   asp-route-id="@order.OrderId"
-                                   class="btn-primary">
-                                    View Details
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
+                }
+            </tbody>
+        </table>
+    }
 </div>
-
-</body>
-</html>
