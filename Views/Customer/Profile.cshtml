@@ -6,6 +6,7 @@
 <div class="browse-page">
 
     <div class="browse-header">
+        <a asp-controller="Home" asp-action="Index" class="detail-back">← Accueil</a>
         <h1>Mon compte</h1>
     </div>
 
@@ -63,6 +64,14 @@
                 <button type="submit" class="btn-cta">Enregistrer</button>
             </div>
         </form>
+
+        <div class="profile-logout">
+            <a asp-controller="Auth" asp-action="Logout" class="btn-logout">
+                <i data-lucide="log-out"></i>
+                Se déconnecter
+            </a>
+        </div>
+
 
     </div>
 
