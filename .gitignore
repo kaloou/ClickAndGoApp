@@ -56,4 +56,4 @@ nunit-*.xml
 #######################
 .DS_Store
 /.idea
-/appsettings.json
+appsettings.json
