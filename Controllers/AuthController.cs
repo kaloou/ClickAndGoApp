@@ -62,6 +62,12 @@ public class AuthController : Controller
                         HttpContext.Session.SetInt32("selectedStoreId", storeId.Value);
                 }
             }
+            if (HttpContext.Session.GetInt32("pendingProductId").HasValue)
+                return RedirectToAction("HandlePendingProduct", "Product");
+
+            if (HttpContext.Session.GetInt32("pendingRecipeId").HasValue)
+                return RedirectToAction("HandlePendingIngredients", "Recipe");
+
             return Redirect("/");
         }
 
