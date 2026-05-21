@@ -117,7 +117,7 @@ namespace ClickAndGoApp.Controllers
         // ============================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> MarkAsReadyAsync(int orderId)
+        public async Task<IActionResult> MarkAsReady(int orderId)
         {
             if (HttpContext.Session.GetString("role") != "OrderPicker")
                 return RedirectToAction("Login", "Auth");

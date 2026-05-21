@@ -77,7 +77,7 @@
 
         @if (Model.Order.NumberOfBoxes > 0 && Model.Order.Status == OrderStatus.Pending)
         {
-            <form method="post" asp-controller="OrderPicker" asp-action="MarkAsReadyAsync">
+            <form method="post" asp-controller="OrderPicker" asp-action="MarkAsReady">
                 <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
                 <button type="submit" class="btn-ready">Mark as Ready</button>
             </form>
