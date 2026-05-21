@@ -14,91 +14,112 @@ public class OrderLineDAL : IOrderLineDAL
 
     public async Task<float> GetProductsTotalAsync(int orderId)
     {
-        using SqlConnection conn = _db.GetConnexion();
-        await conn.OpenAsync();
+        using (SqlConnection conn = _db.GetConnexion())
+        {
+            await conn.OpenAsync();
 
-        string query = @"
-            SELECT ISNULL(SUM(ol.quantity * p.price), 0)
-            FROM OrderLine ol
-            JOIN Product p ON ol.productId = p.productId
-            WHERE ol.orderId = @orderId";
+            string query = @"
+                SELECT ISNULL(SUM(ol.quantity * p.price), 0)
+                FROM OrderLine ol
+                JOIN Product p ON ol.productId = p.productId
+                WHERE ol.orderId = @orderId";
 
-        using SqlCommand cmd = new SqlCommand(query, conn);
-        cmd.Parameters.AddWithValue("@orderId", orderId);
-
-        object result = await cmd.ExecuteScalarAsync();
-        return (float)(decimal)result;
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@orderId", orderId);
+                object result = await cmd.ExecuteScalarAsync();
+                return (float)(decimal)result;
+            }
+        }
     }
 
     public async Task<List<OrderLine>> GetOrderLinesAsync(int orderId)
     {
-        using SqlConnection conn = _db.GetConnexion();
-        await conn.OpenAsync();
+        using (SqlConnection conn = _db.GetConnexion())
+        {
+            await conn.OpenAsync();
 
-        string query = @"
-            SELECT ol.orderId, ol.productId, ol.quantity,
-                   p.name, p.price, p.description, p.imagePath,
-                   c.categoryId, c.name AS categoryName
-            FROM OrderLine ol
-            JOIN Product  p ON ol.productId  = p.productId
-            JOIN Category c ON p.categoryId  = c.categoryId
-            WHERE ol.orderId = @orderId";
+            string query = @"
+                SELECT ol.orderId, ol.productId, ol.quantity,
+                       p.name, p.price, p.description, p.imagePath,
+                       c.categoryId, c.name AS categoryName
+                FROM OrderLine ol
+                JOIN Product  p ON ol.productId  = p.productId
+                JOIN Category c ON p.categoryId  = c.categoryId
+                WHERE ol.orderId = @orderId";
 
-        using SqlCommand cmd = new SqlCommand(query, conn);
-        cmd.Parameters.AddWithValue("@orderId", orderId);
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@orderId", orderId);
 
-        using SqlDataReader reader = await cmd.ExecuteReaderAsync();
-        var orderLines = new List<OrderLine>();
-        while (await reader.ReadAsync())
-            orderLines.Add(ReadOrderLine(reader));
-        return orderLines;
+                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                {
+                    var orderLines = new List<OrderLine>();
+                    while (await reader.ReadAsync())
+                        orderLines.Add(ReadOrderLine(reader));
+                    return orderLines;
+                }
+            }
+        }
     }
 
     public async Task AddProductAsync(int orderId, int productId, int quantity)
     {
-        using SqlConnection conn = _db.GetConnexion();
-        await conn.OpenAsync();
+        using (SqlConnection conn = _db.GetConnexion())
+        {
+            await conn.OpenAsync();
 
-        const string query = @"
-            INSERT INTO OrderLine (orderId, productId, quantity)
-            VALUES (@orderId, @productId, @quantity)";
+            const string query = @"
+                INSERT INTO OrderLine (orderId, productId, quantity)
+                VALUES (@orderId, @productId, @quantity)";
 
-        using SqlCommand cmd = new SqlCommand(query, conn);
-        cmd.Parameters.AddWithValue("@orderId",   orderId);
-        cmd.Parameters.AddWithValue("@productId", productId);
-        cmd.Parameters.AddWithValue("@quantity",  quantity);
-        await cmd.ExecuteNonQueryAsync();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@orderId",   orderId);
+                cmd.Parameters.AddWithValue("@productId", productId);
+                cmd.Parameters.AddWithValue("@quantity",  quantity);
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
     }
 
     public async Task RemoveAsync(int orderId, int productId)
     {
-        using SqlConnection conn = _db.GetConnexion();
-        await conn.OpenAsync();
+        using (SqlConnection conn = _db.GetConnexion())
+        {
+            await conn.OpenAsync();
 
-        const string query = @"
-            DELETE FROM OrderLine
-            WHERE orderId = @orderId AND productId = @productId";
+            const string query = @"
+                DELETE FROM OrderLine
+                WHERE orderId = @orderId AND productId = @productId";
 
-        using SqlCommand cmd = new SqlCommand(query, conn);
-        cmd.Parameters.AddWithValue("@orderId",   orderId);
-        cmd.Parameters.AddWithValue("@productId", productId);
-        await cmd.ExecuteNonQueryAsync();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@orderId",   orderId);
+                cmd.Parameters.AddWithValue("@productId", productId);
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
     }
 
     public async Task SetQuantityAsync(int orderId, int productId, int quantity)
     {
-        using SqlConnection conn = _db.GetConnexion();
-        await conn.OpenAsync();
+        using (SqlConnection conn = _db.GetConnexion())
+        {
+            await conn.OpenAsync();
 
-        const string query = @"
-            UPDATE OrderLine SET quantity = @quantity
-            WHERE orderId = @orderId AND productId = @productId";
+            const string query = @"
+                UPDATE OrderLine SET quantity = @quantity
+                WHERE orderId = @orderId AND productId = @productId";
 
-        using SqlCommand cmd = new SqlCommand(query, conn);
-        cmd.Parameters.AddWithValue("@orderId",   orderId);
-        cmd.Parameters.AddWithValue("@productId", productId);
-        cmd.Parameters.AddWithValue("@quantity",  quantity);
-        await cmd.ExecuteNonQueryAsync();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@orderId",   orderId);
+                cmd.Parameters.AddWithValue("@productId", productId);
+                cmd.Parameters.AddWithValue("@quantity",  quantity);
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
     }
 
     private static OrderLine ReadOrderLine(SqlDataReader reader)

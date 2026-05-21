@@ -54,53 +54,55 @@ public class RecipeController : Controller
         try
         {
             // 2-3 : GetById(recipeId) → recipe
-            using Recipe recipe = await Recipe.GetByIdAsync(recipeId, recipeDal);
-
-            int? orderId = HttpContext.Session.GetInt32("orderId");
-            if (orderId is null)
+            using (Recipe recipe = await Recipe.GetByIdAsync(recipeId, recipeDal))
             {
-                int? existingId = await orderDal.GetActiveCartAsync(userId.Value);
-                int newOrderId  = existingId ?? await orderDal.CreateOrderAsync(userId.Value);
-                HttpContext.Session.SetInt32("orderId", newOrderId);
-                orderId = newOrderId;
-            }
-
-            // 4-5 : GetById(orderId) → order
-            using Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
-
-            // 6-8 : GetIngredients() → ingredients
-            List<RecipeIngredient> ingredients = await recipe.GetIngredientsAsync(recipeIngredientDal);
-
-            // alt [all ingredients are available]
-            if (ingredients.Count > 0)
-            {
-                List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
-
-                int newProducts = 0;
-                foreach (RecipeIngredient ingredient in ingredients)
+                int? orderId = HttpContext.Session.GetInt32("orderId");
+                if (orderId is null)
                 {
-                    OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == ingredient.ProductId);
-                    if (existing == null)
-                    {
-                        await order.AddProductAsync(ingredient.ProductId, orderLineDal, ingredient.Quantity);
-                        newProducts++;
-                    }
-                    else
-                        await existing.SetQuantityAsync(existing.Quantity + ingredient.Quantity, orderLineDal);
+                    int? existingId = await orderDal.GetActiveCartAsync(userId.Value);
+                    int newOrderId  = existingId ?? await orderDal.CreateOrderAsync(userId.Value);
+                    HttpContext.Session.SetInt32("orderId", newOrderId);
+                    orderId = newOrderId;
                 }
 
-                int count = HttpContext.Session.GetInt32("cartCount") ?? 0;
-                HttpContext.Session.SetInt32("cartCount", count + newProducts);
+                // 4-5 : GetById(orderId) → order
+                using (Order order = await Order.GetByIdAsync(orderId.Value, orderDal))
+                {
+                    // 6-8 : GetIngredients() → ingredients
+                    List<RecipeIngredient> ingredients = await recipe.GetIngredientsAsync(recipeIngredientDal);
 
-                await HttpContext.Session.CommitAsync();
-                TempData["Success"] = "Ingrédients ajoutés au panier";
-                return RedirectToAction("SelectRecipe", new { recipeId });
-            }
-            else
-            {
-                // 12 : no ingredients added to cart
-                TempData["Error"] = "Aucun ingrédient disponible pour cette recette";
-                return RedirectToAction("SelectRecipe", new { recipeId });
+                    // alt [all ingredients are available]
+                    if (ingredients.Count > 0)
+                    {
+                        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
+
+                        int newProducts = 0;
+                        foreach (RecipeIngredient ingredient in ingredients)
+                        {
+                            OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == ingredient.ProductId);
+                            if (existing == null)
+                            {
+                                await order.AddProductAsync(ingredient.ProductId, orderLineDal, ingredient.Quantity);
+                                newProducts++;
+                            }
+                            else
+                                await existing.SetQuantityAsync(existing.Quantity + ingredient.Quantity, orderLineDal);
+                        }
+
+                        int count = HttpContext.Session.GetInt32("cartCount") ?? 0;
+                        HttpContext.Session.SetInt32("cartCount", count + newProducts);
+
+                        await HttpContext.Session.CommitAsync();
+                        TempData["Success"] = "Ingrédients ajoutés au panier";
+                        return RedirectToAction("SelectRecipe", new { recipeId });
+                    }
+                    else
+                    {
+                        // 12 : no ingredients added to cart
+                        TempData["Error"] = "Aucun ingrédient disponible pour cette recette";
+                        return RedirectToAction("SelectRecipe", new { recipeId });
+                    }
+                }
             }
         }
         catch (EntityNotFoundException)
