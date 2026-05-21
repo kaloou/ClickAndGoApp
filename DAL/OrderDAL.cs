@@ -64,7 +64,7 @@ public class OrderDAL : IOrderDAL
             JOIN TimeSlot ts ON o.timeSlotId   = ts.timeSlotId
             WHERE ts.storeId = @storeId
               AND CAST(o.pickupDate AS DATE) = CAST(DATEADD(day, 1, GETDATE()) AS DATE)
-              AND o.status != 'Honored'";
+              AND o.status NOT IN ('InTheCart', 'Honored')";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@storeId", storeId);
@@ -176,7 +176,8 @@ public class OrderDAL : IOrderDAL
 
         const string query = @"
             SELECT TOP 1 orderId FROM [Order]
-            WHERE customerId = @customerId AND status = 'InTheCart'";
+            WHERE customerId = @customerId AND status = 'InTheCart'
+            ORDER BY orderId DESC";
 
         using SqlCommand cmd = new SqlCommand(query, conn);
         cmd.Parameters.AddWithValue("@customerId", customerId);

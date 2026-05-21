@@ -58,11 +58,12 @@ public class ProductController : Controller
         if (userId is null) 
             return RedirectToAction("Login", "Auth");
 
-        // On récupère l'id de l'Order(Cart), si pas présent, on le crée au vol
+        // On récupère l'id de l'Order(Cart), si pas présent, on cherche en DB avant de créer
         int? orderId = HttpContext.Session.GetInt32("orderId");
         if (orderId is null)
         {
-            int newOrderId = await orderDal.CreateOrderAsync(userId.Value);
+            int? existingId = await orderDal.GetActiveCartAsync(userId.Value);
+            int newOrderId  = existingId ?? await orderDal.CreateOrderAsync(userId.Value);
             HttpContext.Session.SetInt32("orderId", newOrderId);
             orderId = newOrderId;
         }

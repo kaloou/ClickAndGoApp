@@ -59,7 +59,8 @@ public class RecipeController : Controller
             int? orderId = HttpContext.Session.GetInt32("orderId");
             if (orderId is null)
             {
-                int newOrderId = await orderDal.CreateOrderAsync(userId.Value);
+                int? existingId = await orderDal.GetActiveCartAsync(userId.Value);
+                int newOrderId  = existingId ?? await orderDal.CreateOrderAsync(userId.Value);
                 HttpContext.Session.SetInt32("orderId", newOrderId);
                 orderId = newOrderId;
             }

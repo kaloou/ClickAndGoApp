@@ -36,6 +36,7 @@ namespace ClickAndGoApp.Controllers
                 int pickerId = (int)HttpContext.Session.GetInt32("userId");
                 OrderPicker orderPicker = await OrderPicker.GetByIdAsync(pickerId, _orderPickerDAL);
                 Store store = await orderPicker.GetStoreAsync();
+                HttpContext.Session.SetString("storeName", store.Name);
                 List<Order> orders = await store.GetOrdersByStoreAsync(_orderDAL);
 
                 if (orders.Count == 0)
@@ -117,7 +118,7 @@ namespace ClickAndGoApp.Controllers
         // ============================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> MarkAsReadyAsync(int orderId)
+        public async Task<IActionResult> MarkAsReady(int orderId)
         {
             if (HttpContext.Session.GetString("role") != "OrderPicker")
                 return RedirectToAction("Login", "Auth");
