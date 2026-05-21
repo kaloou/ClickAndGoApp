@@ -1,5 +1,34 @@
+/* ============================================================
+   TABLE OF CONTENTS
+   ============================================================
+   01  LAYOUT          — site header / navbar public
+   02  AUTH            — login & register split layout
+   03  NAVBAR          — barre orange (staff)
+   04  DASHBOARD       — shell des pages staff
+   05  TABLE           — tableau des commandes
+   06  BADGES          — statuts (pending / ready / honored)
+   07  BUTTONS         — variantes de boutons
+   08  EMPTY MESSAGE   — placeholder "aucune donnée"
+   09  ORDER DETAILS   — fiche commande (picker)
+   10  CASHIER         — détail caissier + breakdown prix
+   11  HOME PAGE       — hero, features, split, recipes, app
+   12  BROWSE PRODUCTS — grille produits + filtres catégorie
+   13  PRODUCT DETAILS — fiche produit
+   14  RECIPE          — detail recette + card miniature
+   15  NOTIFICATIONS   — toasts success / error
+   16  PROFILE         — compte client
+   17  CART            — panier
+   18  CHECKOUT        — tunnel (store, timeslot, confirm)
+   19  NAVIGATION      — liens page-level
+   20  CONFIRMATION    — page de confirmation commande
+   21  MISC            — utilitaires isolés
+   22  FOOTER          — pied de page
+   23  ANIMATIONS      — keyframes
+   24  FLATPICKR       — overrides calendrier
+   ============================================================ */
+
 /* ============================================
-   LAYOUT — site header
+   01  LAYOUT — site header
    ============================================ */
 .site-header {
     background: var(--cg-white);
@@ -142,10 +171,7 @@
 
 
 /* ============================================
-   LOGIN
-   ============================================ */
-/* ============================================
-   AUTH SPLIT LAYOUT (Login / Register)
+   02  AUTH — login & register split layout
    ============================================ */
 .auth-page {
     margin: 0;
@@ -312,7 +338,7 @@
 
 
 /* ============================================
-   NAVBAR — orange utility bar (staff dashboards)
+   03  NAVBAR — barre orange (staff dashboards)
    ============================================ */
 .navbar {
     background: var(--cg-orange);
@@ -349,7 +375,7 @@
 
 
 /* ============================================
-   DASHBOARD
+   04  DASHBOARD
    ============================================ */
 .dashboard {
     min-height: 100vh;
@@ -372,7 +398,7 @@
 
 
 /* ============================================
-   TABLE — orders
+   05  TABLE — orders
    ============================================ */
 .orders-table {
     background: var(--cg-white);
@@ -398,7 +424,7 @@
 
 
 /* ============================================
-   BADGES
+   06  BADGES — statuts (pending / ready / honored)
    ============================================ */
 .badge {
     padding: 4px 10px;
@@ -425,7 +451,7 @@
 
 
 /* ============================================
-   BUTTONS — variants
+   07  BUTTONS — variants
    ============================================ */
 .btn-primary {
     background: var(--cg-orange);
@@ -517,7 +543,7 @@
 
 
 /* ============================================
-   EMPTY MESSAGE
+   08  EMPTY MESSAGE
    ============================================ */
 .empty-message {
     background: var(--cg-white);
@@ -531,7 +557,7 @@
 
 
 /* ============================================
-   ORDER DETAILS
+   09  ORDER DETAILS — fiche commande (picker)
    ============================================ */
 .btn-back {
     display: inline-block;
@@ -612,7 +638,7 @@
 
 
 /* ============================================
-   ORDER PICKER — ORDER DETAILS
+   09b  ORDER PICKER — ORDER DETAILS layout
    ============================================ */
 .picker-page {
     padding: var(--cg-space-8);
@@ -840,7 +866,7 @@
 .btn-honor:hover { background: var(--cg-teal-dark); }
 
 /* ============================================
-   CASHIER — price breakdown
+   10  CASHIER — price breakdown
    ============================================ */
 .cashier-breakdown-card {
     background: var(--cg-white);
@@ -894,7 +920,7 @@
 
 
 /* ============================================
-   HOME PAGE — hero / app section
+   11  HOME PAGE — hero / features / app section
    ============================================ */
 .hero-section,
 .app-section {
@@ -1147,7 +1173,7 @@
 
 
 /* ============================================
-   BROWSE PRODUCTS
+   12  BROWSE PRODUCTS — grille + filtres catégorie
    ============================================ */
 .browse-page { padding: var(--cg-space-2) 0 var(--cg-space-10); }
 
@@ -1334,7 +1360,7 @@ a.product-card {
 
 
 /* ============================================
-   PRODUCT DETAILS
+   13  PRODUCT DETAILS — fiche produit
    ============================================ */
 .product-detail-page { padding: var(--cg-space-2) 0 var(--cg-space-10); }
 
@@ -1405,7 +1431,7 @@ a.product-card {
 
 
 /* ============================================
-   RECIPE DETAIL / CARD
+   14  RECIPE — detail + card miniature
    ============================================ */
 .recipe-detail-layout {
     display: grid;
@@ -1466,7 +1492,7 @@ a.product-card {
 
 
 /* ============================================
-   NOTIF NOTIFICATIONS
+   15  NOTIFICATIONS — toasts success / error
    ============================================ */
 .notif-wrapper {
     position: fixed;
@@ -1535,7 +1561,7 @@ a.product-card {
 
 
 /* ============================================
-   PROFILE PAGE
+   16  PROFILE — compte client
    ============================================ */
 .section-card {
     background: var(--cg-white);
@@ -1625,7 +1651,7 @@ a.product-card {
 
 
 /* ============================================
-   CART
+   17  CART — panier
    ============================================ */
 .cart-item {
     display: flex;
@@ -1742,7 +1768,7 @@ a.product-card {
 
 
 /* ============================================
-   CHECKOUT
+   18  CHECKOUT — options store / créneau
    ============================================ */
 .checkout-option {
     display: flex;
@@ -1795,7 +1821,7 @@ a.product-card {
 
 
 /* ============================================
-   NAVIGATION LINKS (page-level)
+   19  NAVIGATION LINKS — page-level
    ============================================ */
 .page-nav {
     margin-top: var(--cg-space-6);
@@ -1812,7 +1838,7 @@ a.product-card {
 
 
 /* ============================================
-   SELECT TIMESLOT
+   19b  SELECT TIMESLOT — grille créneaux
    ============================================ */
 .timeslot-btn {
     display: flex;
@@ -1913,7 +1939,7 @@ a.product-card {
 
 
 /* ============================================
-   CHECKOUT TUNNEL
+   18b  CHECKOUT TUNNEL — stepper + slot picker
    ============================================ */
 
 .checkout-page {
@@ -2194,7 +2220,7 @@ a.product-card {
 
 
 /* ============================================
-   CONFIRMATION PAGE
+   20  CONFIRMATION PAGE
    ============================================ */
 .confirmation-page {
     text-align: center;
@@ -2235,7 +2261,7 @@ a.product-card {
 
 
 /* ============================================
-   MISC
+   21  MISC — utilitaires isolés
    ============================================ */
 .login-hint {
     margin-top: var(--cg-space-4);
@@ -2254,7 +2280,7 @@ a.product-card {
 
 
 /* ============================================
-   FOOTER
+   22  FOOTER
    ============================================ */
 .site-footer {
     background: var(--cg-text);
@@ -2339,7 +2365,7 @@ a.product-card {
 
 
 /* ============================================
-   ANIMATIONS
+   23  ANIMATIONS — keyframes
    ============================================ */
 @keyframes pageEnter {
     from { opacity: 0; transform: translateY(10px); }
@@ -2363,7 +2389,7 @@ main { animation: pageEnter var(--cg-dur-slide) var(--cg-ease) both; }
 
 
 /* ============================================
-   FLATPICKR THEME OVERRIDES
+   24  FLATPICKR — overrides calendrier
    ============================================ */
 .flatpickr-calendar {
     font-family: var(--cg-font-sans) !important;

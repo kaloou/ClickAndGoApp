@@ -13,6 +13,7 @@
     --cg-mint:            #CBF3F0;
     --cg-mint-50:         #E8F9F7;
     --cg-teal:            #30C4B6;
+    --cg-teal-600:        #0D9488;
     --cg-teal-dark:       #1F8B81;
 
     --cg-cream:           #FFF8EE;
@@ -24,8 +25,10 @@
     --cg-border:          #DDDDDD;
     --cg-border-soft:     #F0F0F0;
     --cg-text:            #1A1A2E;
+    --cg-text-dark:       #111827;
     --cg-text-label:      #444444;
     --cg-text-muted:      #888888;
+    --cg-gray-900:        #111827;
     --cg-shadow-rgb:      0, 0, 0;
 
     /* Status */
@@ -95,6 +98,7 @@
     --cg-radius-m:     8px;
     --cg-radius-l:     10px;
     --cg-radius-xl:    12px;
+    --cg-radius-card:  12px;
     --cg-radius-2xl:   14px;
     --cg-radius-3xl:   16px;
     --cg-radius-pill:  20px;
