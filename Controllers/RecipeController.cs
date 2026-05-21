@@ -73,22 +73,22 @@ public class RecipeController : Controller
 
                 using (Order order = await Order.GetByIdAsync(orderId.Value, orderDal))
                 {
-                    List<RecipeIngredient> ingredients = await recipe.GetIngredientsAsync(recipeIngredientDal);
+                    await recipe.GetIngredientsAsync(recipeIngredientDal); // peuple recipe.Ingredients
+                    await order.GetOrderLinesAsync(orderLineDal);          // peuple order.OrderLines
 
-                    if (ingredients.Count > 0)
+                    if (recipe.Ingredients.Count > 0)
                     {
-                        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
                         int newProducts = 0;
-                        foreach (RecipeIngredient ingredient in ingredients)
+                        foreach (RecipeIngredient ingredient in recipe.Ingredients)
                         {
-                            OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == ingredient.ProductId);
+                            OrderLine existing = order.GetOrderLine(ingredient.ProductId);
                             if (existing == null)
                             {
                                 await order.AddProductAsync(ingredient.ProductId, orderLineDal, ingredient.Quantity);
                                 newProducts++;
                             }
                             else
-                                await existing.SetQuantityAsync(existing.Quantity + ingredient.Quantity, orderLineDal);
+                                await existing.SetQuantityAsync(order.OrderId, existing.Quantity + ingredient.Quantity, orderLineDal);
                         }
                         int count = HttpContext.Session.GetInt32("cartCount") ?? 0;
                         HttpContext.Session.SetInt32("cartCount", count + newProducts);
@@ -132,25 +132,24 @@ public class RecipeController : Controller
                 // 4-5 : GetById(orderId) → order
                 using (Order order = await Order.GetByIdAsync(orderId.Value, orderDal))
                 {
-                    // 6-8 : GetIngredients() → ingredients
-                    List<RecipeIngredient> ingredients = await recipe.GetIngredientsAsync(recipeIngredientDal);
+                    // 6-8 : GetIngredients() → peuple recipe.Ingredients
+                    await recipe.GetIngredientsAsync(recipeIngredientDal);
+                    await order.GetOrderLinesAsync(orderLineDal); // peuple order.OrderLines
 
                     // alt [all ingredients are available]
-                    if (ingredients.Count > 0)
+                    if (recipe.Ingredients.Count > 0)
                     {
-                        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
-
                         int newProducts = 0;
-                        foreach (RecipeIngredient ingredient in ingredients)
+                        foreach (RecipeIngredient ingredient in recipe.Ingredients)
                         {
-                            OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == ingredient.ProductId);
+                            OrderLine existing = order.GetOrderLine(ingredient.ProductId);
                             if (existing == null)
                             {
                                 await order.AddProductAsync(ingredient.ProductId, orderLineDal, ingredient.Quantity);
                                 newProducts++;
                             }
                             else
-                                await existing.SetQuantityAsync(existing.Quantity + ingredient.Quantity, orderLineDal);
+                                await existing.SetQuantityAsync(order.OrderId, existing.Quantity + ingredient.Quantity, orderLineDal);
                         }
 
                         int count = HttpContext.Session.GetInt32("cartCount") ?? 0;

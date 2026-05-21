@@ -139,7 +139,6 @@ public class OrderLineDAL : IOrderLineDAL
         );
 
         return new OrderLine(
-            (int)reader["orderId"],
             (int)reader["quantity"],
             product
         );

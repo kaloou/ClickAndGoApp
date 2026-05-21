@@ -68,35 +68,39 @@ public class RecipeDAL : IRecipeDAL
                         Recipe recipe = null;
                         while (await reader.ReadAsync())
                         {
+                            if (reader["productId"] == DBNull.Value)
+                                continue;
+
+                            var category = new Category(
+                                (int)reader["categoryId"],
+                                (string)reader["categoryName"]
+                            );
+                            var product = new Product(
+                                (int)reader["productId"],
+                                (string)reader["productName"],
+                                (float)(decimal)reader["price"],
+                                category,
+                                reader["productDescription"] == DBNull.Value ? null : (string)reader["productDescription"],
+                                reader["productImagePath"]   == DBNull.Value ? null : (string)reader["productImagePath"]
+                            );
+                            var ingredient = new RecipeIngredient(
+                                product,
+                                (int)reader["quantity"]
+                            );
+
                             if (recipe == null)
                             {
+                                // 1er ingrédient → constructeur composition 1..*
                                 recipe = new Recipe(
                                     (int)reader["recipeId"],
                                     (string)reader["name"],
-                                    (string)reader["description"]
+                                    (string)reader["description"],
+                                    ingredient
                                 ) { ImagePath = reader["recipeImagePath"] == DBNull.Value ? null : (string)reader["recipeImagePath"] };
                             }
-
-                            if (reader["productId"] != DBNull.Value)
+                            else
                             {
-                                var category = new Category(
-                                    (int)reader["categoryId"],
-                                    (string)reader["categoryName"]
-                                );
-                                var product = new Product(
-                                    (int)reader["productId"],
-                                    (string)reader["productName"],
-                                    (float)(decimal)reader["price"],
-                                    category,
-                                    reader["productDescription"] == DBNull.Value ? null : (string)reader["productDescription"],
-                                    reader["productImagePath"] == DBNull.Value ? null : (string)reader["productImagePath"]
-                                );
-                                recipe.Ingredients.AddLast(new RecipeIngredient(
-                                    (int)reader["recipeId"],
-                                    (int)reader["productId"],
-                                    (int)reader["quantity"],
-                                    product
-                                ));
+                                recipe.AddIngredient(ingredient);
                             }
                         }
 

@@ -29,13 +29,13 @@ public class CartController : Controller
         if (order == null) // order id corrompu
             return View(new CartViewModel(null, new()));
 
-        // on récupère sa liste de produits
-        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
+        // on récupère sa liste de produits (peuplée dans order.OrderLines)
+        await order.GetOrderLinesAsync(orderLineDal);
 
         // sync du badge panier
-        HttpContext.Session.SetInt32("cartCount", orderLines.Count);
+        HttpContext.Session.SetInt32("cartCount", order.OrderLines.Count);
 
-        return View(new CartViewModel(order, orderLines));
+        return View(new CartViewModel(order, order.OrderLines));
     }
 
     // ====== Remove Product ======
@@ -50,13 +50,14 @@ public class CartController : Controller
 
         //on l'a récupère + sa liste de produits
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
-        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
+        await order.GetOrderLinesAsync(orderLineDal);
 
         // on check bien si le produit choisi est dans la liste de produits
-        OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
+        OrderLine existing = order.GetOrderLine(productId);
         if (existing != null)
         {
-            await existing.RemoveAsync(orderLineDal);
+            order.RemoveOrderLine(existing);
+            await existing.RemoveAsync(order.OrderId, orderLineDal);
             int count = HttpContext.Session.GetInt32("cartCount") ?? 0;
             HttpContext.Session.SetInt32("cartCount", Math.Max(0, count - 1));
         }
@@ -77,14 +78,14 @@ public class CartController : Controller
 
         //on l'a récupère + sa liste de produits
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
-        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
+        await order.GetOrderLinesAsync(orderLineDal);
 
         if (quantity > 0 && quantity <= 10)
         {
             // on check bien si le produit choisi est dans la liste de produits
-            OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
+            OrderLine existing = order.GetOrderLine(productId);
             if (existing != null)
-                await existing.SetQuantityAsync(quantity, orderLineDal);
+                await existing.SetQuantityAsync(order.OrderId, quantity, orderLineDal);
 
             TempData["Success"] = "Quantité mise à jour";
             return RedirectToAction("Index");
