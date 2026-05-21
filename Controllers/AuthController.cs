@@ -106,6 +106,7 @@ public class AuthController : Controller
         
         Customer newCustomer = await Customer.CreateAccountAsync(firstName, lastName, email, password, phoneNumber, address, customerDal);
         CreateSession(newCustomer);
+        TempData["Success"] = "Account created";
         return Redirect("/");
     }
 
