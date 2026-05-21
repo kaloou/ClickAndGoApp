@@ -54,4 +54,8 @@ public class TimeSlot
             throw new InvalidOperationException("A time slot cannot have more than 10 orders");
         orders.Enqueue(order);
     }
+
+    public bool HasCapacity() => orders.Count < 10;
+
+    public Order? GetNextOrder() => orders.Count > 0 ? orders.Peek() : null;
 }

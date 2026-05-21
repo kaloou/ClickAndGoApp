@@ -117,11 +117,15 @@ public class Order : IDisposable
         Customer      = customer;
         TimeSlot      = timeSlot;
         Store         = store;
+        this.OrderLines = new List<OrderLine>(); // O car OrderCart 
     }
 
     //==============================
-    public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal) 
-        => await dal.GetOrderLinesAsync(orderId);
+    public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal)
+    {
+        orderLines = await dal.GetOrderLinesAsync(orderId);
+        return orderLines;
+    }
     
     public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) 
         => await dal.SetNumberOfBoxesAsync(orderId, numberOfBoxes);
@@ -163,10 +167,24 @@ public class Order : IDisposable
     
     public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1) =>
         await dal.AddProductAsync(orderId, productId, quantity);
-    
+
+    public void AddOrderLine(OrderLine line)
+    {
+        if (orderLines.Any(ol => ol.ProductId == line.ProductId))
+            throw new InvalidOperationException($"Product {line.ProductId} already in order");
+        orderLines.Add(line);
+    }
+
+    public void RemoveOrderLine(OrderLine line)
+    {
+        orderLines.Remove(line);
+    }
+
+    public OrderLine? GetOrderLine(int productId)
+        => orderLines.FirstOrDefault(ol => ol.ProductId == productId);
+
     public static async Task<List<Order>> GetOrdersByCustomerAsync(int customerId, IOrderDAL dal)
         => await dal.GetOrdersByCustomerAsync(customerId);
-    // METHODE REMOVE A IMPLEMENTER
     
     
     //==============================
