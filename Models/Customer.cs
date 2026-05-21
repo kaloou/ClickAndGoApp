@@ -22,8 +22,8 @@ public class Customer : User
         set => address = value;
     }
 
-    public Customer(int userId, string firstName, string lastName, string email, string password,
-                    int loyaltyPoints, int phoneNumber, string? address)
+    public Customer(int userId, string firstName, string lastName, string email, string password
+        , int phoneNumber, string? address)
         : base(userId, firstName, lastName, email, password)
     {
         PhoneNumber   = phoneNumber;
