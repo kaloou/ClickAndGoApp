@@ -10,9 +10,7 @@ public class Product
     private Category category;
     private string imagePath;
     private string description;
-    // HashSet is used because a product can only appear once in a given recipe (no duplicates),
-    // and membership checks (Contains) are O(1).
-    private HashSet<RecipeIngredient> recipeIngredients = new HashSet<RecipeIngredient>();
+    private HashSet<RecipeIngredient> recipeIngredients;
 
     public int ProductId
     {
@@ -69,12 +67,14 @@ public class Product
     public Product(int productId, string name, float price,
         Category category, string description, string imagePath = null)
     {
-        ProductId   = productId;
-        Name        = name;
-        Price       = price;
-        Category    = category;
-        Description = description;
-        ImagePath   = imagePath;
+        ProductId         = productId;
+        Name              = name;
+        Price             = price;
+        Category          = category;
+        Description       = description;
+        ImagePath         = imagePath;
+        // HashSet ensures a product can only appear once per recipe (no duplicates), with O(1) Contains.
+        recipeIngredients = new HashSet<RecipeIngredient>();
     }
 
     public static async Task<List<Product>> GetAllAsync(IProductDAL dal)
@@ -82,15 +82,4 @@ public class Product
 
     public static async Task<Product> GetByIdAsync(int productId, IProductDAL dal)
         => await dal.GetByIdAsync(productId);
-
-    public override string ToString()
-        => $"[Product] Id={ProductId} | {Name} | {Price:0.00}€ | CategoryId={CategoryId}";
-
-    public override bool Equals(object obj)
-    {
-        if (obj is not Product other) return false;
-        return ProductId == other.ProductId;
-    }
-
-    public override int GetHashCode() => ProductId.GetHashCode();
 }

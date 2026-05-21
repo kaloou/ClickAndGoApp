@@ -40,10 +40,7 @@ public class OrderLine
         await dal.SetQuantityAsync(orderId, product.ProductId, quantity);
 
     //==============================
-    public override string ToString()
-        => $"[OrderLine] Product={Product?.Name} | Qty={Quantity}";
-
-    // Equality uses the composite key (orderId + productId) to match the DB constraint.
+    // Equality by ProductId — makes orderLines.Remove(line) find the right entry when updating the cart.
     public override bool Equals(object obj)
     {
         if (obj is not OrderLine other) return false;

@@ -7,11 +7,9 @@ public class Store
     private int storeId;
     private string name;
     private string address;
-    // A List is used for orders since we need index access and the order doesn't matter.
-    private List<Order> orders = new List<Order>();
-    private Dictionary<int, Employee> employees = new Dictionary<int, Employee>();
-    // A SortedList keeps time slots sorted by start time automatically — no manual sort needed.
-    private SortedList<DateTime, TimeSlot> timeSlots = new SortedList<DateTime, TimeSlot>();
+    private List<Order> orders;
+    private Dictionary<int, Employee> employees;
+    private SortedList<DateTime, TimeSlot> timeSlots;
 
     public int StoreId
     {
@@ -57,20 +55,30 @@ public class Store
 
     public Store(int storeId, string name, string address)
     {
-        StoreId = storeId;
-        Name    = name;
-        Address = address;
+        StoreId   = storeId;
+        Name      = name;
+        Address   = address;
+        // A List is used for orders since we need index access and the order doesn't matter.
+        orders    = new List<Order>();
+        // Dictionary lookup by employee ID.
+        employees = new Dictionary<int, Employee>();
+        // SortedList keeps time slots sorted by start time automatically — no manual sort needed.
+        timeSlots = new SortedList<DateTime, TimeSlot>();
     }
 
     public async Task<List<Order>> GetOrdersByStoreAsync(IOrderDAL dal)
     {
-        orders = await dal.GetOrdersByStoreAsync(storeId);
+        orders.Clear();
+        foreach (var order in await dal.GetOrdersByStoreAsync(storeId))
+            AddOrder(order);
         return orders;
     }
 
     public async Task<List<Order>> GetTodaysOrdersAsync(IOrderDAL dal)
     {
-        orders = await dal.GetTodaysOrdersAsync(storeId);
+        orders.Clear();
+        foreach (var order in await dal.GetTodaysOrdersAsync(storeId))
+            AddOrder(order);
         return orders;
     }
 
@@ -79,7 +87,7 @@ public class Store
         var list = await dal.GetAvailableTimeSlotsAsync(storeId);
         timeSlots.Clear();
         foreach (var ts in list)
-            timeSlots[ts.StartTime] = ts;
+            AddTimeSlot(ts);
         return list;
     }
 
@@ -94,16 +102,6 @@ public class Store
         orders.Remove(order);
     }
 
-    public void AddEmployee(Employee employee)
-    {
-        employees[employee.UserId] = employee;
-    }
-
-    public void RemoveEmployee(int userId)
-    {
-        employees.Remove(userId);
-    }
-
     public void AddTimeSlot(TimeSlot timeSlot)
     {
         timeSlots[timeSlot.StartTime] = timeSlot;
@@ -116,15 +114,4 @@ public class Store
 
     public static async Task<Store> GetStoreAsync(int storeId, IStoreDAL dal)
         => await dal.GetStoreAsync(storeId);
-
-    public override string ToString()
-        => $"[Store] Id={StoreId} | {Name} | {Address}";
-
-    public override bool Equals(object obj)
-    {
-        if (obj is not Store other) return false;
-        return StoreId == other.StoreId;
-    }
-
-    public override int GetHashCode() => StoreId.GetHashCode();
 }

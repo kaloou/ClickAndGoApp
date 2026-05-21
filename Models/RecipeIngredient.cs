@@ -35,15 +35,4 @@ public class RecipeIngredient
         Quantity = quantity;
     }
 
-    public override string ToString()
-        => $"[RecipeIngredient] Product={Product?.Name} | Qty={Quantity}";
-
-    // Composite key equality — a recipe ingredient is uniquely identified by its recipe + product combination.
-    public override bool Equals(object obj)
-    {
-        if (obj is not RecipeIngredient other) return false;
-        return ProductId == other.ProductId;
-    }
-
-    public override int GetHashCode() => ProductId.GetHashCode();
 }

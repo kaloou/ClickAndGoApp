@@ -29,13 +29,18 @@ public class ProductController : Controller
         List<Category> categories = new();
         try
         {
-            // On récupère les produits de base OU les produits filtrés par la catégorie choisie
+            categories = await Category.GetAllAsync(categoryDal);
+
             if (categoryId.HasValue)
-                products = await Category.GetByCategoryAsync(categoryId.Value, productDal);
+            {
+                // GetProductsAsync populates the category's internal SortedDictionary via AddProduct.
+                Category selected = categories.FirstOrDefault(c => c.CategoryId == categoryId.Value);
+                products = selected != null
+                    ? await selected.GetProductsAsync(productDal)
+                    : await Product.GetAllAsync(productDal);
+            }
             else
                 products = await Product.GetAllAsync(productDal);
-
-            categories = await Category.GetAllAsync(categoryDal);
         }
         catch (Exception)
         {

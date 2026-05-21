@@ -97,15 +97,4 @@ public class User
     // Delegates credential lookup to the DAL to keep DB logic out of the model.
     public static async Task<User> GetByCredentialsAsync(string email, string password, IUserDAL dal)
         => await dal.GetByCredentialsAsync(email, password);
-
-    public override string ToString()
-        => $"[User] Id={UserId} | {FirstName} {LastName} | {Email} | Role={Role}";
-
-    public override bool Equals(object obj)
-    {
-        if (obj is not User other) return false;
-        return UserId == other.UserId;
-    }
-
-    public override int GetHashCode() => UserId.GetHashCode();
 }

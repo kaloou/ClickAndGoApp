@@ -131,7 +131,9 @@ public class Order : IDisposable
     // fetching data we don't always need (e.g. when just listing orders).
     public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal)
     {
-        orderLines = await dal.GetOrderLinesAsync(orderId);
+        orderLines.Clear();
+        foreach (var line in await dal.GetOrderLinesAsync(orderId))
+            AddOrderLine(line);
         return orderLines;
     }
     
@@ -185,9 +187,12 @@ public class Order : IDisposable
     public void AddOrderLine(OrderLine line)
     {
         if (orderLines.Any(ol => ol.ProductId == line.ProductId))
-            throw new InvalidOperationException($"Product {line.ProductId} already in order");
+            throw new InvalidOperationException($"Product {line.ProductId} already in {this}");
         orderLines.Add(line);
     }
+
+    public override string ToString()
+        => $"Order #{OrderId} (Status={Status}, CustomerId={CustomerId})";
 
     public void RemoveOrderLine(OrderLine line)
     {
@@ -221,9 +226,6 @@ public class Order : IDisposable
     }
 
     ~Order() => Dispose(false);
-
-    public override string ToString()
-        => $"[Order] Id={OrderId} | Status={Status} | PickupDate={PickupDate:dd/MM/yyyy HH:mm} | CustomerId={CustomerId}";
 
     // Equality is based on the primary key — two Order objects with the same ID represent the same order.
     // This is what makes orders.Remove(order) work correctly in MarkAsCollected.

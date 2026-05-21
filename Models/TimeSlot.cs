@@ -6,9 +6,7 @@ public class TimeSlot
     private int timeSlotId;
     private DateTime startTime;
     private DateTime endTime;
-    // Queue is used because orders are processed in FIFO order within a slot.
-    // It also naturally reflects the domain: customers "queue up" for a time slot.
-    private Queue<Order> orders = new Queue<Order>();
+    private Queue<Order> orders;
 
     public int TimeSlotId
     {
@@ -50,16 +48,7 @@ public class TimeSlot
         TimeSlotId = timeSlotId;
         StartTime  = startTime;
         EndTime    = endTime;
+        orders     = new Queue<Order>();
     }
 
-    public void AddOrder(Order order)
-    {
-        if (orders.Count >= 10)
-            throw new InvalidOperationException("A time slot cannot have more than 10 orders");
-        orders.Enqueue(order);
-    }
-
-    public bool HasCapacity() => orders.Count < 10;
-
-    public Order? GetNextOrder() => orders.Count > 0 ? orders.Peek() : null;
 }
