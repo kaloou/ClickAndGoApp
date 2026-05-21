@@ -8,6 +8,7 @@ public class Cashier : Employee
         string email, string password, Store store)
         : base(userId, firstName, lastName, email, password, store)
     {
+        Role = "Cashier";
     }
 
     //==============================
