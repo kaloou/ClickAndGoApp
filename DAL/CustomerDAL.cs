@@ -67,7 +67,9 @@ public class CustomerDAL : ICustomerDAL
                 await tx.CommitAsync();
 
                 int phone = int.TryParse(phoneNumber, out int p) ? p : 0;
-                return new Customer(userId, firstName, lastName, email, password, 0, phone, address);
+                var customer = new Customer(userId, firstName, lastName, email, password, 0, phone, address);
+                customer.Role = "Customer";
+                return customer;
             }
         }
     }
@@ -94,7 +96,8 @@ public class CustomerDAL : ICustomerDAL
                     using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                     {
                         if (await reader.ReadAsync())
-                            return new Customer(
+                        {
+                            var c = new Customer(
                                 (int)reader["userId"],
                                 (string)reader["firstName"],
                                 (string)reader["lastName"],
@@ -104,6 +107,9 @@ public class CustomerDAL : ICustomerDAL
                                 Convert.ToInt32(reader["phoneNumber"]),
                                 reader["address"] == DBNull.Value ? null : (string)reader["address"]
                             );
+                            c.Role = "Customer";
+                            return c;
+                        }
                         throw new EntityNotFoundException("Customer", userId);
                     }
                 }
