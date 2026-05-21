@@ -6,7 +6,6 @@ public class OrderLine
 {
     private int quantity;
     private int orderId;
-    private int productId;
     private Product product;
 
     public int OrderId
@@ -17,13 +16,7 @@ public class OrderLine
             : throw new ArgumentException("OrderId must be positive");
     }
 
-    public int ProductId
-    {
-        get => productId;
-        set => productId = value > 0
-            ? value
-            : throw new ArgumentException("ProductId must be positive");
-    }
+    public int ProductId => product.ProductId;
 
     public int Quantity
     {
@@ -39,22 +32,11 @@ public class OrderLine
         set => product = value ?? throw new ArgumentNullException("Product cannot be null");
     }
 
-    // productId déduit du product
     public OrderLine(int orderId, int quantity, Product product)
     {
-        OrderId   = orderId;
-        ProductId = product.ProductId;
-        Quantity  = quantity;
-        Product   = product;
-    }
-
-    // productId explicite
-    public OrderLine(int orderId, int productId, int quantity, Product product)
-    {
-        OrderId   = orderId;
-        ProductId = productId;
-        Quantity  = quantity;
-        Product   = product;
+        OrderId  = orderId;
+        Quantity = quantity;
+        Product  = product;
     }
 
     //==============================

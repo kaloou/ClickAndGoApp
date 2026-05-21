@@ -35,6 +35,7 @@ public class Customer : User
         LoyaltyPoints = loyaltyPoints;
         PhoneNumber   = phoneNumber;
         Address       = address;
+        Role          = "Customer";
     }
 
     //==============================
