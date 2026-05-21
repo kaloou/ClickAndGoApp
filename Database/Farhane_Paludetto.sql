@@ -480,7 +480,7 @@ UPDATE Product SET imagePath = '/images/products/bun.jpg'                 WHERE 
 UPDATE Product SET imagePath = '/images/products/chocolate_muffin.jpg'    WHERE productId = 32;
 
 -- Boissons (33-39)
-UPDATE Product SET imagePath = '/images/products/mineral_water.webp'      WHERE productId = 33;
+UPDATE Product SET imagePath = '/images/products/mineral_water.jpeg'      WHERE productId = 33;
 UPDATE Product SET imagePath = '/images/products/orange_juice.jpg'        WHERE productId = 34;
 UPDATE Product SET imagePath = '/images/products/lemonade.jpg'            WHERE productId = 35;
 UPDATE Product SET imagePath = '/images/products/ground_coffee.jpg'       WHERE productId = 36;
