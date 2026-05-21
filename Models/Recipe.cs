@@ -65,16 +65,7 @@ public class Recipe : IDisposable
         ingredients.AddLast(firstIngredient);
     }
 
-    // constructeur complet (composition 1..* — au moins 1 ingrédient obligatoire)
-    public Recipe(int recipeId, string name, string description, RecipeIngredient firstIngredient)
-        : this(recipeId, name, description)
-    {
-        if (firstIngredient == null)
-            throw new ArgumentNullException(nameof(firstIngredient));
-        firstIngredient.Recipe = this;
-        ingredients.AddLast(firstIngredient);
-    }
-
+    //==============================
     public static async Task<List<Recipe>> GetAllAsync(IRecipeDAL dal)
         => await dal.GetAllAsync();
 

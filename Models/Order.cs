@@ -127,7 +127,7 @@ public class Order : IDisposable
     }
 
     //==============================
-     // OrderLines are loaded on demand rather than in the constructor to avoid
+    // OrderLines are loaded on demand rather than in the constructor to avoid
     // fetching data we don't always need (e.g. when just listing orders).
     public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal)
     {
@@ -178,7 +178,7 @@ public class Order : IDisposable
     
     public async Task SetTimeSlotAsync(int timeSlotId, IOrderDAL dal)
         => await dal.SetTimeSlotAsync(orderId, timeSlotId);
-    
+
     public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1)
         => await dal.AddProductAsync(orderId, productId, quantity);
 
