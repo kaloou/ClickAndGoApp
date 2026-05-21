@@ -73,8 +73,8 @@ public class RecipeController : Controller
 
                 using (Order order = await Order.GetByIdAsync(orderId.Value, orderDal))
                 {
-                    await recipe.GetIngredientsAsync(recipeIngredientDal); // peuple recipe.Ingredients
-                    await order.GetOrderLinesAsync(orderLineDal);          // peuple order.OrderLines
+                    await recipe.GetIngredientsAsync(recipeIngredientDal); 
+                    await order.GetOrderLinesAsync(orderLineDal);          
 
                     if (recipe.Ingredients.Count > 0)
                     {
@@ -117,7 +117,6 @@ public class RecipeController : Controller
 
         try
         {
-            // 2-3 : GetById(recipeId) → recipe
             using (Recipe recipe = await Recipe.GetByIdAsync(recipeId, recipeDal))
             {
                 int? orderId = HttpContext.Session.GetInt32("orderId");
@@ -129,10 +128,8 @@ public class RecipeController : Controller
                     orderId = newOrderId;
                 }
 
-                // 4-5 : GetById(orderId) → order
                 using (Order order = await Order.GetByIdAsync(orderId.Value, orderDal))
                 {
-                    // 6-8 : GetIngredients() → peuple recipe.Ingredients
                     await recipe.GetIngredientsAsync(recipeIngredientDal);
                     await order.GetOrderLinesAsync(orderLineDal); // peuple order.OrderLines
 
@@ -161,7 +158,6 @@ public class RecipeController : Controller
                     }
                     else
                     {
-                        // 12 : no ingredients added to cart
                         TempData["Error"] = "Aucun ingrédient disponible pour cette recette";
                         return RedirectToAction("SelectRecipe", new { recipeId });
                     }

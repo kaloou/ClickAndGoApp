@@ -71,7 +71,7 @@ public class CustomerDAL : ICustomerDAL
                 await tx.CommitAsync();
 
                 int phone = int.TryParse(phoneNumber, out int p) ? p : 0;
-                var customer = new Customer(userId, firstName, lastName, email, password, 0, phone, address);
+                var customer = new Customer(userId, firstName, lastName, email, password, phone, address);
                 customer.Role = "Customer";
                 return customer;
             }
@@ -108,7 +108,6 @@ public class CustomerDAL : ICustomerDAL
                                 (string)reader["lastName"],
                                 (string)reader["email"],
                                 (string)reader["password"],
-                                (int)reader["loyaltyPoints"],
                                 Convert.ToInt32(reader["phoneNumber"]),
                                 reader["address"] == DBNull.Value ? null : (string)reader["address"]
                             );

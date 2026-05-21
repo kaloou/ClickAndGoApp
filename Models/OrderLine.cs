@@ -39,13 +39,4 @@ public class OrderLine
     public async Task SetQuantityAsync(int orderId, int quantity, IOrderLineDAL dal) =>
         await dal.SetQuantityAsync(orderId, product.ProductId, quantity);
 
-    //==============================
-    // Equality by ProductId — makes orderLines.Remove(line) find the right entry when updating the cart.
-    public override bool Equals(object obj)
-    {
-        if (obj is not OrderLine other) return false;
-        return ProductId == other.ProductId;
-    }
-
-    public override int GetHashCode() => ProductId.GetHashCode();
 }
