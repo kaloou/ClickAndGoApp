@@ -238,8 +238,7 @@ public class OrderDAL : IOrderDAL
                 JOIN Customer c  ON u.userId       = c.userId
                 LEFT JOIN TimeSlot ts ON o.timeSlotId = ts.timeSlotId
                 WHERE o.customerId = @customerId
-                  AND o.status != 'InTheCart'
-                ORDER BY o.orderDate DESC, o.orderId ASC";
+                  AND o.status != 'InTheCart'";
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
@@ -252,7 +251,7 @@ public class OrderDAL : IOrderDAL
                         var orders = new List<Order>();
                         while (await reader.ReadAsync())
                             orders.Add(ReadOrder(reader));
-                        return orders;
+                        return orders.OrderByDescending(o => o.OrderDate).ThenBy(o => o.OrderId).ToList();
                     }
                 }
                 catch (SqlException ex)
