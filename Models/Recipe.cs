@@ -10,7 +10,6 @@ public class Recipe : IDisposable
     private string name;
     private string description;
     // LinkedList is used because ingredients are iterated sequentially and never accessed by index.
-    // It also makes AddLast() O(1), which is used when building the list in the DAL.
     private LinkedList<RecipeIngredient> ingredients = new LinkedList<RecipeIngredient>();
     private bool disposed = false;
 
