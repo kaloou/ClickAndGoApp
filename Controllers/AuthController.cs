@@ -62,6 +62,12 @@ public class AuthController : Controller
                         HttpContext.Session.SetInt32("selectedStoreId", storeId.Value);
                 }
             }
+            if (HttpContext.Session.GetInt32("pendingProductId").HasValue)
+                return RedirectToAction("HandlePendingProduct", "Product");
+
+            if (HttpContext.Session.GetInt32("pendingRecipeId").HasValue)
+                return RedirectToAction("HandlePendingIngredients", "Recipe");
+
             return Redirect("/");
         }
 
@@ -104,9 +110,10 @@ public class AuthController : Controller
             return View();
         }
         
-        await Customer.CreateAccountAsync(firstName, lastName, email, password, phoneNumber, address, customerDal);
+        Customer newCustomer = await Customer.CreateAccountAsync(firstName, lastName, email, password, phoneNumber, address, customerDal);
+        CreateSession(newCustomer);
         TempData["Success"] = "Account created";
-        return RedirectToAction("Login");
+        return Redirect("/");
     }
 
     // Log out

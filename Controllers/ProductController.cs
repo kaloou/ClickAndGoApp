@@ -55,8 +55,12 @@ public class ProductController : Controller
     {
         // On vérifie si l'utilisateur est bien connecté
         int? userId = HttpContext.Session.GetInt32("userId");
-        if (userId is null) 
+        if (userId is null)
+        {
+            HttpContext.Session.SetInt32("pendingProductId", productId);
+            HttpContext.Session.SetInt32("pendingQuantity", quantity);
             return RedirectToAction("Login", "Auth");
+        }
 
         // On récupère l'id de l'Order(Cart), si pas présent, on cherche en DB avant de créer
         int? orderId = HttpContext.Session.GetInt32("orderId");
@@ -97,8 +101,47 @@ public class ProductController : Controller
     public async Task<IActionResult> SelectProduct(int productId)
     {
         Product product = await Product.GetByIdAsync(productId, productDal);
-        if (product == null) 
+        if (product == null)
             return RedirectToAction("BrowseProducts");
         return View(product);
+    }
+
+    // ====== Handle Pending Product (after login) ======
+    public async Task<IActionResult> HandlePendingProduct()
+    {
+        int? userId    = HttpContext.Session.GetInt32("userId");
+        int? productId = HttpContext.Session.GetInt32("pendingProductId");
+        int  quantity  = HttpContext.Session.GetInt32("pendingQuantity") ?? 1;
+
+        if (userId == null || !productId.HasValue)
+            return RedirectToAction("BrowseProductsAsync");
+
+        int? orderId = HttpContext.Session.GetInt32("orderId");
+        if (orderId == null)
+        {
+            int? existingId = await orderDal.GetActiveCartAsync(userId.Value);
+            int newOrderId  = existingId ?? await orderDal.CreateOrderAsync(userId.Value);
+            HttpContext.Session.SetInt32("orderId", newOrderId);
+            orderId = newOrderId;
+        }
+
+        Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
+        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
+
+        OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId.Value);
+        if (existing == null)
+        {
+            await order.AddProductAsync(productId.Value, orderLineDal, quantity);
+            int count = HttpContext.Session.GetInt32("cartCount") ?? 0;
+            HttpContext.Session.SetInt32("cartCount", count + 1);
+        }
+        else
+            await existing.SetQuantityAsync(existing.Quantity + quantity, orderLineDal);
+
+        HttpContext.Session.Remove("pendingProductId");
+        HttpContext.Session.Remove("pendingQuantity");
+
+        TempData["Success"] = "Produit ajouté au panier";
+        return RedirectToAction("BrowseProductsAsync");
     }
 }

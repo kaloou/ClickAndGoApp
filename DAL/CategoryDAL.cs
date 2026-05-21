@@ -23,7 +23,7 @@ public class CategoryDAL : ICategoryDAL
             {
                 await conn.OpenAsync();
 
-                string query = "SELECT categoryId, name FROM Category ORDER BY name";
+                string query = "SELECT categoryId, name FROM Category";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -40,6 +40,6 @@ public class CategoryDAL : ICategoryDAL
             throw new DatabaseException("Failed to retrieve categories.", e);
         }
 
-        return categories;
+        return categories.OrderBy(c => c.Name).ToList();
     }
 }

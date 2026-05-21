@@ -12,6 +12,7 @@ builder.Services.AddSession(options => //Activate the session
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true; //Session cookie isn't accessible from js
     options.Cookie.IsEssential = true; //Cookie works even if user refuses them
+    options.Cookie.MaxAge = TimeSpan.FromMinutes(30); //Persists the cookie across browser restarts
 });
 
 //Infrastructure
