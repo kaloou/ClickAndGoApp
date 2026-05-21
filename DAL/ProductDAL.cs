@@ -1,6 +1,5 @@
 using Microsoft.Data.SqlClient;
 using ClickAndGoApp.Models;
-// namespace via ClickAndGoApp.DAL
 
 namespace ClickAndGoApp.DAL;
 
@@ -25,18 +24,19 @@ public class ProductDAL : IProductDAL
                 SELECT p.productId, p.name, p.price, p.description, p.imagePath,
                        c.categoryId, c.name AS categoryName
                 FROM Product p
-                JOIN Category c ON p.categoryId = c.categoryId
-                ORDER BY p.name";
+                JOIN Category c ON p.categoryId = c.categoryId";
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
-            using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
             {
-                while (await reader.ReadAsync())
-                    products.Add(ReadProduct(reader));
+                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                        products.Add(ReadProduct(reader));
+                }
             }
         }
 
-        return products;
+        return products.OrderBy(p => p.Name).ToList();
     }
 
     public async Task<List<Product>> GetByCategoryAsync(int categoryId)
@@ -52,19 +52,21 @@ public class ProductDAL : IProductDAL
                        c.categoryId, c.name AS categoryName
                 FROM Product p
                 JOIN Category c ON p.categoryId = c.categoryId
-                WHERE p.categoryId = @categoryId
-                ORDER BY p.name";
+                WHERE p.categoryId = @categoryId";
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@categoryId", categoryId);
+
                 using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                {
                     while (await reader.ReadAsync())
                         products.Add(ReadProduct(reader));
+                }
             }
         }
 
-        return products;
+        return products.OrderBy(p => p.Name).ToList();
     }
 
     public async Task<Product> GetByIdAsync(int productId)
@@ -83,6 +85,7 @@ public class ProductDAL : IProductDAL
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@productId", productId);
+
                 using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                 {
                     if (!await reader.ReadAsync()) return null;
