@@ -1,3 +1,11 @@
+USE [master]
+GO
+
+CREATE DATABASE [Farhane_Paludetto]
+GO
+
+USE [Farhane_Paludetto]
+GO
 -- =============================================
 -- TABLE USER
 -- =============================================
