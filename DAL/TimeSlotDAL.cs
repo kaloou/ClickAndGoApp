@@ -27,8 +27,7 @@ public class TimeSlotDAL : ITimeSlotDAL
                       SELECT COUNT(*) FROM [Order] o
                       WHERE o.timeSlotId = ts.timeSlotId
                         AND o.status != 'InTheCart'
-                  ) < 10
-                ORDER BY ts.startTime";
+                  ) < 10";
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
@@ -39,7 +38,7 @@ public class TimeSlotDAL : ITimeSlotDAL
                     var slots = new List<TimeSlot>();
                     while (await reader.ReadAsync())
                         slots.Add(new TimeSlot((int)reader["timeSlotId"], (DateTime)reader["startTime"], (DateTime)reader["endTime"]));
-                    return slots;
+                    return slots.OrderBy(ts => ts.StartTime).ToList();
                 }
             }
         }
