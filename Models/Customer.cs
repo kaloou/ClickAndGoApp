@@ -2,19 +2,12 @@ using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.Models;
 
+// Customer extends User with customer-specific data: phone and address.
+// Role is hardcoded to "Customer" in the constructor so it can never be set to something else accidentally.
 public class Customer : User
 {
-    private int loyaltyPoints;
     private int phoneNumber;
     private string? address;
-
-    public int LoyaltyPoints
-    {
-        get => loyaltyPoints;
-        set => loyaltyPoints = value >= 0
-            ? value
-            : throw new ArgumentException("LoyaltyPoints cannot be negative");
-    }
 
     public int PhoneNumber
     {
@@ -22,6 +15,7 @@ public class Customer : User
         set => phoneNumber = value;
     }
 
+    // Address is optional — a customer may not have one registered yet.
     public string? Address
     {
         get => address;
@@ -32,16 +26,17 @@ public class Customer : User
                     int loyaltyPoints, int phoneNumber, string? address)
         : base(userId, firstName, lastName, email, password)
     {
-        LoyaltyPoints = loyaltyPoints;
         PhoneNumber   = phoneNumber;
         Address       = address;
+        // Force the role here so a Customer object can never have a different role.
         Role          = "Customer";
     }
 
-    //==============================
+    // Account creation is a two-step DB operation (insert User then insert Customer).
     public static async Task<Customer> CreateAccountAsync(string firstName, string lastName, string email, string password, string? phoneNumber, string? address, ICustomerDAL dal)
         => await dal.CreateAccountAsync(firstName, lastName, email, password, phoneNumber, address);
 
+    // Returns true if an account already exists with this email
     public static async Task<bool> GetByEmailAsync(string email, ICustomerDAL dal)
         => await dal.GetByEmailAsync(email);
 
@@ -50,7 +45,4 @@ public class Customer : User
 
     public async Task UpdateAsync(string firstName, string lastName, int phoneNumber, string? address, string password, ICustomerDAL dal)
         => await dal.UpdateAsync(UserId, firstName, lastName, phoneNumber, address, password);
-
-    //==============================
-    
 }

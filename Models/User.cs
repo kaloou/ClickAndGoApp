@@ -11,6 +11,8 @@ public class User
     private string password;
     private string role;
 
+    // Validation is enforced directly in the setter so the object can never be in an invalid state,
+    // regardless of where it gets constructed (DAL, controller, test...).
     public int UserId
     {
         get => userId;
@@ -42,6 +44,7 @@ public class User
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Email cannot be empty");
+            // Basic format check — a proper email must contain an '@'.
             if (!value.Contains("@"))
                 throw new ArgumentException("Email is not valid");
             email = value;
@@ -61,6 +64,8 @@ public class User
         }
     }
 
+    // Only the three roles defined in our domain are accepted.
+    // Any other value indicates a bug in the calling code or a corrupt DB record.
     public string Role
     {
         get => role;
@@ -72,7 +77,7 @@ public class User
             role = value;
         }
     }
-
+    
     public User(int userId, string firstName, string lastName, string email, string password)
     {
         UserId    = userId;
@@ -82,19 +87,18 @@ public class User
         Password  = password;
     }
 
+    // Constructor with role — used when loading a generic User from the DB (e.g. login query).
     public User(int userId, string firstName, string lastName, string email, string password, string role)
         : this(userId, firstName, lastName, email, password)
     {
         Role = role;
     }
 
-    //==============================
-    public static async Task<User> GetByCredentialsAsync(string email, string password, IUserDAL dal) 
+    // Delegates credential lookup to the DAL to keep DB logic out of the model.
+    public static async Task<User> GetByCredentialsAsync(string email, string password, IUserDAL dal)
         => await dal.GetByCredentialsAsync(email, password);
-    
-    //==============================
 
-    public override string ToString() 
+    public override string ToString()
         => $"[User] Id={UserId} | {FirstName} {LastName} | {Email} | Role={Role}";
 
     public override bool Equals(object obj)

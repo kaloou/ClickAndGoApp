@@ -20,6 +20,7 @@ public class OrderDAL : IOrderDAL
         {
             await conn.OpenAsync();
 
+            // LEFT JOIN on TimeSlot because an order in the cart has no time slot yet.
             string query = @"
                 SELECT o.orderId, o.orderDate, o.status, o.numberOfBoxes,
                        o.returnedBoxes, o.pickupDate, o.paymentStatus,
@@ -53,6 +54,8 @@ public class OrderDAL : IOrderDAL
         }
     }
 
+    // Returns tomorrow's orders for the order picker — filtered by date and excluding
+    // carts (InTheCart) and already-processed orders (Honored).
     public async Task<List<Order>> GetOrdersByStoreAsync(int storeId)
     {
         using (SqlConnection conn = _db.GetConnexion())
@@ -92,6 +95,7 @@ public class OrderDAL : IOrderDAL
         }
     }
 
+    // Returns today's orders for the cashier — all statuses except Honored (already collected).
     public async Task<List<Order>> GetTodaysOrdersAsync(int storeId)
     {
         using (SqlConnection conn = _db.GetConnexion())
@@ -176,6 +180,7 @@ public class OrderDAL : IOrderDAL
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@orderId", orderId);
+                // Enum is stored as a string in the DB — ToString() converts e.g. OrderStatus.Ready → "Ready".
                 cmd.Parameters.AddWithValue("@status",  status.ToString());
                 await cmd.ExecuteNonQueryAsync();
             }
@@ -188,6 +193,7 @@ public class OrderDAL : IOrderDAL
         {
             await conn.OpenAsync();
 
+            // OUTPUT INSERTED returns the generated orderId without a second SELECT call.
             const string query = @"
                 INSERT INTO [Order] (customerId, status)
                 OUTPUT INSERTED.orderId
@@ -201,6 +207,9 @@ public class OrderDAL : IOrderDAL
         }
     }
 
+    // Checks whether the customer already has an active cart so we don't create duplicate carts.
+    // TOP 1 + ORDER BY DESC picks the most recent one in case of data inconsistency.
+    // The ORDER BY must stay in SQL — it limits the result set before it's returned.
     public async Task<int?> GetActiveCartAsync(int customerId)
     {
         using (SqlConnection conn = _db.GetConnexion())
@@ -221,6 +230,7 @@ public class OrderDAL : IOrderDAL
         }
     }
 
+    // Returns the customer's order history — excludes carts (InTheCart) which are not confirmed orders.
     public async Task<List<Order>> GetOrdersByCustomerAsync(int customerId)
     {
         using (SqlConnection conn = _db.GetConnexion())
@@ -251,6 +261,7 @@ public class OrderDAL : IOrderDAL
                         var orders = new List<Order>();
                         while (await reader.ReadAsync())
                             orders.Add(ReadOrder(reader));
+                        // Sort by date descending so the most recent order appears first.
                         return orders.OrderByDescending(o => o.OrderDate).ThenBy(o => o.OrderId).ToList();
                     }
                 }
@@ -262,6 +273,8 @@ public class OrderDAL : IOrderDAL
         }
     }
 
+    // Sets the time slot and derives the pickup date from it in a single UPDATE,
+    // avoiding a separate SELECT to fetch the slot's startTime.
     public async Task SetTimeSlotAsync(int orderId, int timeSlotId)
     {
         using (SqlConnection conn = _db.GetConnexion())
@@ -283,8 +296,10 @@ public class OrderDAL : IOrderDAL
         }
     }
 
+    // Shared mapping method used by all query methods to avoid duplicating the reader logic.
     private static Order ReadOrder(SqlDataReader reader)
     {
+        // pickupDate can be NULL for orders still in the cart (no slot chosen yet).
         DateTime pickupDate = reader["pickupDate"] == DBNull.Value
             ? DateTime.MinValue
             : (DateTime)reader["pickupDate"];
@@ -300,6 +315,7 @@ public class OrderDAL : IOrderDAL
             reader["address"] == DBNull.Value ? null : (string)reader["address"]
         );
 
+        // tsId is NULL when no time slot has been assigned (LEFT JOIN returns NULL).
         TimeSlot? timeSlot = null;
         if (reader["tsId"] != DBNull.Value)
         {
@@ -320,7 +336,7 @@ public class OrderDAL : IOrderDAL
             Enum.Parse<PaymentStatus>((string)reader["paymentStatus"]),
             customer,
             timeSlot,
-            null
+            null // store is not stored in the Order table — set separately via SetStore() when needed
         );
     }
 }

@@ -12,6 +12,9 @@ public class TimeSlotDAL : ITimeSlotDAL
         this.db = db;
     }
 
+    // Returns only time slots that are still in the future AND have fewer than 10 confirmed orders.
+    // The capacity check is done with a correlated subquery rather than a JOIN + GROUP BY
+    // to keep the query readable and avoid inflating the result set before filtering.
     public async Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(int storeId)
     {
         using (SqlConnection conn = db.GetConnexion())
@@ -26,7 +29,7 @@ public class TimeSlotDAL : ITimeSlotDAL
                   AND (
                       SELECT COUNT(*) FROM [Order] o
                       WHERE o.timeSlotId = ts.timeSlotId
-                        AND o.status != 'InTheCart'
+                        AND o.status != 'InTheCart'  -- only count confirmed orders, not abandoned carts
                   ) < 10";
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -38,12 +41,14 @@ public class TimeSlotDAL : ITimeSlotDAL
                     var slots = new List<TimeSlot>();
                     while (await reader.ReadAsync())
                         slots.Add(new TimeSlot((int)reader["timeSlotId"], (DateTime)reader["startTime"], (DateTime)reader["endTime"]));
+                    // Sort in C# rather than SQL to keep ordering logic consistent with other DALs.
                     return slots.OrderBy(ts => ts.StartTime).ToList();
                 }
             }
         }
     }
 
+    // Used after login to restore the selected store ID from an existing cart's time slot.
     public async Task<int?> GetStoreIdAsync(int timeSlotId)
     {
         using (SqlConnection conn = db.GetConnexion())

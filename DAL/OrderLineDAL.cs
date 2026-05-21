@@ -12,6 +12,8 @@ public class OrderLineDAL : IOrderLineDAL
         _db = db;
     }
 
+    // ISNULL(..., 0) handles empty carts — SUM over no rows returns NULL, not 0.
+    // The result is cast from decimal to float to match the model's Price type.
     public async Task<float> GetProductsTotalAsync(int orderId)
     {
         using (SqlConnection conn = _db.GetConnexion())
@@ -33,6 +35,7 @@ public class OrderLineDAL : IOrderLineDAL
         }
     }
 
+    // Fetches all order lines with their full product and category info in one query.
     public async Task<List<OrderLine>> GetOrderLinesAsync(int orderId)
     {
         using (SqlConnection conn = _db.GetConnexion())
@@ -89,6 +92,7 @@ public class OrderLineDAL : IOrderLineDAL
         {
             await conn.OpenAsync();
 
+            // The WHERE clause uses both columns of the composite primary key.
             const string query = @"
                 DELETE FROM OrderLine
                 WHERE orderId = @orderId AND productId = @productId";
@@ -122,6 +126,7 @@ public class OrderLineDAL : IOrderLineDAL
         }
     }
 
+    // Extracted into a private helper to avoid duplicating the mapping logic.
     private static OrderLine ReadOrderLine(SqlDataReader reader)
     {
         var category = new Category(
@@ -132,7 +137,7 @@ public class OrderLineDAL : IOrderLineDAL
         var product = new Product(
             (int)reader["productId"],
             (string)reader["name"],
-            (float)(decimal)reader["price"],
+            (float)(decimal)reader["price"], // SQL decimal → C# float
             category,
             reader["description"] == DBNull.Value ? null : (string)reader["description"],
             reader["imagePath"]   == DBNull.Value ? null : (string)reader["imagePath"]

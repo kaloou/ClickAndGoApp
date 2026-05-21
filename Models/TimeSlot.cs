@@ -1,10 +1,13 @@
 namespace ClickAndGoApp.Models;
 
+// Represents a pickup window at a store (e.g. 10:00–10:30).
 public class TimeSlot
 {
     private int timeSlotId;
     private DateTime startTime;
     private DateTime endTime;
+    // Queue is used because orders are processed in FIFO order within a slot.
+    // It also naturally reflects the domain: customers "queue up" for a time slot.
     private Queue<Order> orders = new Queue<Order>();
 
     public int TimeSlotId
@@ -23,6 +26,7 @@ public class TimeSlot
             : throw new ArgumentException("StartTime is not valid");
     }
 
+    // EndTime must be strictly after StartTime — a zero-length or backwards slot is invalid.
     public DateTime EndTime
     {
         get => endTime;

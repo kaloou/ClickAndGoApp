@@ -10,6 +10,8 @@ public class Product
     private Category category;
     private string imagePath;
     private string description;
+    // HashSet is used because a product can only appear once in a given recipe (no duplicates),
+    // and membership checks (Contains) are O(1).
     private HashSet<RecipeIngredient> recipeIngredients = new HashSet<RecipeIngredient>();
 
     public int ProductId
@@ -36,6 +38,7 @@ public class Product
             : throw new ArgumentException("Price cannot be negative");
     }
 
+    // Convenience shortcut so callers don't have to go through Category.
     public int CategoryId => category.CategoryId;
 
     public Category Category
@@ -44,6 +47,7 @@ public class Product
         set => category = value ?? throw new ArgumentNullException("Category cannot be null");
     }
 
+    // Both ImagePath and Description are optional — not all products have them.
     public string ImagePath
     {
         get => imagePath;
@@ -73,15 +77,13 @@ public class Product
         ImagePath   = imagePath;
     }
 
-    //==============================
-    public static async Task<List<Product>> GetAllAsync(IProductDAL dal) 
+    public static async Task<List<Product>> GetAllAsync(IProductDAL dal)
         => await dal.GetAllAsync();
 
     public static async Task<Product> GetByIdAsync(int productId, IProductDAL dal)
         => await dal.GetByIdAsync(productId);
 
-    //==============================
-    public override string ToString() 
+    public override string ToString()
         => $"[Product] Id={ProductId} | {Name} | {Price:0.00}€ | CategoryId={CategoryId}";
 
     public override bool Equals(object obj)

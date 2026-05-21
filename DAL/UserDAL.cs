@@ -12,12 +12,17 @@ public class UserDAL : IUserDAL
         _db = db;
     }
 
+    // Fetches a user by email + password and determines their role using a CASE WHEN expression.
+    // We use LEFT JOINs on all role tables so the role can be determined in a single query
+    // rather than running one query per role type.
     public async Task<User> GetByCredentialsAsync(string email, string password)
     {
         using (SqlConnection conn = _db.GetConnexion())
         {
             await conn.OpenAsync();
 
+            // The CASE WHEN checks which sub-table the user appears in to derive their role.
+            // OrderPicker is checked before Cashier because both inherit from Employee —
             string query = @"
                 SELECT u.userId, u.firstName, u.lastName, u.email, u.password,
                     CASE
@@ -34,7 +39,7 @@ public class UserDAL : IUserDAL
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@email",    email);
                 cmd.Parameters.AddWithValue("@password", password);
 
                 using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
@@ -50,6 +55,7 @@ public class UserDAL : IUserDAL
                             (string)reader["role"]
                         );
                     }
+                    // Returns null when no matching user is found — the controller handles this case.
                     return null;
                 }
             }
