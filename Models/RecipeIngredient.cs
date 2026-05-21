@@ -4,7 +4,9 @@ public class RecipeIngredient
 {
     private int quantity;
     private Product product;
+    private Recipe? recipe;
 
+    // ProductId is derived from the Product object to avoid storing it twice.
     public int ProductId => product.ProductId;
 
     public int Quantity
