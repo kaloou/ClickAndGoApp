@@ -12,6 +12,16 @@
             <div class="nav-icon-btn nav-profile">
                 <i data-lucide="user"></i>
                 <span class="nav-username">@ViewBag.FirstName</span>
+                @{
+                    var staffStore = Context.Session.GetString("storeName");
+                }
+                @if (staffStore != null)
+                {
+                    <span class="nav-store-badge">
+                        <i data-lucide="map-pin"></i>
+                        @staffStore
+                    </span>
+                }
             </div>
             <a asp-controller="Auth" asp-action="Logout" class="nav-icon-btn" aria-label="Déconnexion">
                 <i data-lucide="log-out"></i>

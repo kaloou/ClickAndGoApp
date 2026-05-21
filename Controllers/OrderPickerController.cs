@@ -36,6 +36,7 @@ namespace ClickAndGoApp.Controllers
                 int pickerId = (int)HttpContext.Session.GetInt32("userId");
                 OrderPicker orderPicker = await OrderPicker.GetByIdAsync(pickerId, _orderPickerDAL);
                 Store store = await orderPicker.GetStoreAsync();
+                HttpContext.Session.SetString("storeName", store.Name);
                 List<Order> orders = await store.GetOrdersByStoreAsync(_orderDAL);
 
                 if (orders.Count == 0)

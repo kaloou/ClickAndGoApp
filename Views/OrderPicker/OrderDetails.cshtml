@@ -4,84 +4,122 @@
     ViewData["Title"] = "Order Details";
     ViewData["NavbarType"] = "Staff";
     ViewData["HideFooter"] = true;
+    float total = 0;
+    for (int i = 0; i < Model.OrderLines.Count; i++)
+        total += (float)(Model.Products[i].Price * Model.OrderLines[i].Quantity);
 }
 
-<div class="content">
+<div class="picker-page">
 
     <a asp-controller="OrderPicker" asp-action="Index" class="btn-back">← Back to Orders</a>
 
-    <div class="order-info-card">
-        <h2>Order #@Model.Order.OrderId</h2>
-        <div class="order-info-grid">
-            <div>
-                <span class="label">Pickup Date</span>
-                <span>@Model.Order.PickupDate.ToString("dd/MM/yyyy HH:mm")</span>
+    <div class="picker-layout">
+
+        <div class="picker-main">
+
+            <div class="picker-header-card">
+                <div class="picker-order-title">
+                    <h1>Order #@Model.Order.OrderId</h1>
+                    <span class="badge badge-@Model.Order.Status.ToString().ToLower()">@Model.Order.Status</span>
+                </div>
+                <div class="picker-meta">
+                    <div class="picker-meta-item">
+                        <i data-lucide="calendar-clock"></i>
+                        <div>
+                            <span class="label">Pickup Date</span>
+                            <strong>@Model.Order.PickupDate.ToString("dd/MM/yyyy HH:mm")</strong>
+                        </div>
+                    </div>
+                    <div class="picker-meta-item">
+                        <i data-lucide="package"></i>
+                        <div>
+                            <span class="label">Boxes used</span>
+                            <strong>@(Model.Order.NumberOfBoxes > 0 ? Model.Order.NumberOfBoxes.ToString() : "—")</strong>
+                        </div>
+                    </div>
+                    <div class="picker-meta-item">
+                        <i data-lucide="shopping-bag"></i>
+                        <div>
+                            <span class="label">Items</span>
+                            <strong>@Model.OrderLines.Count product@(Model.OrderLines.Count > 1 ? "s" : "")</strong>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <span class="label">Status</span>
-                <span class="badge badge-@Model.Order.Status.ToString().ToLower()">
-                    @Model.Order.Status
-                </span>
+
+            <h3 class="picker-section-title">Products to pick</h3>
+
+            <div class="picker-products-wrapper">
+                <table class="picker-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Unit price</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.OrderLines.Count; i++)
+                        {
+                            var line    = Model.OrderLines[i];
+                            var product = Model.Products[i];
+                            <tr>
+                                <td class="picker-product-name">@product.Name</td>
+                                <td>@product.Price.ToString("0.00") €</td>
+                                <td><span class="order-qty-badge">×@line.Quantity</span></td>
+                                <td class="picker-subtotal">@((product.Price * line.Quantity).ToString("0.00")) €</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="picker-total-row">
+                    <span>Total products</span>
+                    <strong>@total.ToString("0.00") €</strong>
+                </div>
             </div>
-            <div>
-                <span class="label">Number of Boxes</span>
-                <span>@Model.Order.NumberOfBoxes</span>
+
+        </div>
+
+        <div class="picker-aside">
+            <div class="picker-action-card">
+
+                <div class="picker-action-title">
+                    <i data-lucide="package-check"></i>
+                    Encode Boxes
+                </div>
+
+                <form method="post" asp-controller="OrderPicker" asp-action="EncodeBoxes">
+                    <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
+                    <label class="label" for="numberOfBoxes">Number of boxes used</label>
+                    <input type="number" id="numberOfBoxes" name="numberOfBoxes"
+                           min="1" class="picker-input" placeholder="ex : 3" required/>
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="error">@ViewBag.Error</div>
+                    }
+                    @if (ViewBag.Success != null)
+                    {
+                        <div class="success">@ViewBag.Success</div>
+                    }
+                    <button type="submit" class="picker-confirm-btn">Confirm</button>
+                </form>
+
+                @if (Model.Order.NumberOfBoxes > 0 && Model.Order.Status == OrderStatus.Pending)
+                {
+                    <div class="picker-divider"></div>
+                    <form method="post" asp-controller="OrderPicker" asp-action="MarkAsReady">
+                        <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
+                        <button type="submit" class="btn-ready">
+                            <i data-lucide="check-circle"></i>
+                            Mark as Ready
+                        </button>
+                    </form>
+                }
+
             </div>
         </div>
-    </div>
 
-    <h3>Products</h3>
-    <table class="orders-table">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.OrderLines.Count; i++)
-            {
-                var line = Model.OrderLines[i];
-                var product = Model.Products[i];
-                <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Price.ToString("0.00") €</td>
-                    <td>@line.Quantity</td>
-                    <td>@((product.Price * line.Quantity).ToString("0.00")) €</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <div class="encode-boxes-card">
-        <h3>Encode Number of Boxes Used</h3>
-        <form method="post" asp-controller="OrderPicker" asp-action="EncodeBoxes">
-            <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
-            <div class="form-group">
-                <label for="numberOfBoxes">Number of boxes</label>
-                <input type="number" id="numberOfBoxes" name="numberOfBoxes"
-                       min="1" required/>
-            </div>
-            @if (ViewBag.Error != null)
-            {
-                <div class="error">@ViewBag.Error</div>
-            }
-            @if (ViewBag.Success != null)
-            {
-                <div class="success">@ViewBag.Success</div>
-            }
-            <button type="submit">Confirm</button>
-        </form>
-
-        @if (Model.Order.NumberOfBoxes > 0 && Model.Order.Status == OrderStatus.Pending)
-        {
-            <form method="post" asp-controller="OrderPicker" asp-action="MarkAsReady">
-                <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
-                <button type="submit" class="btn-ready">Mark as Ready</button>
-            </form>
-        }
     </div>
 
 </div>
