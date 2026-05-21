@@ -12,22 +12,7 @@
 
 <div class="checkout-page">
 
-    <div class="checkout-stepper">
-        <div class="checkout-step checkout-step--done">
-            <div class="checkout-step-circle"><i data-lucide="check"></i></div>
-            <span class="checkout-step-label">Magasin</span>
-        </div>
-        <div class="checkout-step-line checkout-step-line--done"></div>
-        <div class="checkout-step checkout-step--active">
-            <div class="checkout-step-circle">2</div>
-            <span class="checkout-step-label">Créneau</span>
-        </div>
-        <div class="checkout-step-line"></div>
-        <div class="checkout-step">
-            <div class="checkout-step-circle">3</div>
-            <span class="checkout-step-label">Confirmation</span>
-        </div>
-    </div>
+    <partial name="_CheckoutStepper" model="2" />
 
     <div class="checkout-header">
         <h1>Choisir un créneau</h1>

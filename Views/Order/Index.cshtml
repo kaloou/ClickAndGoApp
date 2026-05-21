@@ -9,6 +9,8 @@
 
 <div class="browse-page">
 
+    <partial name="_CheckoutStepper" model="@(hasStore && hasSlot ? 3 : 0)" />
+
     <div class="browse-header">
         <a asp-controller="Cart" asp-action="Index" class="detail-back">← Retour au panier</a>
         <h1>Récapitulatif de commande</h1>

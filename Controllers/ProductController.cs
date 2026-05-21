@@ -34,15 +34,15 @@ public class ProductController : Controller
                 products = await Category.GetByCategoryAsync(categoryId.Value, productDal);
             else
                 products = await Product.GetAllAsync(productDal);
-            
+
             categories = await Category.GetAllAsync(categoryDal);
         }
         catch (Exception)
-        {                        
+        {
             TempData["Error"] = "Impossible de charger les produits ou catégories";
             products = new();
         }
-        
+
         var vm = new BrowseViewModel(products, categories, categoryId);
 
         return View(vm);
@@ -94,7 +94,7 @@ public class ProductController : Controller
 
         await HttpContext.Session.CommitAsync();
         TempData["Success"] = "Produit ajouté au panier";
-        return RedirectToAction("SelectProduct", new { productId = productId });
+        return RedirectToAction("BrowseProducts");
     }
     
     // ====== Select Product ======
@@ -114,7 +114,7 @@ public class ProductController : Controller
         int  quantity  = HttpContext.Session.GetInt32("pendingQuantity") ?? 1;
 
         if (userId == null || !productId.HasValue)
-            return RedirectToAction("BrowseProductsAsync");
+            return RedirectToAction("BrowseProducts");
 
         int? orderId = HttpContext.Session.GetInt32("orderId");
         if (orderId == null)
@@ -142,6 +142,6 @@ public class ProductController : Controller
         HttpContext.Session.Remove("pendingQuantity");
 
         TempData["Success"] = "Produit ajouté au panier";
-        return RedirectToAction("BrowseProductsAsync");
+        return RedirectToAction("BrowseProducts");
     }
 }

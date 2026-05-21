@@ -1,0 +1,66 @@
+@model int
+@{
+    int s = Model;
+    // s == 0 → tout gris (Order/Index avant tout choix)
+    // s == 1 → Magasin actif
+    // s == 2 → Créneau actif
+    // s == 3 → Confirmation active
+    // s == 4 → tout coché (page Confirmation finale)
+
+    string StepClass(int n) =>
+        s == 0        ? "" :
+        s > n         ? "checkout-step--done" :
+        s == n        ? "checkout-step--active" :
+                        "";
+
+    string LineClass(int afterStep) => (s != 0 && s > afterStep) ? "checkout-step-line--done" : "";
+}
+<div class="checkout-stepper">
+
+    <div class="checkout-step @StepClass(1)">
+        <div class="checkout-step-circle">
+            @if (s > 1)
+            {
+                <i data-lucide="check"></i>
+            }
+            else
+            {
+                <span>1</span>
+            }
+        </div>
+        <span class="checkout-step-label">Magasin</span>
+    </div>
+
+    <div class="checkout-step-line @LineClass(1)"></div>
+
+    <div class="checkout-step @StepClass(2)">
+        <div class="checkout-step-circle">
+            @if (s > 2)
+            {
+                <i data-lucide="check"></i>
+            }
+            else
+            {
+                <span>2</span>
+            }
+        </div>
+        <span class="checkout-step-label">Créneau</span>
+    </div>
+
+    <div class="checkout-step-line @LineClass(2)"></div>
+
+    <div class="checkout-step @StepClass(3)">
+        <div class="checkout-step-circle">
+            @if (s > 3)
+            {
+                <i data-lucide="check"></i>
+            }
+            else
+            {
+                <span>3</span>
+            }
+        </div>
+        <span class="checkout-step-label">Confirmation</span>
+    </div>
+
+</div>
