@@ -11,13 +11,12 @@ public class OrderPicker : Employee
         Role = "OrderPicker";
     }
 
-    //==============================
     public static async Task<OrderPicker> GetByIdAsync(int pickerId, IOrderPickerDAL dal)
         => await dal.GetByIdAsync(pickerId);
 
+    // The store is already loaded when the OrderPicker is fetched from the DB (via JOIN in the DAL),
+    // so we wrap it in a completed Task to match the async interface without an extra DB call.
     public Task<Store> GetStoreAsync() => Task.FromResult(Store);
-
-    //==============================
 
     public override string ToString() =>
         $"[OrderPicker] Id={UserId} | {FirstName} {LastName} | Store={Store.StoreId}";

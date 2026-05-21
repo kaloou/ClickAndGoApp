@@ -13,6 +13,7 @@ public class RecipeDAL : IRecipeDAL
         this.db = db;
     }
 
+    // Fetches only the recipe header (no ingredients) — enough for the listing page.
     public async Task<List<Recipe>> GetAllAsync()
     {
         using (SqlConnection conn = db.GetConnexion())
@@ -40,6 +41,10 @@ public class RecipeDAL : IRecipeDAL
         }
     }
 
+    // Fetches a recipe with all its ingredients in a single query using LEFT JOINs.
+    // LEFT JOIN is used instead of INNER JOIN so that a recipe with no ingredients is still returned.
+    // The result has one row per ingredient, so we build the Recipe object on the first row
+    // and append ingredients on every subsequent row.
     public async Task<Recipe> GetByIdAsync(int recipeId)
     {
         using (SqlConnection conn = db.GetConnexion())
@@ -68,6 +73,7 @@ public class RecipeDAL : IRecipeDAL
                         Recipe recipe = null;
                         while (await reader.ReadAsync())
                         {
+                            // Build the Recipe object only once — it's repeated on every row due to the JOIN.
                             if (recipe == null)
                             {
                                 recipe = new Recipe(
@@ -77,6 +83,7 @@ public class RecipeDAL : IRecipeDAL
                                 ) { ImagePath = reader["recipeImagePath"] == DBNull.Value ? null : (string)reader["recipeImagePath"] };
                             }
 
+                            // productId is NULL when the recipe has no ingredients (LEFT JOIN produces a NULL row).
                             if (reader["productId"] != DBNull.Value)
                             {
                                 var category = new Category(
@@ -89,8 +96,9 @@ public class RecipeDAL : IRecipeDAL
                                     (float)(decimal)reader["price"],
                                     category,
                                     reader["productDescription"] == DBNull.Value ? null : (string)reader["productDescription"],
-                                    reader["productImagePath"] == DBNull.Value ? null : (string)reader["productImagePath"]
+                                    reader["productImagePath"]   == DBNull.Value ? null : (string)reader["productImagePath"]
                                 );
+                                // AddLast keeps ingredients in the order they come from the DB.
                                 recipe.Ingredients.AddLast(new RecipeIngredient(
                                     (int)reader["recipeId"],
                                     (int)reader["productId"],

@@ -21,14 +21,15 @@ public class AuthController : Controller
         this.orderLineDal = orderLineDal;
         this.timeSlotDal  = timeSlotDal;
     }
-    
+
     // ====== Login page ======
     [HttpGet]
     public IActionResult Login()
     {
         return View(new LoginViewModel());
     }
-    // ====== Login ====== (Redirige selon le role)
+
+    // ====== Login POST ======
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> LoginAsync(LoginViewModel model)
@@ -47,6 +48,7 @@ public class AuthController : Controller
 
         if (user.Role == "Customer")
         {
+            // Restore the cart from the DB so the session reflects the customer's existing basket.
             int? existingCartId = await orderDal.GetActiveCartAsync(user.UserId);
             if (existingCartId.HasValue)
             {
@@ -54,6 +56,7 @@ public class AuthController : Controller
                 List<OrderLine> lines = await orderLineDal.GetOrderLinesAsync(existingCartId.Value);
                 HttpContext.Session.SetInt32("cartCount", lines.Count);
 
+                // Also restore the selected store if the cart already has a time slot.
                 Order cart = await Order.GetByIdAsync(existingCartId.Value, orderDal);
                 if (cart.TimeSlotId != 0)
                 {
@@ -62,6 +65,9 @@ public class AuthController : Controller
                         HttpContext.Session.SetInt32("selectedStoreId", storeId.Value);
                 }
             }
+
+            // If the user tried to add a product or recipe before logging in,
+            // redirect them to the handler that will complete the add-to-cart action.
             if (HttpContext.Session.GetInt32("pendingProductId").HasValue)
                 return RedirectToAction("HandlePendingProduct", "Product");
 
@@ -76,22 +82,24 @@ public class AuthController : Controller
 
         return RedirectToAction("Index", "Cashier");
     }
-    
+
+    // Stores the minimum user info in session — enough to identify the user and control access.
+    // We avoid storing the full User object to keep session data small.
     private void CreateSession(Models.User user)
     {
-        HttpContext.Session.SetInt32("userId", user.UserId);
-        HttpContext.Session.SetString("role", user.Role);
+        HttpContext.Session.SetInt32("userId",    user.UserId);
+        HttpContext.Session.SetString("role",      user.Role);
         HttpContext.Session.SetString("firstName", user.FirstName);
     }
-    
+
     // ====== Register page ======
     [HttpGet]
     public IActionResult Register()
     {
         return View();
     }
-    
-    // Create Account
+
+    // ====== Register POST ======
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(string firstName, string lastName, string email, string password, string? phoneNumber, string? address)
@@ -103,22 +111,25 @@ public class AuthController : Controller
             return View();
         }
 
+        // Check for duplicate email before attempting to insert.
         bool emailExists = await Customer.GetByEmailAsync(email, customerDal);
         if (emailExists)
         {
             ViewBag.error = "email already used";
             return View();
         }
-        
+
         Customer newCustomer = await Customer.CreateAccountAsync(firstName, lastName, email, password, phoneNumber, address, customerDal);
+        // Log the customer in immediately after registration so they don't have to log in again.
         CreateSession(newCustomer);
         TempData["Success"] = "Account created";
         return Redirect("/");
     }
 
-    // Log out
+    // ====== Logout ======
     public IActionResult Logout()
     {
+        // Clear wipes all session data — cart, role, userId, everything.
         HttpContext.Session.Clear();
         TempData["Success"] = "Vous avez été déconnecté.";
         return RedirectToAction("Index", "Home");

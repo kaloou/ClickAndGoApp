@@ -15,6 +15,7 @@ public class RecipeIngredient
             : throw new ArgumentException("RecipeId must be positive");
     }
 
+    // ProductId is derived from the Product object to avoid storing it twice.
     public int ProductId => product.ProductId;
 
     public int Quantity
@@ -31,7 +32,6 @@ public class RecipeIngredient
         set => product = value ?? throw new ArgumentNullException("Product cannot be null");
     }
 
-    // pas de productId explicite (déduit du product)
     public RecipeIngredient(int recipeId, Product product, int quantity)
     {
         RecipeId  = recipeId;
@@ -40,7 +40,6 @@ public class RecipeIngredient
         Quantity  = quantity;
     }
 
-    // productId explicite
     public RecipeIngredient(int recipeId, int productId, int quantity, Product product)
     {
         RecipeId       = recipeId;
@@ -52,6 +51,7 @@ public class RecipeIngredient
     public override string ToString()
         => $"[RecipeIngredient] RecipeId={RecipeId} | Product={Product?.Name} | Qty={Quantity}";
 
+    // Composite key equality — a recipe ingredient is uniquely identified by its recipe + product combination.
     public override bool Equals(object obj)
     {
         if (obj is not RecipeIngredient other) return false;

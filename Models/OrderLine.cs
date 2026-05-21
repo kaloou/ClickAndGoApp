@@ -2,6 +2,7 @@ using ClickAndGoApp.DAL;
 
 namespace ClickAndGoApp.Models;
 
+// Represents a single product line in an order, with its quantity.
 public class OrderLine
 {
     private int quantity;
@@ -16,6 +17,7 @@ public class OrderLine
             : throw new ArgumentException("OrderId must be positive");
     }
 
+    // Delegates to the product object — avoids storing a redundant productId field.
     public int ProductId => product.ProductId;
 
     public int Quantity
@@ -39,19 +41,18 @@ public class OrderLine
         Product  = product;
     }
 
-    //==============================
     public Product GetProduct() => product;
-    
+
     public async Task RemoveAsync(IOrderLineDAL dal) =>
         await dal.RemoveAsync(orderId, product.ProductId);
 
     public async Task SetQuantityAsync(int quantity, IOrderLineDAL dal) =>
         await dal.SetQuantityAsync(orderId, product.ProductId, quantity);
 
-    //==============================
-    public override string ToString() 
+    public override string ToString()
         => $"[OrderLine] OrderId={OrderId} | Product={Product?.Name} | Qty={Quantity}";
 
+    // Equality uses the composite key (orderId + productId) to match the DB constraint.
     public override bool Equals(object obj)
     {
         if (obj is not OrderLine other) return false;

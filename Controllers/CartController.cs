@@ -19,20 +19,18 @@ public class CartController : Controller
     // ====== Manage Cart ======
     public async Task<IActionResult> Index()
     {
-        // on check si une order(Cart) est bien en cours, sinon on envoie le view model avec données vides
         int? orderId = HttpContext.Session.GetInt32("orderId");
+        // No orderId in session means the user has no active cart — show an empty cart view.
         if (orderId == null)
             return View(new CartViewModel(null, new()));
 
-        // on récupère order(cart)
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
-        if (order == null) // order id corrompu
+        if (order == null)
             return View(new CartViewModel(null, new()));
 
-        // on récupère sa liste de produits
         List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
-        // sync du badge panier
+        // Keep the badge counter in sync with the actual DB state.
         HttpContext.Session.SetInt32("cartCount", orderLines.Count);
 
         return View(new CartViewModel(order, orderLines));
@@ -43,22 +41,20 @@ public class CartController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RemoveProduct(int productId)
     {
-        // on check si l'order(cart) existe
         int? orderId = HttpContext.Session.GetInt32("orderId");
         if (orderId == null)
             return RedirectToAction("Index");
 
-        //on l'a récupère + sa liste de produits
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
         List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
-        // on check bien si le produit choisi est dans la liste de produits
+        // Find the matching order line — if it exists, remove it and decrement the badge count.
         OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
         if (existing != null)
         {
             await existing.RemoveAsync(orderLineDal);
             int count = HttpContext.Session.GetInt32("cartCount") ?? 0;
-            HttpContext.Session.SetInt32("cartCount", Math.Max(0, count - 1));
+            HttpContext.Session.SetInt32("cartCount", Math.Max(0, count - 1)); // prevent going below 0
         }
 
         TempData["Success"] = "Produit retiré du panier";
@@ -70,18 +66,16 @@ public class CartController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateQuantity(int productId, int quantity)
     {
-        // on check si l'order(cart) existe
         int? orderId = HttpContext.Session.GetInt32("orderId");
         if (orderId == null)
             return RedirectToAction("Index");
 
-        //on l'a récupère + sa liste de produits
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
         List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
 
+        // Quantity is capped at 10 to prevent unreasonable orders.
         if (quantity > 0 && quantity <= 10)
         {
-            // on check bien si le produit choisi est dans la liste de produits
             OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
             if (existing != null)
                 await existing.SetQuantityAsync(quantity, orderLineDal);

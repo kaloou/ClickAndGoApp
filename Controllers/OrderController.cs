@@ -21,7 +21,7 @@ public class OrderController : Controller
         this.timeSlotDal  = timeSlotDal;
     }
 
-    // ====== PlaceOrder ===== résumé panier + choix magasin et créneau 
+    // ====== PlaceOrder — order summary + store/slot selection ======
     public async Task<IActionResult> Index()
     {
         int? userId = HttpContext.Session.GetInt32("userId");
@@ -52,7 +52,7 @@ public class OrderController : Controller
             return RedirectToAction("Index", "Cart");
         }
 
-        // Adapter la vue selon si le store et crénéau son choisi
+        // If a store was already chosen, pass it to the view so it can be displayed.
         int? selectedStoreId = HttpContext.Session.GetInt32("selectedStoreId");
         if (selectedStoreId != null)
         {
@@ -60,15 +60,17 @@ public class OrderController : Controller
             ViewBag.SelectedStore = store;
         }
 
-        if (order.TimeSlotId != 0) // signifie que le timeSlot n'a pas encore été choisi
+        // Only compute the total once a time slot is chosen (pickup date is set).
+        // TimeSlotId == 0 means no slot has been selected yet (sentinel value — see Order model).
+        if (order.TimeSlotId != 0)
             ViewBag.Total = await order.ComputeTotalAsync(orderLineDal);
-        
+
         var vm = new CartViewModel(order, orderLines);
-        
+
         return View(vm);
     }
 
-    // ====== SelectStore ======
+    // ====== SelectStore — GET ======
     public async Task<IActionResult> SelectStore()
     {
         int? orderId = HttpContext.Session.GetInt32("orderId");
@@ -77,26 +79,29 @@ public class OrderController : Controller
             TempData["Error"] = "Pas de commande en cours";
             return RedirectToAction("Index", "Cart");
         }
-        
+
         List<Store> stores = await Store.GetAllStoresAsync(storeDal);
         if (!stores.Any())
         {
             TempData["Error"] = "Pas de magasin disponibles";
             return RedirectToAction("Index", "Cart");
         }
-        
+
         return View(stores);
     }
 
+    // ====== SelectStore — POST ======
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult SelectStore(int storeId)
     {
+        // Store the chosen store in session — no DB write needed at this step.
         HttpContext.Session.SetInt32("selectedStoreId", storeId);
         return RedirectToAction("SelectTimeSlot");
     }
 
-    // ====== SelectTimeSlot ======
+    // ====== SelectTimeSlot — GET ======
+    // selectedDate filters the available slots to a specific day chosen by the user.
     public async Task<IActionResult> SelectTimeSlot(string selectedDate = null)
     {
         if (HttpContext.Session.GetInt32("orderId") == null)
@@ -114,16 +119,19 @@ public class OrderController : Controller
 
         ViewBag.StoreName = store.Name;
 
+        // If a date was selected, filter the slots client-side (no extra DB call needed).
         if (selectedDate != null && DateTime.TryParse(selectedDate, out DateTime parsedDate))
         {
             ViewBag.SelectedDate = selectedDate;
             return View(allSlots.Where(s => s.StartTime.Date == parsedDate.Date).ToList());
         }
 
+        // No date selected yet — show an empty list so the user picks a date first.
         ViewBag.SelectedDate = null;
         return View(new List<TimeSlot>());
     }
 
+    // ====== SelectTimeSlot — POST ======
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> SelectTimeSlot(int timeSlotId)
@@ -133,6 +141,7 @@ public class OrderController : Controller
             return RedirectToAction("Index", "Cart");
 
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
+        // SetTimeSlotAsync also sets pickupDate from the slot's startTime — see OrderDAL.
         await order.SetTimeSlotAsync(timeSlotId, orderDal);
         return RedirectToAction("Index");
     }
@@ -154,8 +163,10 @@ public class OrderController : Controller
             return RedirectToAction("Index");
         }
 
+        // Transition the order from InTheCart to Pending — it will now appear in the picker's list.
         await order.SetStatusAsync(OrderStatus.Pending, orderDal);
 
+        // Pass confirmation details to the next page via TempData (survives one redirect).
         int? storeId = HttpContext.Session.GetInt32("selectedStoreId");
         if (storeId != null)
         {
@@ -167,6 +178,7 @@ public class OrderController : Controller
         TempData["Total"]      = total.ToString("F2");
         TempData["PickupDate"] = order.PickupDate.ToString("dd/MM/yyyy HH:mm");
 
+        // Clear cart-related session keys — the order is confirmed and the cart is empty.
         HttpContext.Session.Remove("orderId");
         HttpContext.Session.Remove("selectedStoreId");
         HttpContext.Session.SetInt32("cartCount", 0);

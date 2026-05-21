@@ -13,6 +13,7 @@ public class CustomerDAL : ICustomerDAL
         this.db = db;
     }
 
+    // Returns true if an account already exists with this email — used at registration to prevent duplicates.
     public async Task<bool> GetByEmailAsync(string email)
     {
         using (SqlConnection conn = db.GetConnexion())
@@ -29,6 +30,8 @@ public class CustomerDAL : ICustomerDAL
         }
     }
 
+    // Account creation writes to two tables: [User] and Customer.
+    // the first insert is rolled back and the DB stays consistent.
     public async Task<Customer> CreateAccountAsync(string firstName, string lastName, string email, string password, string? phoneNumber, string? address)
     {
         using (SqlConnection conn = db.GetConnexion())
@@ -59,6 +62,7 @@ public class CustomerDAL : ICustomerDAL
                 using (SqlCommand cmdCust = new SqlCommand(insertCustomer, conn, tx))
                 {
                     cmdCust.Parameters.AddWithValue("@userId",      userId);
+                    // Nullable fields are mapped to DBNull when null so SQL doesn't receive a null parameter.
                     cmdCust.Parameters.AddWithValue("@phoneNumber", (object?)phoneNumber ?? DBNull.Value);
                     cmdCust.Parameters.AddWithValue("@address",     (object?)address     ?? DBNull.Value);
                     await cmdCust.ExecuteNonQueryAsync();
@@ -80,6 +84,7 @@ public class CustomerDAL : ICustomerDAL
         {
             await conn.OpenAsync();
 
+            // JOIN between User and Customer is needed because the data is split across two tables.
             const string query = @"
                 SELECT u.userId, u.firstName, u.lastName, u.email, u.password,
                        c.loyaltyPoints, c.phoneNumber, c.address

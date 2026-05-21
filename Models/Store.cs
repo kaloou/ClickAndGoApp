@@ -7,8 +7,10 @@ public class Store
     private int storeId;
     private string name;
     private string address;
+    // A List is used for orders since we need index access and the order doesn't matter.
     private List<Order> orders = new List<Order>();
     private Dictionary<int, Employee> employees = new Dictionary<int, Employee>();
+    // A SortedList keeps time slots sorted by start time automatically — no manual sort needed.
     private SortedList<DateTime, TimeSlot> timeSlots = new SortedList<DateTime, TimeSlot>();
 
     public int StoreId
@@ -59,26 +61,23 @@ public class Store
         Name    = name;
         Address = address;
     }
-    
-    //==============================
+
     public async Task<List<Order>> GetOrdersByStoreAsync(IOrderDAL dal)
         => await dal.GetOrdersByStoreAsync(storeId);
-    
-    public async Task<List<Order>> GetTodaysOrdersAsync(IOrderDAL dal) 
+
+    public async Task<List<Order>> GetTodaysOrdersAsync(IOrderDAL dal)
         => await dal.GetTodaysOrdersAsync(storeId);
-    
+
     public async Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(ITimeSlotDAL dal)
         => await dal.GetAvailableTimeSlotsAsync(storeId);
-    
-    public static async Task<List<Store>> GetAllStoresAsync(IStoreDAL dal) 
+
+    public static async Task<List<Store>> GetAllStoresAsync(IStoreDAL dal)
         => await dal.GetAllStoresAsync();
-    
-    //==============================
-    
-    public static async Task<Store> GetStoreAsync(int storeId, IStoreDAL dal) 
+
+    public static async Task<Store> GetStoreAsync(int storeId, IStoreDAL dal)
         => await dal.GetStoreAsync(storeId);
-    
-    public override string ToString() 
+
+    public override string ToString()
         => $"[Store] Id={StoreId} | {Name} | {Address}";
 
     public override bool Equals(object obj)
