@@ -62,9 +62,28 @@ public class Recipe : IDisposable
 
     // Ingredients are loaded on demand — we only need them on the detail page, not when listing recipes.
     public async Task<List<RecipeIngredient>> GetIngredientsAsync(IRecipeIngredientDAL dal)
-        => await dal.GetByRecipeAsync(recipeId);
+    {
+        var result = await dal.GetByRecipeAsync(recipeId);
+        ingredients = new LinkedList<RecipeIngredient>(result);
+        return result;
+    }
 
-    // Standard IDisposable pattern — see Order.cs for the full explanation.
+    public void AddIngredient(RecipeIngredient ingredient)
+    {
+        if (ingredients.Any(i => i.ProductId == ingredient.ProductId))
+            throw new InvalidOperationException($"Product {ingredient.ProductId} already in recipe");
+        ingredients.AddLast(ingredient);
+    }
+
+    public void RemoveIngredient(RecipeIngredient ingredient)
+    {
+        ingredients.Remove(ingredient);
+    }
+
+    public RecipeIngredient? GetIngredient(int productId)
+        => ingredients.FirstOrDefault(i => i.ProductId == productId);
+    
+    //==============================
     public void Dispose()
     {
         Dispose(true);
