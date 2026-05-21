@@ -47,11 +47,32 @@ public class Recipe : IDisposable
         set => ingredients = value ?? throw new ArgumentNullException("Ingredients cannot be null");
     }
 
+    // constructeur preview (GetAllAsync — pas d'ingrédients chargés)
     public Recipe(int recipeId, string name, string description)
     {
         RecipeId    = recipeId;
         Name        = name;
         Description = description;
+    }
+
+    // constructeur complet (composition 1..* — au moins 1 ingrédient obligatoire)
+    public Recipe(int recipeId, string name, string description, RecipeIngredient firstIngredient)
+        : this(recipeId, name, description)
+    {
+        if (firstIngredient == null)
+            throw new ArgumentNullException(nameof(firstIngredient));
+        firstIngredient.Recipe = this;
+        ingredients.AddLast(firstIngredient);
+    }
+
+    // constructeur complet (composition 1..* — au moins 1 ingrédient obligatoire)
+    public Recipe(int recipeId, string name, string description, RecipeIngredient firstIngredient)
+        : this(recipeId, name, description)
+    {
+        if (firstIngredient == null)
+            throw new ArgumentNullException(nameof(firstIngredient));
+        firstIngredient.Recipe = this;
+        ingredients.AddLast(firstIngredient);
     }
 
     public static async Task<List<Recipe>> GetAllAsync(IRecipeDAL dal)
@@ -72,6 +93,7 @@ public class Recipe : IDisposable
     {
         if (ingredients.Any(i => i.ProductId == ingredient.ProductId))
             throw new InvalidOperationException($"Product {ingredient.ProductId} already in recipe");
+        ingredient.Recipe = this;
         ingredients.AddLast(ingredient);
     }
 

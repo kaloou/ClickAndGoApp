@@ -76,10 +76,10 @@ public class ProductController : Controller
         if (order is null)
             return RedirectToAction("BrowseProducts");
 
-        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal); // Panier
+        await order.GetOrderLinesAsync(orderLineDal); // peuple order.OrderLines
 
         // Null si le produit n'est pas encore dans le panier, un OrderLine (produit) s'il est déja dedans
-        OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId);
+        OrderLine existing = order.GetOrderLine(productId);
         
         if (existing == null)
         {
@@ -89,7 +89,7 @@ public class ProductController : Controller
         }
         else
         {
-            await existing.SetQuantityAsync(existing.Quantity + quantity, orderLineDal);
+            await existing.SetQuantityAsync(order.OrderId, existing.Quantity + quantity, orderLineDal);
         }
 
         await HttpContext.Session.CommitAsync();
@@ -126,9 +126,9 @@ public class ProductController : Controller
         }
 
         Order order = await Order.GetByIdAsync(orderId.Value, orderDal);
-        List<OrderLine> orderLines = await order.GetOrderLinesAsync(orderLineDal);
+        await order.GetOrderLinesAsync(orderLineDal);
 
-        OrderLine existing = orderLines.FirstOrDefault(ol => ol.Product.ProductId == productId.Value);
+        OrderLine existing = order.GetOrderLine(productId.Value);
         if (existing == null)
         {
             await order.AddProductAsync(productId.Value, orderLineDal, quantity);
@@ -136,7 +136,7 @@ public class ProductController : Controller
             HttpContext.Session.SetInt32("cartCount", count + 1);
         }
         else
-            await existing.SetQuantityAsync(existing.Quantity + quantity, orderLineDal);
+            await existing.SetQuantityAsync(order.OrderId, existing.Quantity + quantity, orderLineDal);
 
         HttpContext.Session.Remove("pendingProductId");
         HttpContext.Session.Remove("pendingQuantity");
