@@ -113,24 +113,29 @@ public class Order : IDisposable
                  int numberOfBoxes, int returnedBoxes, DateTime pickupDate,
                  PaymentStatus paymentStatus, Customer customer, TimeSlot? timeSlot, Store? store)
     {
-        OrderId       = orderId;
-        OrderDate     = orderDate;
-        Status        = status;
+        OrderId = orderId;
+        OrderDate = orderDate;
+        Status = status;
         NumberOfBoxes = numberOfBoxes;
         ReturnedBoxes = returnedBoxes;
-        PickupDate    = pickupDate;
+        PickupDate = pickupDate;
         PaymentStatus = paymentStatus;
-        Customer      = customer;
-        TimeSlot      = timeSlot;
-        Store         = store;
+        Customer = customer;
+        TimeSlot = timeSlot;
+        Store = store;
+        this.OrderLines = new List<OrderLine>(); // O car OrderCart 
     }
 
+    //==============================
     // OrderLines are loaded on demand rather than in the constructor to avoid
     // fetching data we don't always need (e.g. when just listing orders).
     public async Task<List<OrderLine>> GetOrderLinesAsync(IOrderLineDAL dal)
-        => await dal.GetOrderLinesAsync(orderId);
-
-    public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal)
+    {
+        orderLines = await dal.GetOrderLinesAsync(orderId);
+        return orderLines;
+    }
+    
+    public async Task SetNumberOfBoxesAsync(int numberOfBoxes, IOrderDAL dal) 
         => await dal.SetNumberOfBoxesAsync(orderId, numberOfBoxes);
 
     public static async Task<Order> GetByIdAsync(int orderId, IOrderDAL dal)
@@ -170,12 +175,27 @@ public class Order : IDisposable
         else
             store.StoreId = storeId;
     }
-
+    
     public async Task SetTimeSlotAsync(int timeSlotId, IOrderDAL dal)
         => await dal.SetTimeSlotAsync(orderId, timeSlotId);
 
     public async Task AddProductAsync(int productId, IOrderLineDAL dal, int quantity = 1)
         => await dal.AddProductAsync(orderId, productId, quantity);
+
+    public void AddOrderLine(OrderLine line)
+    {
+        if (orderLines.Any(ol => ol.ProductId == line.ProductId))
+            throw new InvalidOperationException($"Product {line.ProductId} already in order");
+        orderLines.Add(line);
+    }
+
+    public void RemoveOrderLine(OrderLine line)
+    {
+        orderLines.Remove(line);
+    }
+
+    public OrderLine? GetOrderLine(int productId)
+        => orderLines.FirstOrDefault(ol => ol.ProductId == productId);
 
     public static async Task<List<Order>> GetOrdersByCustomerAsync(int customerId, IOrderDAL dal)
         => await dal.GetOrdersByCustomerAsync(customerId);
@@ -183,6 +203,7 @@ public class Order : IDisposable
     // Dispose(true) is called from public Dispose() — managed resources are cleaned up.
     // Dispose(false) is called from the finalizer — only unmanaged resources would be freed here,
     // but we have none; the finalizer exists as a safety net.
+    //==============================
     public void Dispose()
     {
         Dispose(true);

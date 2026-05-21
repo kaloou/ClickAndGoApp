@@ -49,10 +49,8 @@ public class RecipeIngredientDAL : IRecipeIngredientDAL
                             reader["imagePath"]   == DBNull.Value ? null : (string)reader["imagePath"]
                         );
                         ingredients.Add(new RecipeIngredient(
-                            (int)reader["recipeId"],
-                            (int)reader["productId"],
-                            (int)reader["quantity"],
-                            product
+                            product,
+                            (int)reader["quantity"]
                         ));
                     }
                     return ingredients;

@@ -63,16 +63,56 @@ public class Store
     }
 
     public async Task<List<Order>> GetOrdersByStoreAsync(IOrderDAL dal)
-        => await dal.GetOrdersByStoreAsync(storeId);
+    {
+        orders = await dal.GetOrdersByStoreAsync(storeId);
+        return orders;
+    }
 
     public async Task<List<Order>> GetTodaysOrdersAsync(IOrderDAL dal)
-        => await dal.GetTodaysOrdersAsync(storeId);
+    {
+        orders = await dal.GetTodaysOrdersAsync(storeId);
+        return orders;
+    }
 
     public async Task<List<TimeSlot>> GetAvailableTimeSlotsAsync(ITimeSlotDAL dal)
-        => await dal.GetAvailableTimeSlotsAsync(storeId);
+    {
+        var list = await dal.GetAvailableTimeSlotsAsync(storeId);
+        timeSlots.Clear();
+        foreach (var ts in list)
+            timeSlots[ts.StartTime] = ts;
+        return list;
+    }
+
+    public void AddOrder(Order order)
+    {
+        if (!orders.Contains(order))
+            orders.Add(order);
+    }
+
+    public void RemoveOrder(Order order)
+    {
+        orders.Remove(order);
+    }
+
+    public void AddEmployee(Employee employee)
+    {
+        employees[employee.UserId] = employee;
+    }
+
+    public void RemoveEmployee(int userId)
+    {
+        employees.Remove(userId);
+    }
+
+    public void AddTimeSlot(TimeSlot timeSlot)
+    {
+        timeSlots[timeSlot.StartTime] = timeSlot;
+    }
 
     public static async Task<List<Store>> GetAllStoresAsync(IStoreDAL dal)
         => await dal.GetAllStoresAsync();
+
+    //==============================
 
     public static async Task<Store> GetStoreAsync(int storeId, IStoreDAL dal)
         => await dal.GetStoreAsync(storeId);

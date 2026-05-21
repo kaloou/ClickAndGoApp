@@ -73,38 +73,39 @@ public class RecipeDAL : IRecipeDAL
                         Recipe recipe = null;
                         while (await reader.ReadAsync())
                         {
-                            // Build the Recipe object only once — it's repeated on every row due to the JOIN.
+                            if (reader["productId"] == DBNull.Value)
+                                continue;
+
+                            var category = new Category(
+                                (int)reader["categoryId"],
+                                (string)reader["categoryName"]
+                            );
+                            var product = new Product(
+                                (int)reader["productId"],
+                                (string)reader["productName"],
+                                (float)(decimal)reader["price"],
+                                category,
+                                reader["productDescription"] == DBNull.Value ? null : (string)reader["productDescription"],
+                                reader["productImagePath"]   == DBNull.Value ? null : (string)reader["productImagePath"]
+                            );
+                            var ingredient = new RecipeIngredient(
+                                product,
+                                (int)reader["quantity"]
+                            );
+
                             if (recipe == null)
                             {
+                                // 1er ingrédient → constructeur composition 1..*
                                 recipe = new Recipe(
                                     (int)reader["recipeId"],
                                     (string)reader["name"],
-                                    (string)reader["description"]
+                                    (string)reader["description"],
+                                    ingredient
                                 ) { ImagePath = reader["recipeImagePath"] == DBNull.Value ? null : (string)reader["recipeImagePath"] };
                             }
-
-                            // productId is NULL when the recipe has no ingredients (LEFT JOIN produces a NULL row).
-                            if (reader["productId"] != DBNull.Value)
+                            else
                             {
-                                var category = new Category(
-                                    (int)reader["categoryId"],
-                                    (string)reader["categoryName"]
-                                );
-                                var product = new Product(
-                                    (int)reader["productId"],
-                                    (string)reader["productName"],
-                                    (float)(decimal)reader["price"],
-                                    category,
-                                    reader["productDescription"] == DBNull.Value ? null : (string)reader["productDescription"],
-                                    reader["productImagePath"]   == DBNull.Value ? null : (string)reader["productImagePath"]
-                                );
-                                // AddLast keeps ingredients in the order they come from the DB.
-                                recipe.Ingredients.AddLast(new RecipeIngredient(
-                                    (int)reader["recipeId"],
-                                    (int)reader["productId"],
-                                    (int)reader["quantity"],
-                                    product
-                                ));
+                                recipe.AddIngredient(ingredient);
                             }
                         }
 
