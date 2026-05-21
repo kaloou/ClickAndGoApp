@@ -76,27 +76,22 @@ public class Recipe : IDisposable
     public async Task<List<RecipeIngredient>> GetIngredientsAsync(IRecipeIngredientDAL dal)
     {
         var result = await dal.GetByRecipeAsync(recipeId);
-        ingredients = new LinkedList<RecipeIngredient>(result);
+        ingredients.Clear();
+        foreach (var ingredient in result)
+            AddIngredient(ingredient);
         return result;
     }
 
     public void AddIngredient(RecipeIngredient ingredient)
     {
         if (ingredients.Any(i => i.ProductId == ingredient.ProductId))
-            throw new InvalidOperationException($"Product {ingredient.ProductId} already in recipe");
+            throw new InvalidOperationException($"Product {ingredient.ProductId} already in {this}");
         ingredient.Recipe = this;
         ingredients.AddLast(ingredient);
     }
 
-    public void RemoveIngredient(RecipeIngredient ingredient)
-    {
-        ingredients.Remove(ingredient);
-    }
+    public override string ToString() => $"Recipe #{RecipeId} '{Name}'";
 
-    public RecipeIngredient? GetIngredient(int productId)
-        => ingredients.FirstOrDefault(i => i.ProductId == productId);
-    
-    //==============================
     public void Dispose()
     {
         Dispose(true);
@@ -114,15 +109,4 @@ public class Recipe : IDisposable
     }
 
     ~Recipe() => Dispose(false);
-
-    public override string ToString()
-        => $"[Recipe] Id={RecipeId} | {Name}";
-
-    public override bool Equals(object obj)
-    {
-        if (obj is not Recipe other) return false;
-        return RecipeId == other.RecipeId;
-    }
-
-    public override int GetHashCode() => RecipeId.GetHashCode();
 }
