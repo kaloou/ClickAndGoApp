@@ -833,6 +833,65 @@
     height: 18px;
 }
 
+.btn-honor {
+    background: var(--cg-teal);
+    width: 100%;
+}
+.btn-honor:hover { background: var(--cg-teal-dark); }
+
+/* ============================================
+   CASHIER — price breakdown
+   ============================================ */
+.cashier-breakdown-card {
+    background: var(--cg-white);
+    border: 1px solid var(--cg-border-soft);
+    border-radius: var(--cg-radius-card);
+    overflow: hidden;
+}
+
+.cashier-breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--cg-space-4) var(--cg-space-6);
+    border-bottom: 1px solid var(--cg-border-soft);
+    font-size: var(--cg-fs-sm);
+    color: var(--cg-text-muted);
+}
+
+.cashier-breakdown-row span:last-child {
+    font-weight: var(--cg-fw-medium);
+    color: var(--cg-text-dark);
+}
+
+.cashier-breakdown-deduction {
+    color: var(--cg-teal);
+}
+
+.cashier-breakdown-deduction span:last-child {
+    color: var(--cg-teal-dark);
+}
+
+.cashier-breakdown-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--cg-space-5) var(--cg-space-6);
+    background: var(--cg-bg-soft);
+}
+
+.cashier-breakdown-total span {
+    font-size: var(--cg-fs-sm);
+    font-weight: var(--cg-fw-semibold);
+    color: var(--cg-text-dark);
+}
+
+.cashier-breakdown-total strong {
+    font-size: var(--cg-fs-xl);
+    font-weight: var(--cg-fw-bold);
+    color: var(--cg-teal-dark);
+}
+
 
 /* ============================================
    HOME PAGE — hero / app section

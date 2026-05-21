@@ -37,6 +37,7 @@ namespace ClickAndGoApp.Controllers
                 int cashierId = (int)HttpContext.Session.GetInt32("userId");
                 Cashier cashier = await Cashier.GetByIdAsync(cashierId, _cashierDAL);
                 Store store = await cashier.GetStoreAsync();
+                HttpContext.Session.SetString("storeName", store.Name);
                 List<Order> orders = await store.GetTodaysOrdersAsync(_orderDAL);
 
                 if (orders.Count == 0)

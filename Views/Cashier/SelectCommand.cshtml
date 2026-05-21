@@ -1,78 +1,118 @@
 @model ClickAndGoApp.ViewModels.CashierOrderViewModel
+@using ClickAndGoApp.Models.Enums
 @{
-    ViewData["Title"] = "Select Command";
+    ViewData["Title"] = "Order Details";
     ViewData["NavbarType"] = "Staff";
     ViewData["HideFooter"] = true;
+    const float boxFee = 5.95f;
+    float productsTotal = Model.TotalAmount - boxFee - boxFee * Model.Order.NumberOfBoxes + boxFee * Model.Order.ReturnedBoxes;
 }
 
-<div class="content">
+<div class="picker-page">
 
     <a asp-controller="Cashier" asp-action="Index" class="btn-back">← Back to Today's Orders</a>
 
-    <div class="order-info-card">
-        <h2>Order #@Model.Order.OrderId</h2>
-        <div class="order-info-grid">
-            <div>
-                <span class="label">Customer ID</span>
-                <span>@Model.Order.CustomerId</span>
+    <div class="picker-layout">
+
+        <div class="picker-main">
+
+            <div class="picker-header-card">
+                <div class="picker-order-title">
+                    <h1>Order #@Model.Order.OrderId</h1>
+                    <span class="badge badge-@Model.Order.Status.ToString().ToLower()">@Model.Order.Status</span>
+                </div>
+                <div class="picker-meta">
+                    <div class="picker-meta-item">
+                        <i data-lucide="user"></i>
+                        <div>
+                            <span class="label">Customer ID</span>
+                            <strong>#@Model.Order.CustomerId</strong>
+                        </div>
+                    </div>
+                    <div class="picker-meta-item">
+                        <i data-lucide="calendar-clock"></i>
+                        <div>
+                            <span class="label">Pickup Time</span>
+                            <strong>@Model.Order.PickupDate.ToString("dd/MM/yyyy HH:mm")</strong>
+                        </div>
+                    </div>
+                    <div class="picker-meta-item">
+                        <i data-lucide="package"></i>
+                        <div>
+                            <span class="label">Boxes</span>
+                            <strong>@Model.Order.NumberOfBoxes box@(Model.Order.NumberOfBoxes > 1 ? "es" : "")</strong>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <span class="label">Pickup Time</span>
-                <span>@Model.Order.PickupDate.ToString("HH:mm")</span>
+
+            <h3 class="picker-section-title">Price Breakdown</h3>
+
+            <div class="cashier-breakdown-card">
+                <div class="cashier-breakdown-row">
+                    <span>Products total</span>
+                    <span>@productsTotal.ToString("0.00") €</span>
+                </div>
+                <div class="cashier-breakdown-row">
+                    <span>Service fee</span>
+                    <span>+ @boxFee.ToString("0.00") €</span>
+                </div>
+                <div class="cashier-breakdown-row">
+                    <span>Box deposit (@Model.Order.NumberOfBoxes × €5.95)</span>
+                    <span>+ @((boxFee * Model.Order.NumberOfBoxes).ToString("0.00")) €</span>
+                </div>
+                @if (Model.Order.ReturnedBoxes > 0)
+                {
+                    <div class="cashier-breakdown-row cashier-breakdown-deduction">
+                        <span>Returned boxes (@Model.Order.ReturnedBoxes × €5.95)</span>
+                        <span>− @((boxFee * Model.Order.ReturnedBoxes).ToString("0.00")) €</span>
+                    </div>
+                }
+                <div class="cashier-breakdown-total">
+                    <span>Total due</span>
+                    <strong>@Model.TotalAmount.ToString("0.00") €</strong>
+                </div>
             </div>
-            <div>
-                <span class="label">Status</span>
-                <span class="badge badge-@Model.Order.Status.ToString().ToLower()">
-                    @Model.Order.Status
-                </span>
-            </div>
-            <div>
-                <span class="label">Number of Boxes</span>
-                <span>@Model.Order.NumberOfBoxes</span>
-            </div>
-            <div>
-                <span class="label">Returned Boxes</span>
-                <span>@Model.Order.ReturnedBoxes</span>
-            </div>
-            <div>
-                <span class="label">Total Amount</span>
-                <span class="total-amount">
-                    @Model.TotalAmount.ToString("0.00") €
-                </span>
+
+        </div>
+
+        <div class="picker-aside">
+            <div class="picker-action-card">
+
+                <div class="picker-action-title">
+                    <i data-lucide="package-open"></i>
+                    Returned Boxes
+                </div>
+
+                <form method="post" asp-controller="Cashier" asp-action="EnterReturnedBoxes">
+                    <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
+                    <label class="label" for="returnedBoxes">Number of boxes returned</label>
+                    <input type="number" id="returnedBoxes" name="returnedBoxes"
+                           min="0" value="@Model.Order.ReturnedBoxes" class="picker-input" required/>
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="error">@ViewBag.Error</div>
+                    }
+                    @if (ViewBag.Success != null)
+                    {
+                        <div class="success">@ViewBag.Success</div>
+                    }
+                    <button type="submit" class="picker-confirm-btn">Save</button>
+                </form>
+
+                <div class="picker-divider"></div>
+
+                <form method="post" asp-controller="Cashier" asp-action="MarkAsCollected">
+                    <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
+                    <button type="submit" class="btn-ready btn-honor">
+                        <i data-lucide="check-circle"></i>
+                        Mark as Honored
+                    </button>
+                </form>
+
             </div>
         </div>
-    </div>
 
-    <div class="encode-boxes-card">
-        <h3>Enter Number of Returned Boxes</h3>
-        <form method="post" asp-controller="Cashier" asp-action="EnterReturnedBoxes">
-            <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
-            <div class="form-group">
-                <label for="returnedBoxes">Number of returned boxes</label>
-                <input type="number" id="returnedBoxes" name="returnedBoxes"
-                       min="0" value="@Model.Order.ReturnedBoxes" required/>
-            </div>
-            @if (ViewBag.Error != null)
-            {
-                <div class="error">@ViewBag.Error</div>
-            }
-            @if (ViewBag.Success != null)
-            {
-                <div class="success">@ViewBag.Success</div>
-            }
-            <button type="submit">Save</button>
-        </form>
-    </div>
-
-    <div class="encode-boxes-card">
-        <h3>Mark Order as Collected</h3>
-        <p class="subtitle">Once the customer has collected their order, mark it as honored.</p>
-        <form method="post" asp-controller="Cashier" asp-action="MarkAsCollected">
-            <input type="hidden" name="orderId" value="@Model.Order.OrderId"/>
-            <button type="submit" class="btn-danger">
-                Mark as Collected
-            </button>
-        </form>
     </div>
 
 </div>
