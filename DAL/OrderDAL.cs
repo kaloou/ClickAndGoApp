@@ -25,7 +25,7 @@ public class OrderDAL : IOrderDAL
                 SELECT o.orderId, o.orderDate, o.status, o.numberOfBoxes,
                        o.returnedBoxes, o.pickupDate, o.paymentStatus,
                        u.userId, u.firstName, u.lastName, u.email, u.password,
-                       c.loyaltyPoints, c.phoneNumber, c.address,
+                       c.phoneNumber, c.address,
                        ts.timeSlotId AS tsId, ts.startTime, ts.endTime
                 FROM [Order] o
                 JOIN [User]   u  ON o.customerId   = u.userId
@@ -66,7 +66,7 @@ public class OrderDAL : IOrderDAL
                 SELECT o.orderId, o.orderDate, o.status, o.numberOfBoxes,
                        o.returnedBoxes, o.pickupDate, o.paymentStatus,
                        u.userId, u.firstName, u.lastName, u.email, u.password,
-                       c.loyaltyPoints, c.phoneNumber, c.address,
+                       c.phoneNumber, c.address,
                        ts.timeSlotId AS tsId, ts.startTime, ts.endTime
                 FROM [Order] o
                 JOIN [User]   u  ON o.customerId   = u.userId
@@ -106,7 +106,7 @@ public class OrderDAL : IOrderDAL
                 SELECT o.orderId, o.orderDate, o.status, o.numberOfBoxes,
                        o.returnedBoxes, o.pickupDate, o.paymentStatus,
                        u.userId, u.firstName, u.lastName, u.email, u.password,
-                       c.loyaltyPoints, c.phoneNumber, c.address,
+                       c.phoneNumber, c.address,
                        ts.timeSlotId AS tsId, ts.startTime, ts.endTime
                 FROM [Order] o
                 JOIN [User]   u  ON o.customerId   = u.userId
@@ -241,7 +241,7 @@ public class OrderDAL : IOrderDAL
                 SELECT o.orderId, o.orderDate, o.status, o.numberOfBoxes,
                        o.returnedBoxes, o.pickupDate, o.paymentStatus,
                        u.userId, u.firstName, u.lastName, u.email, u.password,
-                       c.loyaltyPoints, c.phoneNumber, c.address,
+                       c.phoneNumber, c.address,
                        ts.timeSlotId AS tsId, ts.startTime, ts.endTime
                 FROM [Order] o
                 JOIN [User]   u  ON o.customerId  = u.userId

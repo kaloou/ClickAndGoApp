@@ -1,11 +1,17 @@
+-- =============================================
+-- Création de la Base de données : Farhane_Paludetto
+-- =============================================
+
 USE [master]
 GO
 
+DROP DATABASE [Farhane_Paludetto]
 CREATE DATABASE [Farhane_Paludetto]
 GO
 
 USE [Farhane_Paludetto]
 GO
+
 -- =============================================
 -- TABLE USER
 -- =============================================
@@ -550,26 +556,5 @@ INSERT INTO OrderLine (orderId, productId, quantity) VALUES
     (6, 40, 2), (6, 15, 1), (6, 46, 1),
     (7,  6, 1), (7, 14, 1), (7, 13, 1),
     (8,  2, 3), (8,  9, 2), (8, 27, 1);
-GO
-
-
--- =============================================
--- SUPPRESSION DES TABLES (avec toutes leurs données)
--- À exécuter pour remettre la BD à zéro avant de relancer le script
--- =============================================
-
-DROP TABLE IF EXISTS RecipesIngredients;
-DROP TABLE IF EXISTS OrderLine;
-DROP TABLE IF EXISTS [Order];
-DROP TABLE IF EXISTS TimeSlot;
-DROP TABLE IF EXISTS Recipes;
-DROP TABLE IF EXISTS Product;
-DROP TABLE IF EXISTS Category;
-DROP TABLE IF EXISTS Cashier;
-DROP TABLE IF EXISTS OrderPicker;
-DROP TABLE IF EXISTS Customer;
-DROP TABLE IF EXISTS Employee;
-DROP TABLE IF EXISTS Store;
-DROP TABLE IF EXISTS [User];
 GO
 

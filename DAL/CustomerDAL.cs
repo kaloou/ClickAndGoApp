@@ -56,8 +56,8 @@ public class CustomerDAL : ICustomerDAL
                 }
 
                 const string insertCustomer = @"
-                    INSERT INTO Customer (userId, loyaltyPoints, phoneNumber, address)
-                    VALUES (@userId, 0, @phoneNumber, @address)";
+                    INSERT INTO Customer (userId, phoneNumber, address)
+                    VALUES (@userId, @phoneNumber, @address)";
 
                 using (SqlCommand cmdCust = new SqlCommand(insertCustomer, conn, tx))
                 {
@@ -87,7 +87,7 @@ public class CustomerDAL : ICustomerDAL
             // JOIN between User and Customer is needed because the data is split across two tables.
             const string query = @"
                 SELECT u.userId, u.firstName, u.lastName, u.email, u.password,
-                       c.loyaltyPoints, c.phoneNumber, c.address
+                       c.phoneNumber, c.address
                 FROM [User] u
                 JOIN Customer c ON u.userId = c.userId
                 WHERE u.userId = @userId";
